@@ -1,17 +1,18 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Expressive\Tooling\CreateMiddleware;
+namespace MezzioTest\Tooling\CreateMiddleware;
 
+use Mezzio\Tooling\CreateMiddleware\CreateMiddleware;
+use Mezzio\Tooling\CreateMiddleware\CreateMiddlewareException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
-use Zend\Expressive\Tooling\CreateMiddleware\CreateMiddleware;
-use Zend\Expressive\Tooling\CreateMiddleware\CreateMiddlewareException;
 
 class CreateMiddlewareTest extends TestCase
 {
