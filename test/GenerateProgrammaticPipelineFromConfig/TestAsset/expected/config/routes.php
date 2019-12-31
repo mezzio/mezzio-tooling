@@ -1,9 +1,10 @@
 <?php
+
 /**
- * Expressive routed middleware
+ * Mezzio routed middleware
  */
 
-/** @var \Zend\Expressive\Application $app */
+/** @var \Mezzio\Application $app */
 $app->get('/', 'App\\Action\\HomePageAction', 'home');
 $app->route('/api/posts', 'App\\Action\\PostsAction', ['GET', 'POST'], 'api.posts')
     ->setOptions([
@@ -16,7 +17,7 @@ $app->route('/rest/post', [
     'Api\\Middleware\\Negotiation',
     'Api\\Middleware\\Validation',
     'Api\\Action\\PostAction',
-], \Zend\Expressive\Router\Route::HTTP_METHOD_ANY, 'api.rest.post')
+], \Mezzio\Router\Route::HTTP_METHOD_ANY, 'api.rest.post')
     ->setOptions([
         'sort' => 'updated',
         'order' => 'desc',

@@ -1,17 +1,18 @@
 <?php
+
 /**
- * Expressive programmatic pipeline configuration
+ * Mezzio programmatic pipeline configuration
  */
 
-use Zend\Expressive\Container\ErrorHandlerFactory;
-use Zend\Expressive\Container\ErrorResponseGeneratorFactory;
-use Zend\Expressive\Container\NotFoundHandlerFactory;
-use Zend\Expressive\Middleware\ErrorResponseGenerator;
-use Zend\Expressive\Middleware\ImplicitHeadMiddleware;
-use Zend\Expressive\Middleware\ImplicitOptionsMiddleware;
-use Zend\Expressive\Middleware\NotFoundHandler;
-use Zend\Stratigility\Middleware\ErrorHandler;
-use Zend\Stratigility\Middleware\OriginalMessages;
+use Mezzio\Container\ErrorHandlerFactory;
+use Mezzio\Container\ErrorResponseGeneratorFactory;
+use Mezzio\Container\NotFoundHandlerFactory;
+use Mezzio\Middleware\ErrorResponseGenerator;
+use Mezzio\Middleware\ImplicitHeadMiddleware;
+use Mezzio\Middleware\ImplicitOptionsMiddleware;
+use Mezzio\Middleware\NotFoundHandler;
+use Laminas\Stratigility\Middleware\ErrorHandler;
+use Laminas\Stratigility\Middleware\OriginalMessages;
 
 return [
     'dependencies' => [
@@ -23,13 +24,13 @@ return [
         'factories' => [
             ErrorHandler::class => ErrorHandlerFactory::class,
             // Override the following in a local config file to use
-            // Zend\Expressive\Container\WhoopsErrorResponseGeneratorFactory
+            // Mezzio\Container\WhoopsErrorResponseGeneratorFactory
             // in order to use Whoops for development error handling.
             ErrorResponseGenerator::class => ErrorResponseGeneratorFactory::class,
             NotFoundHandler::class => NotFoundHandlerFactory::class,
         ],
     ],
-    'zend-expressive' => [
+    'mezzio' => [
         'programmatic_pipeline' => true,
         'raise_throwables'      => true,
     ],

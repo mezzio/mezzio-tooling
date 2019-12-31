@@ -1,12 +1,13 @@
 <?php
+
 /**
- * Expressive middleware pipeline
+ * Mezzio middleware pipeline
  */
 
-/** @var \Zend\Expressive\Application $app */
-$app->pipe(\Zend\Stratigility\Middleware\OriginalMessages::class);
-$app->pipe(\Zend\Stratigility\Middleware\ErrorHandler::class);
-$app->pipe('Zend\\Expressive\\Helper\\ServerUrlMiddleware');
+/** @var \Mezzio\Application $app */
+$app->pipe(\Laminas\Stratigility\Middleware\OriginalMessages::class);
+$app->pipe(\Laminas\Stratigility\Middleware\ErrorHandler::class);
+$app->pipe('Mezzio\\Helper\\ServerUrlMiddleware');
 $app->pipe('App\\Middleware\\XClacksOverhead');
 $app->pipe('/api', [
     'Api\\Middleware\\Authentication',
@@ -15,10 +16,10 @@ $app->pipe('/api', [
     'Api\\Middleware\\Validation',
 ]);
 $app->pipeRoutingMiddleware();
-$app->pipe('Zend\\Expressive\\Middleware\\ImplicitHeadMiddleware');
-$app->pipe('Zend\\Expressive\\Middleware\\ImplicitOptionsMiddleware');
-$app->pipe('Zend\\Expressive\\Helper\\UrlHelperMiddleware');
+$app->pipe('Mezzio\\Middleware\\ImplicitHeadMiddleware');
+$app->pipe('Mezzio\\Middleware\\ImplicitOptionsMiddleware');
+$app->pipe('Mezzio\\Helper\\UrlHelperMiddleware');
 $app->pipeDispatchMiddleware();
 $app->pipe('App\\Middleware\\NotFoundHandler');
 $app->pipeErrorHandler('App\\Middleware\\ErrorMiddleware');
-$app->pipe(\Zend\Expressive\Middleware\NotFoundHandler::class);
+$app->pipe(\Mezzio\Middleware\NotFoundHandler::class);
