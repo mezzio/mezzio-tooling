@@ -1,20 +1,21 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2018-2019 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace Zend\Expressive\Tooling\CreateHandler;
+namespace Mezzio\Tooling\CreateHandler;
 
+use Mezzio\LaminasView\LaminasViewRenderer;
+use Mezzio\Plates\PlatesRenderer;
+use Mezzio\Template\TemplateRendererInterface;
+use Mezzio\Tooling\TemplateResolutionTrait;
+use Mezzio\Twig\TwigRenderer;
 use ReflectionClass;
-use Zend\Expressive\Plates\PlatesRenderer;
-use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Expressive\Tooling\TemplateResolutionTrait;
-use Zend\Expressive\Twig\TwigRenderer;
-use Zend\Expressive\ZendView\ZendViewRenderer;
 
 class CreateTemplate
 {
@@ -28,7 +29,7 @@ class CreateTemplate
     private const KNOWN_RENDERERS = [
         PlatesRenderer::class,
         TwigRenderer::class,
-        ZendViewRenderer::class,
+        LaminasViewRenderer::class,
     ];
 
     /**
@@ -178,7 +179,7 @@ class CreateTemplate
                 return 'html.twig';
             case PlatesRenderer::class:
                 // fall-through
-            case ZendViewRenderer::class:
+            case LaminasViewRenderer::class:
                 // fall-through
             default:
                 return 'phtml';

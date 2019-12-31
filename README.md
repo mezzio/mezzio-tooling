@@ -1,21 +1,21 @@
-# zend-expressive-tooling
+# mezzio-tooling
 
-[![Build Status](https://secure.travis-ci.org/zendframework/zend-expressive-tooling.svg?branch=master)](https://secure.travis-ci.org/zendframework/zend-expressive-tooling)
-[![Coverage Status](https://coveralls.io/repos/github/zendframework/zend-expressive-tooling/badge.svg?branch=master)](https://coveralls.io/github/zendframework/zend-expressive-tooling?branch=master)
+[![Build Status](https://travis-ci.org/mezzio/mezzio-tooling.svg?branch=master)](https://travis-ci.org/mezzio/mezzio-tooling)
+[![Coverage Status](https://coveralls.io/repos/github/mezzio/mezzio-tooling/badge.svg?branch=master)](https://coveralls.io/github/mezzio/mezzio-tooling?branch=master)
 
-*Migration and development tools for Expressive.*
+*Migration and development tools for Mezzio.*
 
 ## Installation
 
 Install via composer:
 
 ```bash
-$ composer require --dev zendframework/zend-expressive-tooling
+$ composer require --dev mezzio/mezzio-tooling
 ```
 
-## `expressive` Tool
+## `mezzio` Tool
 
-- `vendor/bin/expressive`: Entry point for all tooling. Currently exposes the
+- `vendor/bin/mezzio`: Entry point for all tooling. Currently exposes the
   following:
 
   - **action:create**: Create an action class file; this is an alias for the
@@ -25,7 +25,7 @@ $ composer require --dev zendframework/zend-expressive-tooling
   - **handler:create**: Create a PSR-15 request handler class file. Also
     generates a factory for the generated class, and, if a template renderer is
     registered with the application container, generates a template and modifies
-    the class to render it into a zend-diactoros `HtmlResponse`.
+    the class to render it into a laminas-diactoros `HtmlResponse`.
   - **middleware:create**: Create a PSR-15 middleware class file.
   - **migrate:interop-middleware**: Migrate interop middlewares and delegators
     to PSR-15 middlewares and request handlers.
@@ -51,7 +51,7 @@ option during cli execution for the various `module:*` commands.
 
 declare(strict_types = 1);
 
-use Zend\Expressive\Tooling\Module\CommandCommonOptions;
+use Mezzio\Tooling\Module\CommandCommonOptions;
 
 return [
     /* ... */
