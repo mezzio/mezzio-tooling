@@ -1,12 +1,12 @@
 <?php
 
-namespace ZendTest\Expressive\Tooling\MigrateInteropMiddleware\TestAsset;
+namespace MezzioTest\Tooling\MigrateInteropMiddleware\TestAsset;
 
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 
 class MultipleInterfacesMiddleware implements
     MyInterface,
