@@ -1,11 +1,12 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Expressive\Tooling\ScanForErrorMiddleware;
+namespace Mezzio\Tooling\ScanForErrorMiddleware;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,7 +19,7 @@ class ScanForErrorMiddlewareCommand extends Command
 
     const HELP = <<< 'EOT'
 Scans the directory provided by --dir (defaulting to src/) for classes
-that either implement Zend\Stratigility\ErrorMiddlewareInterface,
+that either implement Laminas\Stratigility\ErrorMiddlewareInterface,
 or which implement __invoke() using that signature. Any that are
 discovered are reported to the console.
 EOT;
