@@ -1,13 +1,14 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Expressive\Tooling\MigrateOriginalMessageCalls;
+namespace Mezzio\Tooling\MigrateOriginalMessageCalls;
 
-use Zend\Stdlib\ConsoleHelper;
+use Laminas\Stdlib\ConsoleHelper;
 
 class Help
 {
@@ -29,7 +30,7 @@ class Help
                    calls. If not specified, assumes src/ under the
                    current working path.
 
-Migrate an Expressive application to remove calls to legacy
+Migrate an Mezzio application to remove calls to legacy
 request/response methods.
 
 Scans all PHP files under the --src directory for any calls to

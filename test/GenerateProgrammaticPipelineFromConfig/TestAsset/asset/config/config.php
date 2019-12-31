@@ -1,6 +1,6 @@
 <?php
-use Zend\Expressive\Application;
-use Zend\Expressive\Helper;
+use Mezzio\Application;
+use Mezzio\Helper;
 
 return [
     'middleware_pipeline' => [
