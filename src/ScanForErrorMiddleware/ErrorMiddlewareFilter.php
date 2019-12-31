@@ -1,18 +1,19 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Expressive\Tooling\ScanForErrorMiddleware;
+namespace Mezzio\Tooling\ScanForErrorMiddleware;
 
 use FilterIterator;
+use Laminas\Code\Scanner\ClassScanner;
+use Laminas\Code\Scanner\FileScanner;
+use Laminas\Code\Scanner\MethodScanner;
+use Laminas\Stratigility\ErrorMiddlewareInterface;
 use SplFileInfo;
-use Zend\Code\Scanner\ClassScanner;
-use Zend\Code\Scanner\FileScanner;
-use Zend\Code\Scanner\MethodScanner;
-use Zend\Stratigility\ErrorMiddlewareInterface;
 
 class ErrorMiddlewareFilter extends FilterIterator
 {
