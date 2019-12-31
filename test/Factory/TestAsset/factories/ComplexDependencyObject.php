@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ZendTest\Expressive\Tooling\Factory\TestAsset;
+namespace MezzioTest\Tooling\Factory\TestAsset;
 
 use Psr\Container\ContainerInterface;
-use ZendTest\Expressive\Tooling\Factory\TestAsset\SecondComplexDependencyObject;
-use ZendTest\Expressive\Tooling\Factory\TestAsset\SimpleDependencyObject;
+use MezzioTest\Tooling\Factory\TestAsset\SecondComplexDependencyObject;
+use MezzioTest\Tooling\Factory\TestAsset\SimpleDependencyObject;
 
 class ComplexDependencyObjectFactory
 {
