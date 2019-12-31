@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace ZendTest\Expressive\Tooling\Factory\TestAsset;
+namespace MezzioTest\Tooling\Factory\TestAsset;
 
 use Psr\Container\ContainerInterface;
-use ZendTest\Expressive\Tooling\Factory\TestAsset\InvokableObject;
+use MezzioTest\Tooling\Factory\TestAsset\InvokableObject;
 
 class SimpleDependencyObjectFactory
 {
