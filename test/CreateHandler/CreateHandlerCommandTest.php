@@ -1,14 +1,21 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Expressive\Tooling\CreateHandler;
+namespace MezzioTest\Tooling\CreateHandler;
 
+use Mezzio\Template\TemplateRendererInterface;
+use Mezzio\Tooling\CreateHandler\CreateHandler;
+use Mezzio\Tooling\CreateHandler\CreateHandlerCommand;
+use Mezzio\Tooling\CreateHandler\CreateHandlerException;
+use Mezzio\Tooling\CreateHandler\CreateTemplate;
+use Mezzio\Tooling\CreateHandler\Template;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\Assert;
@@ -24,12 +31,6 @@ use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
-use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Expressive\Tooling\CreateHandler\CreateHandler;
-use Zend\Expressive\Tooling\CreateHandler\CreateHandlerCommand;
-use Zend\Expressive\Tooling\CreateHandler\CreateHandlerException;
-use Zend\Expressive\Tooling\CreateHandler\CreateTemplate;
-use Zend\Expressive\Tooling\CreateHandler\Template;
 
 /**
  * @runTestsInSeparateProcesses

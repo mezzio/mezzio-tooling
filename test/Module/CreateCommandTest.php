@@ -1,14 +1,18 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Expressive\Tooling\Module;
+namespace MezzioTest\Tooling\Module;
 
+use Mezzio\Tooling\Module\Create;
+use Mezzio\Tooling\Module\CreateCommand;
+use Mezzio\Tooling\Module\RuntimeException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -22,9 +26,6 @@ use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
-use Zend\Expressive\Tooling\Module\Create;
-use Zend\Expressive\Tooling\Module\CreateCommand;
-use Zend\Expressive\Tooling\Module\RuntimeException;
 
 /**
  * @runTestsInSeparateProcesses
