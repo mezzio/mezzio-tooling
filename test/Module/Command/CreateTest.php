@@ -1,18 +1,19 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Expressive\Tooling\Module\Command;
+namespace MezzioTest\Tooling\Module\Command;
 
+use Mezzio\Tooling\Module\Command\Create;
+use Mezzio\Tooling\Module\Exception;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
-use Zend\Expressive\Tooling\Module\Command\Create;
-use Zend\Expressive\Tooling\Module\Exception;
 
 class CreateTest extends TestCase
 {
@@ -52,7 +53,7 @@ class CreateTest extends TestCase
     {
         $baseModulePath = sprintf('%s/my-modules/MyApp', $this->dir->url());
 
-        $mkdir = $this->getFunctionMock('Zend\Expressive\Tooling\Module\Command', 'mkdir');
+        $mkdir = $this->getFunctionMock('Mezzio\Tooling\Module\Command', 'mkdir');
         $mkdir->expects($this->once())
             ->with($baseModulePath)
             ->willReturn(false);
@@ -69,7 +70,7 @@ class CreateTest extends TestCase
     {
         $baseModulePath = sprintf('%s/my-modules/MyApp', $this->dir->url());
 
-        $mkdir = $this->getFunctionMock('Zend\Expressive\Tooling\Module\Command', 'mkdir');
+        $mkdir = $this->getFunctionMock('Mezzio\Tooling\Module\Command', 'mkdir');
         $mkdir->expects($this->at(0))
             ->with($baseModulePath)
             ->willReturn(true);
@@ -90,7 +91,7 @@ class CreateTest extends TestCase
     {
         $baseModulePath = sprintf('%s/my-modules/MyApp', $this->dir->url());
 
-        $mkdir = $this->getFunctionMock('Zend\Expressive\Tooling\Module\Command', 'mkdir');
+        $mkdir = $this->getFunctionMock('Mezzio\Tooling\Module\Command', 'mkdir');
         $mkdir->expects($this->at(0))
             ->with($baseModulePath)
             ->willReturn(true);

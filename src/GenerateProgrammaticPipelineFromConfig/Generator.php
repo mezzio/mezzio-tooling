@@ -1,20 +1,21 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2016-2017 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Expressive\Tooling\GenerateProgrammaticPipelineFromConfig;
+namespace Mezzio\Tooling\GenerateProgrammaticPipelineFromConfig;
 
 use ArrayObject;
+use Laminas\Stdlib\ConsoleHelper;
+use Laminas\Stdlib\SplPriorityQueue;
+use Mezzio\Application;
+use Mezzio\Middleware\ImplicitHeadMiddleware;
+use Mezzio\Middleware\ImplicitOptionsMiddleware;
+use Mezzio\Router\Route;
 use Traversable;
-use Zend\Expressive\Application;
-use Zend\Expressive\Middleware\ImplicitHeadMiddleware;
-use Zend\Expressive\Middleware\ImplicitOptionsMiddleware;
-use Zend\Expressive\Router\Route;
-use Zend\Stdlib\ConsoleHelper;
-use Zend\Stdlib\SplPriorityQueue;
 
 class Generator
 {
@@ -25,22 +26,23 @@ class Generator
 
     const TEMPLATE_CONFIG = <<< 'EOT'
 <?php
+
 /**
- * Expressive programmatic pipeline configuration
+ * Mezzio programmatic pipeline configuration
  */
 
-use Zend\Expressive\Container\ErrorHandlerFactory;
-use Zend\Expressive\Container\ErrorResponseGeneratorFactory;
-use Zend\Expressive\Container\NotFoundDelegateFactory;
-use Zend\Expressive\Container\NotFoundHandlerFactory;
-use Zend\Expressive\Delegate\DefaultDelegate;
-use Zend\Expressive\Delegate\NotFoundDelegate;
-use Zend\Expressive\Middleware\ErrorResponseGenerator;
-use Zend\Expressive\Middleware\ImplicitHeadMiddleware;
-use Zend\Expressive\Middleware\ImplicitOptionsMiddleware;
-use Zend\Expressive\Middleware\NotFoundHandler;
-use Zend\Stratigility\Middleware\ErrorHandler;
-use Zend\Stratigility\Middleware\OriginalMessages;
+use Mezzio\Container\ErrorHandlerFactory;
+use Mezzio\Container\ErrorResponseGeneratorFactory;
+use Mezzio\Container\NotFoundDelegateFactory;
+use Mezzio\Container\NotFoundHandlerFactory;
+use Mezzio\Delegate\DefaultDelegate;
+use Mezzio\Delegate\NotFoundDelegate;
+use Mezzio\Middleware\ErrorResponseGenerator;
+use Mezzio\Middleware\ImplicitHeadMiddleware;
+use Mezzio\Middleware\ImplicitOptionsMiddleware;
+use Mezzio\Middleware\NotFoundHandler;
+use Laminas\Stratigility\Middleware\ErrorHandler;
+use Laminas\Stratigility\Middleware\OriginalMessages;
 
 return [
     'dependencies' => [
@@ -56,7 +58,7 @@ return [
         'factories' => [
             ErrorHandler::class => ErrorHandlerFactory::class,
             // Override the following in a local config file to use
-            // Zend\Expressive\Container\WhoopsErrorResponseGeneratorFactory
+            // Mezzio\Container\WhoopsErrorResponseGeneratorFactory
             // in order to use Whoops for development error handling.
             ErrorResponseGenerator::class => ErrorResponseGeneratorFactory::class,
             // Override the following to use an alternate "not found" delegate.
@@ -64,7 +66,7 @@ return [
             NotFoundHandler::class => NotFoundHandlerFactory::class,
         ],
     ],
-    'zend-expressive' => [
+    'mezzio' => [
         'programmatic_pipeline' => true,
         'raise_throwables'      => true,
     ],
@@ -74,22 +76,24 @@ EOT;
 
     const TEMPLATE_PIPELINE = <<< 'EOT'
 <?php
+
 /**
- * Expressive middleware pipeline
+ * Mezzio middleware pipeline
  */
 
-/** @var \Zend\Expressive\Application $app */
+/** @var \Mezzio\Application $app */
 %s
 
 EOT;
 
     const TEMPLATE_ROUTES = <<< 'EOT'
 <?php
+
 /**
- * Expressive routed middleware
+ * Mezzio routed middleware
  */
 
-/** @var \Zend\Expressive\Application $app */
+/** @var \Mezzio\Application $app */
 %s
 
 EOT;
@@ -103,9 +107,9 @@ EOT;
 
     const TEMPLATE_ROUTED_METHOD_WITH_NAME = '$app->%s(\'%s\', %s, \'%s\')';
 
-    const TEMPLATE_ROUTED_NO_METHOD_NO_NAME = '$app->route(\'%s\', %s, \\Zend\\Expressive\\Router\\Route::HTTP_METHOD_ANY)';
+    const TEMPLATE_ROUTED_NO_METHOD_NO_NAME = '$app->route(\'%s\', %s, \\Mezzio\\Router\\Route::HTTP_METHOD_ANY)';
 
-    const TEMPLATE_ROUTED_NO_METHOD_WITH_NAME = '$app->route(\'%s\', %s, \\Zend\\Expressive\\Router\\Route::HTTP_METHOD_ANY, \'%s\')'; 
+    const TEMPLATE_ROUTED_NO_METHOD_WITH_NAME = '$app->route(\'%s\', %s, \\Mezzio\\Router\\Route::HTTP_METHOD_ANY, \'%s\')'; 
 
     const TEMPLATE_ROUTED_METHODS_NO_NAME = '$app->route(\'%s\', %s, %s)';
 
@@ -255,9 +259,9 @@ EOT;
 
         // Push the original messages middleware and error handler to the top
         // of the pipeline, and the not-found handler to the end.
-        array_unshift($pipeline, '$app->pipe(\Zend\Stratigility\Middleware\ErrorHandler::class);');
-        array_unshift($pipeline, '$app->pipe(\Zend\Stratigility\Middleware\OriginalMessages::class);');
-        array_push($pipeline, '$app->pipe(\Zend\Expressive\Middleware\NotFoundHandler::class);');
+        array_unshift($pipeline, '$app->pipe(\Laminas\Stratigility\Middleware\ErrorHandler::class);');
+        array_unshift($pipeline, '$app->pipe(\Laminas\Stratigility\Middleware\OriginalMessages::class);');
+        array_push($pipeline, '$app->pipe(\Mezzio\Middleware\NotFoundHandler::class);');
 
         return implode("\n", $pipeline);
     }
@@ -455,11 +459,11 @@ EOT;
 
         if (is_string($value)) {
             if ($value === Application::ROUTING_MIDDLEWARE) {
-                return '\Zend\Expressive\Application::ROUTING_MIDDLEWARE';
+                return '\Mezzio\Application::ROUTING_MIDDLEWARE';
             }
 
             if ($value === Application::DISPATCH_MIDDLEWARE) {
-                return '\Zend\Expressive\Application::DISPATCH_MIDDLEWARE';
+                return '\Mezzio\Application::DISPATCH_MIDDLEWARE';
             }
 
             if (class_exists($value)) {
