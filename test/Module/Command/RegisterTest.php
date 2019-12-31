@@ -1,23 +1,24 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Expressive\Tooling\Module\Command;
+namespace MezzioTest\Tooling\Module\Command;
 
+use Laminas\ComponentInstaller\Injector\ConfigAggregatorInjector;
+use Laminas\ComponentInstaller\Injector\InjectorInterface;
+use Laminas\ComposerAutoloading\Command\Enable;
+use Laminas\ComposerAutoloading\Exception\RuntimeException;
+use Mezzio\Tooling\Module\Command\Register;
+use Mezzio\Tooling\Module\Exception;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
-use Zend\ComponentInstaller\Injector\ConfigAggregatorInjector;
-use Zend\ComponentInstaller\Injector\InjectorInterface;
-use Zend\Expressive\Tooling\Module\Command\Register;
-use Zend\Expressive\Tooling\Module\Exception;
-use ZF\ComposerAutoloading\Command\Enable;
-use ZF\ComposerAutoloading\Exception\RuntimeException;
 
 class RegisterTest extends TestCase
 {
