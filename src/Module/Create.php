@@ -1,15 +1,16 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2017-2019 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace Zend\Expressive\Tooling\Module;
+namespace Mezzio\Tooling\Module;
 
-use Zend\Expressive\Tooling\TemplateResolutionTrait;
+use Mezzio\Tooling\TemplateResolutionTrait;
 
 class Create
 {
@@ -25,7 +26,7 @@ namespace %1$s;
 /**
  * The configuration provider for the %1$s module
  *
- * @see https://docs.zendframework.com/zend-component-installer/
+ * @see https://docs.laminas.dev/laminas-component-installer/
  */
 class ConfigProvider
 {
@@ -72,7 +73,7 @@ class ConfigProvider
 EOT;
 
     /**
-     * Create source tree for the expressive module.
+     * Create source tree for the mezzio module.
      */
     public function process(string $moduleName, string $modulesPath, string $projectDir) : string
     {
@@ -85,7 +86,7 @@ EOT;
     }
 
     /**
-     * Creates directory structure for new expressive module.
+     * Creates directory structure for new mezzio module.
      *
      * @throws RuntimeException
      */
@@ -122,7 +123,7 @@ EOT;
     }
 
     /**
-     * Creates ConfigProvider for new expressive module.
+     * Creates ConfigProvider for new mezzio module.
      */
     private function createConfigProvider(string $modulePath, string $moduleName) : void
     {
