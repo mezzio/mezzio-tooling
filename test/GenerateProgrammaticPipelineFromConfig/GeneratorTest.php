@@ -1,16 +1,17 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Expressive\Tooling\GenerateProgrammaticPipelineFromConfig;
+namespace MezzioTest\Tooling\GenerateProgrammaticPipelineFromConfig;
 
+use Mezzio\Tooling\GenerateProgrammaticPipelineFromConfig\Generator;
+use Mezzio\Tooling\GenerateProgrammaticPipelineFromConfig\GeneratorException;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Expressive\Tooling\GenerateProgrammaticPipelineFromConfig\Generator;
-use Zend\Expressive\Tooling\GenerateProgrammaticPipelineFromConfig\GeneratorException;
 
 class GeneratorTest extends TestCase
 {
