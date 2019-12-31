@@ -1,13 +1,14 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace Zend\Expressive\Tooling\MigrateInteropMiddleware;
+namespace Mezzio\Tooling\MigrateInteropMiddleware;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,7 +20,7 @@ class MigrateInteropMiddlewareCommand extends Command
     private const DEFAULT_SRC = '/src';
 
     private const HELP = <<< 'EOT'
-Migrate an Expressive application to PSR-15 middlewares.
+Migrate an Mezzio application to PSR-15 middlewares.
 
 Scans all PHP files under the --src directory for interop middlewares
 and delegators. Changes imported interop classes to PSR-15 interfaces,

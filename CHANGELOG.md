@@ -6,8 +6,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#48](https://github.com/zendframework/zend-expressive-tooling/pull/48) adds a
-  new command, `expressive handler:create`, which will create a PSR-15 request
+- [zendframework/zend-expressive-tooling#48](https://github.com/zendframework/zend-expressive-tooling/pull/48) adds a
+  new command, `mezzio handler:create`, which will create a PSR-15 request
   handler using the class name provided.
 
 ### Changed
@@ -24,15 +24,15 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#48](https://github.com/zendframework/zend-expressive-tooling/pull/48) fixes
-  the description of the `expressive middleware:create` command to reference
+- [zendframework/zend-expressive-tooling#48](https://github.com/zendframework/zend-expressive-tooling/pull/48) fixes
+  the description of the `mezzio middleware:create` command to reference
   PSR-15 instead of http-interop.
 
 ## 1.0.0alpha2 - 2018-02-06
 
 ### Added
 
-- Adds support for zend-component-installer `^2.0`.
+- Adds support for laminas-component-installer `^2.0`.
 
 ### Changed
 
@@ -44,7 +44,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Removes support for zend-component-installer `^1.1`.
+- Removes support for laminas-component-installer `^1.1`.
 
 ### Fixed
 
@@ -54,14 +54,14 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#39](https://github.com/zendframework/zend-expressive-tooling/pull/39) and
-  [#44](https://github.com/zendframework/zend-expressive-tooling/pull/44) add
-  support for PSR-15. The `expressive middleware:create` command will now
+- [zendframework/zend-expressive-tooling#39](https://github.com/zendframework/zend-expressive-tooling/pull/39) and
+  [zendframework/zend-expressive-tooling#44](https://github.com/zendframework/zend-expressive-tooling/pull/44) add
+  support for PSR-15. The `mezzio middleware:create` command will now
   generate PSR-15 middleware.
 
-- [#39](https://github.com/zendframework/zend-expressive-tooling/pull/39) and
-  [#44](https://github.com/zendframework/zend-expressive-tooling/pull/44) add
-  a new tool: `expressive migrate:interop-middleware`. This tool will migrate
+- [zendframework/zend-expressive-tooling#39](https://github.com/zendframework/zend-expressive-tooling/pull/39) and
+  [zendframework/zend-expressive-tooling#44](https://github.com/zendframework/zend-expressive-tooling/pull/44) add
+  a new tool: `mezzio migrate:interop-middleware`. This tool will migrate
   existing http-interop middleware, delegators, and/or request handlers of any
   version to PSR-15 middleware and request handlers.
 
@@ -75,23 +75,23 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- [#39](https://github.com/zendframework/zend-expressive-tooling/pull/39)
+- [zendframework/zend-expressive-tooling#39](https://github.com/zendframework/zend-expressive-tooling/pull/39)
   removes support for http-interop/http-middleware.
 
-- [#39](https://github.com/zendframework/zend-expressive-tooling/pull/39)
+- [zendframework/zend-expressive-tooling#39](https://github.com/zendframework/zend-expressive-tooling/pull/39)
   removes support for PHP versions prior to PHP 7.1.
 
-- [#47](https://github.com/zendframework/zend-expressive-tooling/pull/47)
-  removes a number of legacy commands built to help migration from Expressive
+- [zendframework/zend-expressive-tooling#47](https://github.com/zendframework/zend-expressive-tooling/pull/47)
+  removes a number of legacy commands built to help migration from Mezzio
   version 1 to version 2, as they are no longer compatible with dependencies
   against with this version works. These commands include:
 
-  - `expressive migrate:pipeline-from-config`
-  - `expressive migrate:original-messages`
-  - `expressive migrate:error-middleware-scanner`
+  - `mezzio migrate:pipeline-from-config`
+  - `mezzio migrate:original-messages`
+  - `mezzio migrate:error-middleware-scanner`
 
-- [#47](https://github.com/zendframework/zend-expressive-tooling/pull/47)
-  removes all scripts other than `expressive` from the package definition.
+- [zendframework/zend-expressive-tooling#47](https://github.com/zendframework/zend-expressive-tooling/pull/47)
+  removes all scripts other than `mezzio` from the package definition.
 
 ### Fixed
 
@@ -101,7 +101,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#46](https://github.com/zendframework/zend-expressive-tooling/pull/46) adds
+- [zendframework/zend-expressive-tooling#46](https://github.com/zendframework/zend-expressive-tooling/pull/46) adds
   compatibility with symfony/console `^4.0`.
 
 ### Changed
@@ -124,7 +124,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#32](https://github.com/zendframework/zend-expressive-tooling/pull/32) adds a
+- [zendframework/zend-expressive-tooling#32](https://github.com/zendframework/zend-expressive-tooling/pull/32) adds a
   new argument to `CreateMiddleware::process()`, `$classSkeleton`; if provided,
   the value will be used as the skeleton for a new middleware class to generate,
   instead of the default provided with the tooling.
@@ -143,7 +143,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#31](https://github.com/zendframework/zend-expressive-tooling/pull/31)
+- [zendframework/zend-expressive-tooling#31](https://github.com/zendframework/zend-expressive-tooling/pull/31)
   provides fixes to the various generators such that they will now throw
   exceptions if the middleware they are attempting to create already exist on
   the filesystem.
@@ -164,8 +164,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#28](https://github.com/zendframework/zend-expressive-tooling/pull/28) adds
-  to the bootstrap of the the `expressive` command another path to check for the
+- [zendframework/zend-expressive-tooling#28](https://github.com/zendframework/zend-expressive-tooling/pull/28) adds
+  to the bootstrap of the the `mezzio` command another path to check for the
   autoloader; this new path is necessary to enable autoloading to work correctly
   on MacOS.
 
@@ -185,10 +185,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#24](https://github.com/zendframework/zend-expressive-tooling/pull/24) fixes
+- [zendframework/zend-expressive-tooling#24](https://github.com/zendframework/zend-expressive-tooling/pull/24) fixes
   incorrect use statement in `CreateMiddleware::CLASS_SKELETON`.
 
-- [#25](https://github.com/zendframework/zend-expressive-tooling/pull/25) fixes
+- [zendframework/zend-expressive-tooling#25](https://github.com/zendframework/zend-expressive-tooling/pull/25) fixes
   symfony/console required version to be less restrictive.
 
 ## 0.4.2 - 2017-04-26
@@ -207,11 +207,11 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#26](https://github.com/zendframework/zend-expressive-tooling/pull/26)
+- [zendframework/zend-expressive-tooling#26](https://github.com/zendframework/zend-expressive-tooling/pull/26)
   updates the constraints for:
-  - zend-expressive to `^2.0` only, since that has now been released.
-  - zend-component-installer to `^1.0 || ^0.7.1`, fixing an issue when
-    installing Expressive with modular support due to constraint violations.
+  - mezzio to `^2.0` only, since that has now been released.
+  - laminas-component-installer to `^1.0 || ^0.7.1`, fixing an issue when
+    installing Mezzio with modular support due to constraint violations.
 
 ## 0.4.1 - 2017-04-11
 
@@ -229,7 +229,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Updates zend-component-installer minimum version to 0.7.1, which provides a
+- Updates laminas-component-installer minimum version to 0.7.1, which provides a
   fix for detection of config providers; prior to this fix, `module:degister`
   could not remove globally qualified config providers for a module.
 
@@ -237,9 +237,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#22](https://github.com/zendframework/zend-expressive-tooling/pull/22) and
-  [#23](https://github.com/zendframework/zend-expressive-tooling/pull/23) add
-  the script `expressive`, which allows executing any of the other commands
+- [zendframework/zend-expressive-tooling#22](https://github.com/zendframework/zend-expressive-tooling/pull/22) and
+  [zendframework/zend-expressive-tooling#23](https://github.com/zendframework/zend-expressive-tooling/pull/23) add
+  the script `mezzio`, which allows executing any of the other commands
   provided in the package, including a new command for middleware creation. The
   exposed commands are:
 
@@ -251,8 +251,8 @@ All notable changes to this project will be documented in this file, in reverse 
   - **module:deregister**: Deregister a middleware module from the application
   - **module:register**: Register a middleware module with the application
 
-  All previous scripts (e.g., `expressive-pipeline-from-config`) are still
-  present and continue to work, but are deprecated in favor of the `expressive`
+  All previous scripts (e.g., `mezzio-pipeline-from-config`) are still
+  present and continue to work, but are deprecated in favor of the `mezzio`
   script.
 
 ### Deprecated
@@ -275,7 +275,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Changed
 
-- [#17](https://github.com/zendframework/zend-expressive-tooling/pull/17)
+- [zendframework/zend-expressive-tooling#17](https://github.com/zendframework/zend-expressive-tooling/pull/17)
   changes the reference to the `DefaultDelegate` in the generated
   `config/autoload/programmatic-pipeline.global.php` to be a string instead of
   using `::class` notation. Using a string name makes it clear the service is
@@ -291,16 +291,16 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#16](https://github.com/zendframework/zend-expressive-tooling/pull/16) fixes
+- [zendframework/zend-expressive-tooling#16](https://github.com/zendframework/zend-expressive-tooling/pull/16) fixes
   generation of routes where no HTTP method is specified to use a `null` instead
-  of the `Zend\Expressive\Router\Route::HTTP_METHOD_ANY` constant.
+  of the `Mezzio\Router\Route::HTTP_METHOD_ANY` constant.
 
 ## 0.3.1 - 2017-03-02
 
 ### Added
 
-- [#15](https://github.com/zendframework/zend-expressive-tooling/pull/15) adds
-  documentation for the `expressive-module` command to the README file.
+- [zendframework/zend-expressive-tooling#15](https://github.com/zendframework/zend-expressive-tooling/pull/15) adds
+  documentation for the `mezzio-module` command to the README file.
 
 ### Deprecated
 
@@ -312,17 +312,17 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#14](https://github.com/zendframework/zend-expressive-tooling/pull/14) fixes
+- [zendframework/zend-expressive-tooling#14](https://github.com/zendframework/zend-expressive-tooling/pull/14) fixes
   the `public/index.php` template to remove the `error_reporting()` declaration,
-  as it is no longer necessary with Stratigily 2 and the upcoming Expressive 2
+  as it is no longer necessary with Stratigily 2 and the upcoming Mezzio 2
   release.
 
 ## 0.3.0 - 2017-03-01
 
 ### Added
 
-- [#12](https://github.com/zendframework/zend-expressive-tooling/pull/12) adds
-  the new tool `expressive-module`, with the commands `create`, `register`, and
+- [zendframework/zend-expressive-tooling#12](https://github.com/zendframework/zend-expressive-tooling/pull/12) adds
+  the new tool `mezzio-module`, with the commands `create`, `register`, and
   `deregister`, for creating new "modules". `create` will create a tree under
   the `src/` tree named for the provided module containing `src/` and
   `templates/` subdirectories, as well as a `ConfigProvider` class; it then adds
@@ -335,13 +335,13 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Changes
 
-- [#10](https://github.com/zendframework/zend-expressive-tooling/pull/10)
-  updates the `expressive-pipeline-from-config` tooling to no longer generate
+- [zendframework/zend-expressive-tooling#10](https://github.com/zendframework/zend-expressive-tooling/pull/10)
+  updates the `mezzio-pipeline-from-config` tooling to no longer generate
   `pipeErrorHandler()` statements. It will now notify users via STDOUT if
   legacy error handlers are encountered, indicating which were encountered.
 
-- [#10](https://github.com/zendframework/zend-expressive-tooling/pull/10)
-  updates the `expressive-pipeline-from-config` tooling to now register the
+- [zendframework/zend-expressive-tooling#10](https://github.com/zendframework/zend-expressive-tooling/pull/10)
+  updates the `mezzio-pipeline-from-config` tooling to now register the
   `DefaultDelegate` and `NotFoundDelegate` services, with the former aliased to
   the latter.
 
@@ -365,12 +365,12 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Changes
 
-- [#7](https://github.com/zendframework/zend-expressive-tooling/pull/7) updates
-  the `Zend\Expressive\Tooling\GenerateProgrammaticPipelineFromConfig\Generator`
+- [zendframework/zend-expressive-tooling#7](https://github.com/zendframework/zend-expressive-tooling/pull/7) updates
+  the `Mezzio\Tooling\GenerateProgrammaticPipelineFromConfig\Generator`
   class such that it now:
 
-  - Adds dependency configuration for `Zend\Expressive\Middleware\ImplicitHeadMiddleware`
-  - Adds dependency configuration for `Zend\Expressive\Middleware\ImplicitOptionsMiddleware`
+  - Adds dependency configuration for `Mezzio\Middleware\ImplicitHeadMiddleware`
+  - Adds dependency configuration for `Mezzio\Middleware\ImplicitOptionsMiddleware`
   - Registers each of the above middleware immediately following the
     routing middleware in the pipeline.
 
@@ -394,8 +394,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Changed
 
-- [#6](https://github.com/zendframework/zend-expressive-tooling/pull/6) provides
-  some internal refactoring of `Zend\Expressive\Tooling\GenerateProgrammaticPipelineFromConfig\Generator`
+- [zendframework/zend-expressive-tooling#6](https://github.com/zendframework/zend-expressive-tooling/pull/6) provides
+  some internal refactoring of `Mezzio\Tooling\GenerateProgrammaticPipelineFromConfig\Generator`
   to optimize performance and maintainability when generating the routing
   statements.
 
@@ -427,15 +427,15 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#1](https://github.com/zendframework/zend-expressive-tooling/pull/1) updates
+- [zendframework/zend-expressive-tooling#1](https://github.com/zendframework/zend-expressive-tooling/pull/1) updates
   the various `Help` classes to translate a command name to be relative to the
   `vendor/bin/` directory under every operating system when run local to a
   project.
-- [#3](https://github.com/zendframework/zend-expressive-tooling/pull/3) fixes
+- [zendframework/zend-expressive-tooling#3](https://github.com/zendframework/zend-expressive-tooling/pull/3) fixes
   the top-level key used in generated configuration files to properly be
-  `zf-expressive` instead of `zf-expressive-tooling`.
-- [#5](https://github.com/zendframework/zend-expressive-tooling/pull/5) fixes
-  the help message for the `expressive-pipeline-from-config` command to detail
+  `api-tools-mezzio` instead of `api-tools-mezzio-tooling`.
+- [zendframework/zend-expressive-tooling#5](https://github.com/zendframework/zend-expressive-tooling/pull/5) fixes
+  the help message for the `mezzio-pipeline-from-config` command to detail
   what it actually does (vs what the original incarnation did).
 
 ## 0.1.1 - 2016-12-06

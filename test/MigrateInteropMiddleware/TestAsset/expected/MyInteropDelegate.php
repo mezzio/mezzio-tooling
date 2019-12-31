@@ -1,6 +1,6 @@
 <?php
 
-namespace ZendTest\Expressive\Tooling\MigrateInteropMiddleware\TestAsset;
+namespace MezzioTest\Tooling\MigrateInteropMiddleware\TestAsset;
 
 use Psr\Http\Server\RequestHandlerInterface as DelegateInterface;
 use Psr\Http\Message\ServerRequestInterface;

@@ -1,19 +1,20 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Expressive\Tooling\CreateHandler;
+namespace MezzioTest\Tooling\CreateHandler;
 
+use Mezzio\Tooling\CreateHandler\CreateHandler;
+use Mezzio\Tooling\CreateHandler\CreateHandlerException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
-use Zend\Expressive\Tooling\CreateHandler\CreateHandler;
-use Zend\Expressive\Tooling\CreateHandler\CreateHandlerException;
 
 class CreateHandlerTest extends TestCase
 {
