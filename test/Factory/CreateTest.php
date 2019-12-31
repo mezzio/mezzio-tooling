@@ -1,23 +1,24 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Expressive\Tooling\Factory;
+namespace MezzioTest\Tooling\Factory;
 
+use Mezzio\Tooling\Factory\ClassNotFoundException;
+use Mezzio\Tooling\Factory\Create;
+use Mezzio\Tooling\Factory\FactoryAlreadyExistsException;
+use Mezzio\Tooling\Factory\FactoryClassGenerator;
+use Mezzio\Tooling\Factory\FactoryWriteException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Zend\Expressive\Tooling\Factory\ClassNotFoundException;
-use Zend\Expressive\Tooling\Factory\Create;
-use Zend\Expressive\Tooling\Factory\FactoryAlreadyExistsException;
-use Zend\Expressive\Tooling\Factory\FactoryClassGenerator;
-use Zend\Expressive\Tooling\Factory\FactoryWriteException;
 
 class CreateTest extends TestCase
 {
