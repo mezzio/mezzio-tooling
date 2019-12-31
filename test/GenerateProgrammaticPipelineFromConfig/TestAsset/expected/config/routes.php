@@ -1,9 +1,10 @@
 <?php
+
 /**
- * Expressive routed middleware
+ * Mezzio routed middleware
  */
 
-/** @var \Zend\Expressive\Application $app */
+/** @var \Mezzio\Application $app */
 $app->get('/', 'App\\Action\\HomePageAction', 'home');
 $app->route('/api/posts', 'App\\Action\\PostsAction', ['GET', 'POST'], 'api.posts')
     ->setOptions([
