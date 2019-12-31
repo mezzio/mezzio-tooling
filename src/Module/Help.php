@@ -1,13 +1,14 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Expressive\Tooling\Module;
+namespace Mezzio\Tooling\Module;
 
-use Zend\Stdlib\ConsoleHelper;
+use Laminas\Stdlib\ConsoleHelper;
 
 class Help
 {
@@ -19,7 +20,7 @@ class Help
 <info>Commands:</info>
 
   <info>help</info>          Display this help/usage message
-  <info>create</info>        Create source tree for the expressive module and register it
+  <info>create</info>        Create source tree for the mezzio module and register it
   <info>register</info>      Register module in application configuration,
                        and enable autoloading of module via composer
   <info>deregister</info>    Deregister module from application configuration,
@@ -66,7 +67,7 @@ EOT;
         // Find relative command path
         $command = strtr(realpath($this->command) ?: $this->command, [
             getcwd() . DIRECTORY_SEPARATOR => '',
-            'zendframework' . DIRECTORY_SEPARATOR . 'zend-expressive-tooling' . DIRECTORY_SEPARATOR => '',
+            'laminas' . DIRECTORY_SEPARATOR . 'mezzio-tooling' . DIRECTORY_SEPARATOR => '',
         ]);
 
         $this->helper->writeLine(sprintf(
