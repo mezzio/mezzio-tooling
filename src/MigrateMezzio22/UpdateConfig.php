@@ -1,11 +1,12 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Expressive\Tooling\MigrateExpressive22;
+namespace Mezzio\Tooling\MigrateMezzio22;
 
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -21,14 +22,14 @@ class UpdateConfig
         $contents = file_get_contents($filename);
 
         $components = [
-            \Zend\Expressive\Router\ConfigProvider::class,
-            \Zend\Expressive\ConfigProvider::class,
+            \Mezzio\Router\ConfigProvider::class,
+            \Mezzio\ConfigProvider::class,
         ];
 
         $pattern = sprintf(
             "/(new (?:%s?%s)?ConfigAggregator\(\s*(?:array\(|\[)\s*)(?:\r|\n|\r\n)(\s*)/",
             preg_quote('\\'),
-            preg_quote('Zend\ConfigAggregator\\')
+            preg_quote('Laminas\ConfigAggregator\\')
         );
 
         $replacementTemplate = "\$1\n\$2\\%s::class,\n\$2";

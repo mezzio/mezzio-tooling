@@ -1,19 +1,20 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Expressive\Tooling\MigrateExpressive22;
+namespace MezzioTest\Tooling\MigrateMezzio22;
 
+use Mezzio\Tooling\MigrateMezzio22\MigrateMezzio22Command;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use ReflectionMethod;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Zend\Expressive\Tooling\MigrateExpressive22\MigrateExpressive22Command;
 
 /**
  * @runTestsInSeparateProcesses
@@ -23,8 +24,8 @@ class MigrateOriginalMessageCallsCommandTest extends TestCase
 {
     protected function setUp()
     {
-        $this->root = vfsStream::setup('expressive22');
-        $this->url = vfsStream::url('expressive22');
+        $this->root = vfsStream::setup('mezzio22');
+        $this->url = vfsStream::url('mezzio22');
         mkdir($this->url . '/config');
         touch($this->url . '/config/config.php');
         touch($this->url . '/config/pipeline.php');
@@ -32,7 +33,7 @@ class MigrateOriginalMessageCallsCommandTest extends TestCase
         $this->input = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(OutputInterface::class);
 
-        $this->command = new MigrateExpressive22Command('migrate:expressive-v2.2');
+        $this->command = new MigrateMezzio22Command('migrate:mezzio-v2.2');
         $this->command->setProjectDir($this->url);
     }
 
@@ -45,12 +46,12 @@ class MigrateOriginalMessageCallsCommandTest extends TestCase
 
     public function testConfigureSetsExpectedDescription()
     {
-        $this->assertContains('Migrate an Expressive application to version 2.2', $this->command->getDescription());
+        $this->assertContains('Migrate an Mezzio application to version 2.2', $this->command->getDescription());
     }
 
     public function testConfigureSetsExpectedHelp()
     {
-        $this->assertEquals(MigrateExpressive22Command::HELP, $this->command->getHelp());
+        $this->assertEquals(MigrateMezzio22Command::HELP, $this->command->getHelp());
     }
 
     public function testCommandUpdatesConfigAndPipeline()
@@ -62,15 +63,15 @@ class MigrateOriginalMessageCallsCommandTest extends TestCase
         file_put_contents($pipeline, $this->getOriginalPipeline());
 
         $this->output
-            ->writeln(Argument::containingString('Migrating application to Expressive 2.2'))
+            ->writeln(Argument::containingString('Migrating application to Mezzio 2.2'))
             ->shouldBeCalled();
 
         $this->output->writeln(Argument::containingString('- Updating config/config.php'))->shouldBeCalled();
         $this->output
-            ->writeln(Argument::containingString('Adding Zend\Expressive\Router\ConfigProvider to config'))
+            ->writeln(Argument::containingString('Adding Mezzio\Router\ConfigProvider to config'))
             ->shouldBeCalled();
         $this->output
-            ->writeln(Argument::containingString('Adding Zend\Expressive\ConfigProvider to config'))
+            ->writeln(Argument::containingString('Adding Mezzio\ConfigProvider to config'))
             ->shouldBeCalled();
 
         $this->output
@@ -112,9 +113,9 @@ class MigrateOriginalMessageCallsCommandTest extends TestCase
         return <<< 'EOT'
 <?php
 
-use Zend\ConfigAggregator\ArrayProvider;
-use Zend\ConfigAggregator\ConfigAggregator;
-use Zend\ConfigAggregator\PhpFileProvider;
+use Laminas\ConfigAggregator\ArrayProvider;
+use Laminas\ConfigAggregator\ConfigAggregator;
+use Laminas\ConfigAggregator\PhpFileProvider;
 
 // To enable or disable caching, set the `ConfigAggregator::ENABLE_CACHE` boolean in
 // `config/autoload/local.php`.
@@ -149,8 +150,8 @@ EOT;
     {
         return <<< 'EOT'
 $app->pipeRoutingMiddleware();
-$app->pipe(\Zend\Expressive\Middleware\ImplicitHeadMiddleware::class);
-$app->pipe(\Zend\Expressive\Middleware\ImplicitOptionsMiddleware::class);
+$app->pipe(\Mezzio\Middleware\ImplicitHeadMiddleware::class);
+$app->pipe(\Mezzio\Middleware\ImplicitOptionsMiddleware::class);
 $app->pipeDispatchMiddleware();
 EOT;
     }
@@ -160,9 +161,9 @@ EOT;
         return <<< 'EOT'
 <?php
 
-use Zend\ConfigAggregator\ArrayProvider;
-use Zend\ConfigAggregator\ConfigAggregator;
-use Zend\ConfigAggregator\PhpFileProvider;
+use Laminas\ConfigAggregator\ArrayProvider;
+use Laminas\ConfigAggregator\ConfigAggregator;
+use Laminas\ConfigAggregator\PhpFileProvider;
 
 // To enable or disable caching, set the `ConfigAggregator::ENABLE_CACHE` boolean in
 // `config/autoload/local.php`.
@@ -171,8 +172,8 @@ $cacheConfig = [
 ];
 
 $aggregator = new ConfigAggregator([
-    \Zend\Expressive\ConfigProvider::class,
-    \Zend\Expressive\Router\ConfigProvider::class,
+    \Mezzio\ConfigProvider::class,
+    \Mezzio\Router\ConfigProvider::class,
     // Include cache configuration
     new ArrayProvider($cacheConfig),
 
@@ -198,10 +199,10 @@ EOT;
     public function getExpectedPipeline()
     {
         return <<< 'EOT'
-$app->pipe(\Zend\Expressive\Router\Middleware\RouteMiddleware::class);
-$app->pipe(\Zend\Expressive\Router\Middleware\ImplicitHeadMiddleware::class);
-$app->pipe(\Zend\Expressive\Router\Middleware\ImplicitOptionsMiddleware::class);
-$app->pipe(\Zend\Expressive\Router\Middleware\DispatchMiddleware::class);
+$app->pipe(\Mezzio\Router\Middleware\RouteMiddleware::class);
+$app->pipe(\Mezzio\Router\Middleware\ImplicitHeadMiddleware::class);
+$app->pipe(\Mezzio\Router\Middleware\ImplicitOptionsMiddleware::class);
+$app->pipe(\Mezzio\Router\Middleware\DispatchMiddleware::class);
 EOT;
     }
 }

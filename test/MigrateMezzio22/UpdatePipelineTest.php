@@ -1,24 +1,25 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Expressive\Tooling\MigrateExpressive22;
+namespace MezzioTest\Tooling\MigrateMezzio22;
 
+use Mezzio\Tooling\MigrateMezzio22\UpdatePipeline;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Symfony\Component\Console\Output\OutputInterface;
-use Zend\Expressive\Tooling\MigrateExpressive22\UpdatePipeline;
 
 class UpdatePipelineTest extends TestCase
 {
     public function setUp()
     {
-        $this->root = vfsStream::setup('expressive22');
-        $this->url = vfsStream::url('expressive22');
+        $this->root = vfsStream::setup('mezzio22');
+        $this->url = vfsStream::url('mezzio22');
         mkdir($this->url . '/config');
         touch($this->url . '/config/pipeline.php');
     }
@@ -27,17 +28,17 @@ class UpdatePipelineTest extends TestCase
     {
         $originalContents = <<< 'EOT'
 $app->pipeRoutingMiddleware();
-$app->pipe(\Zend\Expressive\Middleware\ImplicitHeadMiddleware::class);
-$app->pipe(\Zend\Expressive\Middleware\ImplicitOptionsMiddleware::class);
+$app->pipe(\Mezzio\Middleware\ImplicitHeadMiddleware::class);
+$app->pipe(\Mezzio\Middleware\ImplicitOptionsMiddleware::class);
 $app->pipeDispatchMiddleware();
 EOT;
         file_put_contents($this->url . '/config/pipeline.php', $originalContents);
 
         $expectedContents = <<< 'EOT'
-$app->pipe(\Zend\Expressive\Router\Middleware\RouteMiddleware::class);
-$app->pipe(\Zend\Expressive\Router\Middleware\ImplicitHeadMiddleware::class);
-$app->pipe(\Zend\Expressive\Router\Middleware\ImplicitOptionsMiddleware::class);
-$app->pipe(\Zend\Expressive\Router\Middleware\DispatchMiddleware::class);
+$app->pipe(\Mezzio\Router\Middleware\RouteMiddleware::class);
+$app->pipe(\Mezzio\Router\Middleware\ImplicitHeadMiddleware::class);
+$app->pipe(\Mezzio\Router\Middleware\ImplicitOptionsMiddleware::class);
+$app->pipe(\Mezzio\Router\Middleware\DispatchMiddleware::class);
 EOT;
 
         $output = $this->prophesize(OutputInterface::class);
@@ -56,14 +57,14 @@ EOT;
     public function testUpdatesPipelineReferencingRelativeNames()
     {
         $originalContents = <<< 'EOT'
-$app->pipe(Zend\Expressive\Middleware\ImplicitHeadMiddleware::class);
-$app->pipe(Zend\Expressive\Middleware\ImplicitOptionsMiddleware::class);
+$app->pipe(Mezzio\Middleware\ImplicitHeadMiddleware::class);
+$app->pipe(Mezzio\Middleware\ImplicitOptionsMiddleware::class);
 EOT;
         file_put_contents($this->url . '/config/pipeline.php', $originalContents);
 
         $expectedContents = <<< 'EOT'
-$app->pipe(\Zend\Expressive\Router\Middleware\ImplicitHeadMiddleware::class);
-$app->pipe(\Zend\Expressive\Router\Middleware\ImplicitOptionsMiddleware::class);
+$app->pipe(\Mezzio\Router\Middleware\ImplicitHeadMiddleware::class);
+$app->pipe(\Mezzio\Router\Middleware\ImplicitOptionsMiddleware::class);
 EOT;
 
         $output = $this->prophesize(OutputInterface::class);
@@ -86,8 +87,8 @@ EOT;
         file_put_contents($this->url . '/config/pipeline.php', $originalContents);
 
         $expectedContents = <<< 'EOT'
-$app->pipe(\Zend\Expressive\Router\Middleware\ImplicitHeadMiddleware::class);
-$app->pipe(\Zend\Expressive\Router\Middleware\ImplicitOptionsMiddleware::class);
+$app->pipe(\Mezzio\Router\Middleware\ImplicitHeadMiddleware::class);
+$app->pipe(\Mezzio\Router\Middleware\ImplicitOptionsMiddleware::class);
 EOT;
 
         $output = $this->prophesize(OutputInterface::class);
@@ -110,8 +111,8 @@ EOT;
         file_put_contents($this->url . '/config/pipeline.php', $originalContents);
 
         $expectedContents = <<< 'EOT'
-$app->pipe(\Zend\Expressive\Router\Middleware\RouteMiddleware::class);
-$app->pipe(\Zend\Expressive\Router\Middleware\DispatchMiddleware::class);
+$app->pipe(\Mezzio\Router\Middleware\RouteMiddleware::class);
+$app->pipe(\Mezzio\Router\Middleware\DispatchMiddleware::class);
 EOT;
 
         $output = $this->prophesize(OutputInterface::class);
