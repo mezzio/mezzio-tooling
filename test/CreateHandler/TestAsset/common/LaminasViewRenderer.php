@@ -8,14 +8,11 @@
 
 declare(strict_types=1);
 
-namespace MezzioTest\Tooling\MigrateInteropMiddleware\TestAsset;
+namespace Mezzio\LaminasView;
 
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Psr\Http\Message\ServerRequestInterface;
-
-class MyInteropDelegate implements DelegateInterface
+/**
+ * Dummy class for testing template generation.
+ */
+class LaminasViewRenderer
 {
-    public function process(ServerRequestInterface $request)
-    {
-    }
 }
