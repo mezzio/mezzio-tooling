@@ -1,14 +1,19 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Expressive\Tooling\Module;
+namespace MezzioTest\Tooling\Module;
 
+use Laminas\ComponentInstaller\Injector\ConfigAggregatorInjector;
+use Laminas\ComposerAutoloading\Command\Disable;
+use Laminas\ComposerAutoloading\Exception\RuntimeException;
+use Mezzio\Tooling\Module\DeregisterCommand;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
@@ -19,10 +24,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionMethod;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
-use Zend\ComponentInstaller\Injector\ConfigAggregatorInjector;
-use Zend\Expressive\Tooling\Module\DeregisterCommand;
-use ZF\ComposerAutoloading\Command\Disable;
-use ZF\ComposerAutoloading\Exception\RuntimeException;
 
 class DeregisterCommandTest extends TestCase
 {

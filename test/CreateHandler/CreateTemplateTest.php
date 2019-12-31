@@ -1,29 +1,30 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2017-2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Expressive\Tooling\CreateHandler;
+namespace MezzioTest\Tooling\CreateHandler;
 
 use ArrayObject;
 use Generator;
+use Mezzio\LaminasView\LaminasViewRenderer;
+use Mezzio\Plates\PlatesRenderer;
+use Mezzio\Template\TemplateRendererInterface;
+use Mezzio\Tooling\CreateHandler\CreateTemplate;
+use Mezzio\Tooling\CreateHandler\TemplatePathResolutionException;
+use Mezzio\Tooling\CreateHandler\UnresolvableRendererException;
+use Mezzio\Twig\TwigRenderer;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use ReflectionProperty;
-use Zend\Expressive\Plates\PlatesRenderer;
-use Zend\Expressive\Template\TemplateRendererInterface;
-use Zend\Expressive\Twig\TwigRenderer;
-use Zend\Expressive\ZendView\ZendViewRenderer;
-use Zend\Expressive\Tooling\CreateHandler\CreateTemplate;
-use Zend\Expressive\Tooling\CreateHandler\TemplatePathResolutionException;
-use Zend\Expressive\Tooling\CreateHandler\UnresolvableRendererException;
 
 /**
  * @runTestsInSeparateProcesses
@@ -33,7 +34,7 @@ class CreateTemplateTest extends TestCase
     private const COMMON_FILES = [
         '/TestAsset/common/PlatesRenderer.php'   => '/src/PlatesRenderer.php',
         '/TestAsset/common/TwigRenderer.php'     => '/src/TwigRenderer.php',
-        '/TestAsset/common/ZendViewRenderer.php' => '/src/ZendViewRenderer.php',
+        '/TestAsset/common/LaminasViewRenderer.php' => '/src/LaminasViewRenderer.php',
     ];
 
     /** @var ContainerInterface|ObjectProphecy */
@@ -45,7 +46,7 @@ class CreateTemplateTest extends TestCase
     /** @var string */
     private $projectRoot;
 
-    /** @var PlatesRenderer|TwigRenderer|ZendViewRenderer */
+    /** @var PlatesRenderer|TwigRenderer|LaminasViewRenderer */
     private $renderer;
 
     protected function setUp() : void
@@ -110,7 +111,7 @@ class CreateTemplateTest extends TestCase
         return [
             PlatesRenderer::class   => [PlatesRenderer::class, 'phtml'],
             TwigRenderer::class     => [TwigRenderer::class, 'html.twig'],
-            ZendViewRenderer::class => [ZendViewRenderer::class, 'phtml'],
+            LaminasViewRenderer::class => [LaminasViewRenderer::class, 'phtml'],
         ];
     }
 
