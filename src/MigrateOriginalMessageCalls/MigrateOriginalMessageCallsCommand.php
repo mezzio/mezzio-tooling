@@ -1,11 +1,12 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-expressive-tooling for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-expressive-tooling/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-tooling for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-tooling/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-tooling/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Expressive\Tooling\MigrateOriginalMessageCalls;
+namespace Mezzio\Tooling\MigrateOriginalMessageCalls;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,7 +18,7 @@ class MigrateOriginalMessageCallsCommand extends Command
     const DEFAULT_SRC = '/src';
 
     const HELP = <<< 'EOT'
-Migrate an Expressive application to remove calls to legacy
+Migrate an Mezzio application to remove calls to legacy
 request/response methods.
 
 Scans all PHP files under the --src directory for any calls to
