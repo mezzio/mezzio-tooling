@@ -76,6 +76,6 @@
         "license-check": "docheader check src/"
     },
     "replace": {
-        "zendframework/zend-expressive-tooling": "self.version"
+        "zendframework/zend-expressive-tooling": "^1.3.0"
     }
 }
