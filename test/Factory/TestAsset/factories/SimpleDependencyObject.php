@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MezzioTest\Tooling\Factory\TestAsset;
 
-use Psr\Container\ContainerInterface;
 use MezzioTest\Tooling\Factory\TestAsset\InvokableObject;
+use Psr\Container\ContainerInterface;
 
 class SimpleDependencyObjectFactory
 {
