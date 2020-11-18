@@ -21,6 +21,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use ReflectionMethod;
@@ -39,6 +40,7 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 class CreateHandlerCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ProphecyTrait;
 
     /** @var ContainerInterface|ObjectProphecy */
     private $container;
@@ -113,25 +115,25 @@ class CreateHandlerCommandTest extends TestCase
     public function testConfigureSetsExpectedDescriptionWhenRequestingAHandler()
     {
         $command = $this->createCommand();
-        $this->assertStringContainsString(CreateHandlerCommand::HELP_HANDLER_DESCRIPTION, $command->getDescription());
+        self::assertStringContainsString(CreateHandlerCommand::HELP_HANDLER_DESCRIPTION, $command->getDescription());
     }
 
     public function testConfigureSetsExpectedDescriptionWhenRequestingAnAction()
     {
         $command = new CreateHandlerCommand('action:create', null, $this->container->reveal());
-        $this->assertStringContainsString(CreateHandlerCommand::HELP_ACTION_DESCRIPTION, $command->getDescription());
+        self::assertStringContainsString(CreateHandlerCommand::HELP_ACTION_DESCRIPTION, $command->getDescription());
     }
 
     public function testConfigureSetsExpectedHelpWhenRequestingAHandler()
     {
         $command = $this->createCommand();
-        $this->assertEquals(CreateHandlerCommand::HELP_HANDLER, $command->getHelp());
+        self::assertEquals(CreateHandlerCommand::HELP_HANDLER, $command->getHelp());
     }
 
     public function testConfigureSetsExpectedHelpWhenRequestingAnAction()
     {
         $command = new CreateHandlerCommand('action:create', null, $this->container->reveal());
-        $this->assertEquals(CreateHandlerCommand::HELP_ACTION, $command->getHelp());
+        self::assertEquals(CreateHandlerCommand::HELP_ACTION, $command->getHelp());
     }
 
     public function testConfigureSetsExpectedArgumentsWhenRequestingAHandler()
@@ -139,22 +141,22 @@ class CreateHandlerCommandTest extends TestCase
         $command = $this->createCommand();
         $definition = $command->getDefinition();
 
-        $this->assertTrue($definition->hasArgument('handler'));
-        $this->assertFalse($definition->hasArgument('action'));
+        self::assertTrue($definition->hasArgument('handler'));
+        self::assertFalse($definition->hasArgument('action'));
         $argument = $definition->getArgument('handler');
-        $this->assertTrue($argument->isRequired());
-        $this->assertEquals(CreateHandlerCommand::HELP_HANDLER_ARG_HANDLER, $argument->getDescription());
+        self::assertTrue($argument->isRequired());
+        self::assertEquals(CreateHandlerCommand::HELP_HANDLER_ARG_HANDLER, $argument->getDescription());
     }
 
     public function testConfigureSetsExpectedArgumentsWhenRequestingAnAction()
     {
         $command = new CreateHandlerCommand('action:create', null, $this->container->reveal());
         $definition = $command->getDefinition();
-        $this->assertTrue($definition->hasArgument('action'));
-        $this->assertFalse($definition->hasArgument('handler'));
+        self::assertTrue($definition->hasArgument('action'));
+        self::assertFalse($definition->hasArgument('handler'));
         $argument = $definition->getArgument('action');
-        $this->assertTrue($argument->isRequired());
-        $this->assertEquals(CreateHandlerCommand::HELP_ACTION_ARG_ACTION, $argument->getDescription());
+        self::assertTrue($argument->isRequired());
+        self::assertEquals(CreateHandlerCommand::HELP_ACTION_ARG_ACTION, $argument->getDescription());
     }
 
     public function testConfigureSetsExpectedOptionsWhenRequestingAHandler()
@@ -162,20 +164,20 @@ class CreateHandlerCommandTest extends TestCase
         $command = $this->createCommand();
         $definition = $command->getDefinition();
 
-        $this->assertTrue($definition->hasOption('no-factory'));
+        self::assertTrue($definition->hasOption('no-factory'));
         $option = $definition->getOption('no-factory');
-        $this->assertFalse($option->acceptValue());
-        $this->assertEquals(CreateHandlerCommand::HELP_HANDLER_OPT_NO_FACTORY, $option->getDescription());
+        self::assertFalse($option->acceptValue());
+        self::assertEquals(CreateHandlerCommand::HELP_HANDLER_OPT_NO_FACTORY, $option->getDescription());
 
-        $this->assertTrue($definition->hasOption('no-register'));
+        self::assertTrue($definition->hasOption('no-register'));
         $option = $definition->getOption('no-register');
-        $this->assertFalse($option->acceptValue());
-        $this->assertEquals(CreateHandlerCommand::HELP_HANDLER_OPT_NO_REGISTER, $option->getDescription());
+        self::assertFalse($option->acceptValue());
+        self::assertEquals(CreateHandlerCommand::HELP_HANDLER_OPT_NO_REGISTER, $option->getDescription());
 
-        $this->assertFalse($definition->hasOption('without-template'));
-        $this->assertFalse($definition->hasOption('with-template-namespace'));
-        $this->assertFalse($definition->hasOption('with-template-name'));
-        $this->assertFalse($definition->hasOption('with-template-extension'));
+        self::assertFalse($definition->hasOption('without-template'));
+        self::assertFalse($definition->hasOption('with-template-namespace'));
+        self::assertFalse($definition->hasOption('with-template-name'));
+        self::assertFalse($definition->hasOption('with-template-extension'));
     }
 
     public function testConfigureSetsExpectedOptionsWhenRequestingAnAction()
@@ -183,20 +185,20 @@ class CreateHandlerCommandTest extends TestCase
         $command = new CreateHandlerCommand('action:create', null, $this->container->reveal());
         $definition = $command->getDefinition();
 
-        $this->assertTrue($definition->hasOption('no-factory'));
+        self::assertTrue($definition->hasOption('no-factory'));
         $option = $definition->getOption('no-factory');
-        $this->assertFalse($option->acceptValue());
-        $this->assertEquals(CreateHandlerCommand::HELP_ACTION_OPT_NO_FACTORY, $option->getDescription());
+        self::assertFalse($option->acceptValue());
+        self::assertEquals(CreateHandlerCommand::HELP_ACTION_OPT_NO_FACTORY, $option->getDescription());
 
-        $this->assertTrue($definition->hasOption('no-register'));
+        self::assertTrue($definition->hasOption('no-register'));
         $option = $definition->getOption('no-register');
-        $this->assertFalse($option->acceptValue());
-        $this->assertEquals(CreateHandlerCommand::HELP_ACTION_OPT_NO_REGISTER, $option->getDescription());
+        self::assertFalse($option->acceptValue());
+        self::assertEquals(CreateHandlerCommand::HELP_ACTION_OPT_NO_REGISTER, $option->getDescription());
 
-        $this->assertFalse($definition->hasOption('without-template'));
-        $this->assertFalse($definition->hasOption('with-template-namespace'));
-        $this->assertFalse($definition->hasOption('with-template-name'));
-        $this->assertFalse($definition->hasOption('with-template-extension'));
+        self::assertFalse($definition->hasOption('without-template'));
+        self::assertFalse($definition->hasOption('with-template-namespace'));
+        self::assertFalse($definition->hasOption('with-template-name'));
+        self::assertFalse($definition->hasOption('with-template-extension'));
     }
 
     public function testConfigureSetsExpectedTemplateOptionsWhenRequestingAHandlerAndRendererIsPresent()
@@ -205,25 +207,25 @@ class CreateHandlerCommandTest extends TestCase
         $command = new CreateHandlerCommand('handler:create', null, $this->container->reveal());
         $definition = $command->getDefinition();
 
-        $this->assertTrue($definition->hasOption('without-template'));
+        self::assertTrue($definition->hasOption('without-template'));
         $option = $definition->getOption('without-template');
-        $this->assertFalse($option->acceptValue());
-        $this->assertEquals(CreateHandlerCommand::HELP_OPTION_WITHOUT_TEMPLATE, $option->getDescription());
+        self::assertFalse($option->acceptValue());
+        self::assertEquals(CreateHandlerCommand::HELP_OPTION_WITHOUT_TEMPLATE, $option->getDescription());
 
-        $this->assertTrue($definition->hasOption('with-template-namespace'));
+        self::assertTrue($definition->hasOption('with-template-namespace'));
         $option = $definition->getOption('with-template-namespace');
-        $this->assertTrue($option->acceptValue());
-        $this->assertEquals(CreateHandlerCommand::HELP_OPTION_WITH_TEMPLATE_NAMESPACE, $option->getDescription());
+        self::assertTrue($option->acceptValue());
+        self::assertEquals(CreateHandlerCommand::HELP_OPTION_WITH_TEMPLATE_NAMESPACE, $option->getDescription());
 
-        $this->assertTrue($definition->hasOption('with-template-name'));
+        self::assertTrue($definition->hasOption('with-template-name'));
         $option = $definition->getOption('with-template-name');
-        $this->assertTrue($option->acceptValue());
-        $this->assertEquals(CreateHandlerCommand::HELP_OPTION_WITH_TEMPLATE_NAME, $option->getDescription());
+        self::assertTrue($option->acceptValue());
+        self::assertEquals(CreateHandlerCommand::HELP_OPTION_WITH_TEMPLATE_NAME, $option->getDescription());
 
-        $this->assertTrue($definition->hasOption('with-template-extension'));
+        self::assertTrue($definition->hasOption('with-template-extension'));
         $option = $definition->getOption('with-template-extension');
-        $this->assertTrue($option->acceptValue());
-        $this->assertEquals(CreateHandlerCommand::HELP_OPTION_WITH_TEMPLATE_EXTENSION, $option->getDescription());
+        self::assertTrue($option->acceptValue());
+        self::assertEquals(CreateHandlerCommand::HELP_OPTION_WITH_TEMPLATE_EXTENSION, $option->getDescription());
     }
 
     public function testConfigureSetsExpectedTemplateOptionsWhenRequestingAnActionAndRendererIsPresent()
@@ -232,25 +234,25 @@ class CreateHandlerCommandTest extends TestCase
         $command = new CreateHandlerCommand('action:create', null, $this->container->reveal());
         $definition = $command->getDefinition();
 
-        $this->assertTrue($definition->hasOption('without-template'));
+        self::assertTrue($definition->hasOption('without-template'));
         $option = $definition->getOption('without-template');
-        $this->assertFalse($option->acceptValue());
-        $this->assertEquals(CreateHandlerCommand::HELP_OPTION_WITHOUT_TEMPLATE, $option->getDescription());
+        self::assertFalse($option->acceptValue());
+        self::assertEquals(CreateHandlerCommand::HELP_OPTION_WITHOUT_TEMPLATE, $option->getDescription());
 
-        $this->assertTrue($definition->hasOption('with-template-namespace'));
+        self::assertTrue($definition->hasOption('with-template-namespace'));
         $option = $definition->getOption('with-template-namespace');
-        $this->assertTrue($option->acceptValue());
-        $this->assertEquals(CreateHandlerCommand::HELP_OPTION_WITH_TEMPLATE_NAMESPACE, $option->getDescription());
+        self::assertTrue($option->acceptValue());
+        self::assertEquals(CreateHandlerCommand::HELP_OPTION_WITH_TEMPLATE_NAMESPACE, $option->getDescription());
 
-        $this->assertTrue($definition->hasOption('with-template-name'));
+        self::assertTrue($definition->hasOption('with-template-name'));
         $option = $definition->getOption('with-template-name');
-        $this->assertTrue($option->acceptValue());
-        $this->assertEquals(CreateHandlerCommand::HELP_OPTION_WITH_TEMPLATE_NAME, $option->getDescription());
+        self::assertTrue($option->acceptValue());
+        self::assertEquals(CreateHandlerCommand::HELP_OPTION_WITH_TEMPLATE_NAME, $option->getDescription());
 
-        $this->assertTrue($definition->hasOption('with-template-extension'));
+        self::assertTrue($definition->hasOption('with-template-extension'));
         $option = $definition->getOption('with-template-extension');
-        $this->assertTrue($option->acceptValue());
-        $this->assertEquals(CreateHandlerCommand::HELP_OPTION_WITH_TEMPLATE_EXTENSION, $option->getDescription());
+        self::assertTrue($option->acceptValue());
+        self::assertEquals(CreateHandlerCommand::HELP_OPTION_WITH_TEMPLATE_EXTENSION, $option->getDescription());
     }
 
     public function testSuccessfulExecutionEmitsExpectedMessages()
@@ -280,7 +282,7 @@ class CreateHandlerCommandTest extends TestCase
 
         $method = $this->reflectExecuteMethod($command);
 
-        $this->assertSame(0, $method->invoke(
+        self::assertSame(0, $method->invoke(
             $command,
             $this->input->reveal(),
             $this->output->reveal()
@@ -314,7 +316,7 @@ class CreateHandlerCommandTest extends TestCase
 
         $method = $this->reflectExecuteMethod($command);
 
-        $this->assertSame(0, $method->invoke(
+        self::assertSame(0, $method->invoke(
             $command,
             $this->input->reveal(),
             $this->output->reveal()
@@ -384,7 +386,7 @@ class CreateHandlerCommandTest extends TestCase
 
         $method = $this->reflectExecuteMethod($command);
 
-        $this->assertSame(0, $method->invoke(
+        self::assertSame(0, $method->invoke(
             $command,
             $this->input->reveal(),
             $this->output->reveal()
@@ -461,7 +463,7 @@ class CreateHandlerCommandTest extends TestCase
 
         $method = $this->reflectExecuteMethod($command);
 
-        $this->assertSame(0, $method->invoke(
+        self::assertSame(0, $method->invoke(
             $command,
             $this->input->reveal(),
             $this->output->reveal()
@@ -511,7 +513,7 @@ class CreateHandlerCommandTest extends TestCase
 
         $method = $this->reflectExecuteMethod($command);
 
-        $this->assertSame(0, $method->invoke(
+        self::assertSame(0, $method->invoke(
             $command,
             $this->input->reveal(),
             $this->output->reveal()

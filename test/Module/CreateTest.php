@@ -60,7 +60,7 @@ class CreateTest extends TestCase
         $baseModulePath = sprintf('%s/my-modules/MyApp', $this->dir->url());
 
         $mkdir = $this->getFunctionMock('Mezzio\Tooling\Module', 'mkdir');
-        $mkdir->expects($this->once())
+        $mkdir->expects(self::once())
             ->with($baseModulePath)
             ->willReturn(false);
 
@@ -77,11 +77,11 @@ class CreateTest extends TestCase
         $baseModulePath = sprintf('%s/my-modules/MyApp', $this->dir->url());
 
         $mkdir = $this->getFunctionMock('Mezzio\Tooling\Module', 'mkdir');
-        $mkdir->expects($this->at(0))
+        $mkdir->expects(self::at(0))
             ->with($baseModulePath)
             ->willReturn(true);
 
-        $mkdir->expects($this->at(1))
+        $mkdir->expects(self::at(1))
             ->with(sprintf('%s/src', $baseModulePath))
             ->willReturn(false);
 
@@ -98,15 +98,15 @@ class CreateTest extends TestCase
         $baseModulePath = sprintf('%s/my-modules/MyApp', $this->dir->url());
 
         $mkdir = $this->getFunctionMock('Mezzio\Tooling\Module', 'mkdir');
-        $mkdir->expects($this->at(0))
+        $mkdir->expects(self::at(0))
             ->with($baseModulePath)
             ->willReturn(true);
 
-        $mkdir->expects($this->at(1))
+        $mkdir->expects(self::at(1))
             ->with(sprintf('%s/src', $baseModulePath))
             ->willReturn(true);
 
-        $mkdir->expects($this->at(2))
+        $mkdir->expects(self::at(2))
             ->with(sprintf('%s/templates', $baseModulePath))
             ->willReturn(false);
 
@@ -121,17 +121,17 @@ class CreateTest extends TestCase
     public function testCreatesConfigProvider()
     {
         $configProvider = vfsStream::url('project/my-modules/MyApp/src/ConfigProvider.php');
-        $this->assertEquals(
+        self::assertEquals(
             sprintf('Created module MyApp in %s/MyApp', $this->modulesDir->url()),
             $this->command->process('MyApp', $this->modulesPath, $this->projectDir)
         );
-        $this->assertFileExists($configProvider);
+        self::assertFileExists($configProvider);
         $configProviderContent = file_get_contents($configProvider);
-        $this->assertSame(1, preg_match('/\bnamespace MyApp\b/', $configProviderContent));
-        $this->assertSame(1, preg_match('/\bclass ConfigProvider\b/', $configProviderContent));
+        self::assertSame(1, preg_match('/\bnamespace MyApp\b/', $configProviderContent));
+        self::assertSame(1, preg_match('/\bclass ConfigProvider\b/', $configProviderContent));
         $command = $this->command;
         $expectedContent = sprintf($command::TEMPLATE_CONFIG_PROVIDER, 'MyApp', 'my-app');
-        $this->assertSame($expectedContent, $configProviderContent);
+        self::assertSame($expectedContent, $configProviderContent);
     }
 
     public function testModuleTemplatePathNameWithNumber()
@@ -141,7 +141,7 @@ class CreateTest extends TestCase
         $configProviderContent = file_get_contents($configProvider);
         $command = $this->command;
         $expectedContent = sprintf($command::TEMPLATE_CONFIG_PROVIDER, 'My2App', 'my2-app');
-        $this->assertSame($expectedContent, $configProviderContent);
+        self::assertSame($expectedContent, $configProviderContent);
     }
 
     public function testModuleTemplatePathNameWithSequentialUppercase()
@@ -151,6 +151,6 @@ class CreateTest extends TestCase
         $configProviderContent = file_get_contents($configProvider);
         $command = $this->command;
         $expectedContent = sprintf($command::TEMPLATE_CONFIG_PROVIDER, 'THEApp', 'the-app');
-        $this->assertSame($expectedContent, $configProviderContent);
+        self::assertSame($expectedContent, $configProviderContent);
     }
 }

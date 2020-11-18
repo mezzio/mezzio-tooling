@@ -129,16 +129,16 @@ class CreateHandlerTest extends TestCase
         $generator = new CreateHandler(CreateHandler::CLASS_SKELETON, $this->projectRoot);
 
         $expectedPath = vfsStream::url('project/src/Foo/BarHandler.php');
-        $this->assertEquals(
+        self::assertEquals(
             $expectedPath,
             $generator->process('Foo\BarHandler')
         );
 
         $classFileContents = file_get_contents($expectedPath);
-        $this->assertRegexp('#^\<\?php#s', $classFileContents);
-        $this->assertRegexp('#^namespace Foo;$#m', $classFileContents);
-        $this->assertRegexp('#^class BarHandler implements RequestHandlerInterface$#m', $classFileContents);
-        $this->assertRegexp(
+        self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
+        self::assertMatchesRegularExpression('#^namespace Foo;$#m', $classFileContents);
+        self::assertMatchesRegularExpression('#^class BarHandler implements RequestHandlerInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
             '#^\s{4}public function handle\(ServerRequestInterface \$request\) : ResponseInterface$#m',
             $classFileContents
         );
@@ -159,16 +159,16 @@ class CreateHandlerTest extends TestCase
         $generator = new CreateHandler(CreateHandler::CLASS_SKELETON, $this->projectRoot);
 
         $expectedPath = vfsStream::url('project/src/Foo/Bar/BazHandler.php');
-        $this->assertEquals(
+        self::assertEquals(
             $expectedPath,
             $generator->process('Foo\Bar\BazHandler')
         );
 
         $classFileContents = file_get_contents($expectedPath);
-        $this->assertRegexp('#^\<\?php#s', $classFileContents);
-        $this->assertRegexp('#^namespace Foo\\\\Bar;$#m', $classFileContents);
-        $this->assertRegexp('#^class BazHandler implements RequestHandlerInterface$#m', $classFileContents);
-        $this->assertRegexp(
+        self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
+        self::assertMatchesRegularExpression('#^namespace Foo\\\\Bar;$#m', $classFileContents);
+        self::assertMatchesRegularExpression('#^class BazHandler implements RequestHandlerInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
             '#^\s{4}public function handle\(ServerRequestInterface \$request\) : ResponseInterface$#m',
             $classFileContents
         );
@@ -189,16 +189,16 @@ class CreateHandlerTest extends TestCase
         $generator = new CreateHandler(CreateHandler::CLASS_SKELETON, $this->projectRoot);
 
         $expectedPath = vfsStream::url('project/src/Foo/src/BarHandler.php');
-        $this->assertEquals(
+        self::assertEquals(
             $expectedPath,
             $generator->process('Foo\BarHandler')
         );
 
         $classFileContents = file_get_contents($expectedPath);
-        $this->assertRegexp('#^\<\?php#s', $classFileContents);
-        $this->assertRegexp('#^namespace Foo;$#m', $classFileContents);
-        $this->assertRegexp('#^class BarHandler implements RequestHandlerInterface$#m', $classFileContents);
-        $this->assertRegexp(
+        self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
+        self::assertMatchesRegularExpression('#^namespace Foo;$#m', $classFileContents);
+        self::assertMatchesRegularExpression('#^class BarHandler implements RequestHandlerInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
             '#^\s{4}public function handle\(ServerRequestInterface \$request\) : ResponseInterface$#m',
             $classFileContents
         );
@@ -219,16 +219,16 @@ class CreateHandlerTest extends TestCase
         $generator = new CreateHandler(CreateHandler::CLASS_SKELETON, $this->projectRoot);
 
         $expectedPath = vfsStream::url('project/src/Foo/src/Bar/BazHandler.php');
-        $this->assertEquals(
+        self::assertEquals(
             $expectedPath,
             $generator->process('Foo\Bar\BazHandler')
         );
 
         $classFileContents = file_get_contents($expectedPath);
-        $this->assertRegexp('#^\<\?php#s', $classFileContents);
-        $this->assertRegexp('#^namespace Foo\\\\Bar;$#m', $classFileContents);
-        $this->assertRegexp('#^class BazHandler implements RequestHandlerInterface$#m', $classFileContents);
-        $this->assertRegexp(
+        self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
+        self::assertMatchesRegularExpression('#^namespace Foo\\\\Bar;$#m', $classFileContents);
+        self::assertMatchesRegularExpression('#^class BazHandler implements RequestHandlerInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
             '#^\s{4}public function handle\(ServerRequestInterface \$request\) : ResponseInterface$#m',
             $classFileContents
         );
@@ -270,12 +270,12 @@ class CreateHandlerTest extends TestCase
         $generator = new CreateHandler('class Foo\Bar\BazHandler', $this->projectRoot);
 
         $expectedPath = vfsStream::url('project/src/Foo/Bar/BazHandler.php');
-        $this->assertEquals(
+        self::assertEquals(
             $expectedPath,
             $generator->process('Foo\Bar\BazHandler')
         );
 
         $classFileContents = file_get_contents($expectedPath);
-        $this->assertStringContainsString('class Foo\Bar\BazHandler', $classFileContents);
+        self::assertStringContainsString('class Foo\Bar\BazHandler', $classFileContents);
     }
 }

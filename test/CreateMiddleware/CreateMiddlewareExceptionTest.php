@@ -18,32 +18,32 @@ class CreateMiddlewareExceptionTest extends TestCase
     public function testMissingComposerJsonReturnsInstance()
     {
         $e = CreateMiddlewareException::missingComposerJson();
-        $this->assertInstanceOf(CreateMiddlewareException::class, $e);
-        $this->assertStringContainsString('Could not find a composer.json', $e->getMessage());
+        self::assertInstanceOf(CreateMiddlewareException::class, $e);
+        self::assertStringContainsString('Could not find a composer.json', $e->getMessage());
     }
 
     public function testMissingComposerAutoloadersReturnsInstance()
     {
         $e = CreateMiddlewareException::missingComposerAutoloaders();
-        $this->assertInstanceOf(CreateMiddlewareException::class, $e);
-        $this->assertStringContainsString('PSR-4 autoloaders', $e->getMessage());
+        self::assertInstanceOf(CreateMiddlewareException::class, $e);
+        self::assertStringContainsString('PSR-4 autoloaders', $e->getMessage());
     }
 
     public function testInvalidComposerJsonReturnsInstanceWithErrorMessage()
     {
         $error = 'Invalid or malformed JSON';
         $e = CreateMiddlewareException::invalidComposerJson($error);
-        $this->assertInstanceOf(CreateMiddlewareException::class, $e);
-        $this->assertStringContainsString('Unable to parse composer.json: ', $e->getMessage());
-        $this->assertStringContainsString($error, $e->getMessage());
+        self::assertInstanceOf(CreateMiddlewareException::class, $e);
+        self::assertStringContainsString('Unable to parse composer.json: ', $e->getMessage());
+        self::assertStringContainsString($error, $e->getMessage());
     }
 
     public function testAutoloaderNotFoundReturnsInstanceUsingClassNameProvided()
     {
         $expected = __CLASS__;
         $e = CreateMiddlewareException::autoloaderNotFound($expected);
-        $this->assertInstanceOf(CreateMiddlewareException::class, $e);
-        $this->assertStringContainsString('match ' . $expected, $e->getMessage());
+        self::assertInstanceOf(CreateMiddlewareException::class, $e);
+        self::assertStringContainsString('match ' . $expected, $e->getMessage());
     }
 
     public function testUnableToCreatePathReturnsInstanceUsingPathAndClassProvided()
@@ -51,9 +51,9 @@ class CreateMiddlewareExceptionTest extends TestCase
         $path = __FILE__;
         $class = __CLASS__;
         $e = CreateMiddlewareException::unableToCreatePath($path, $class);
-        $this->assertInstanceOf(CreateMiddlewareException::class, $e);
-        $this->assertStringContainsString('directory ' . $path, $e->getMessage());
-        $this->assertStringContainsString('class ' . $class, $e->getMessage());
+        self::assertInstanceOf(CreateMiddlewareException::class, $e);
+        self::assertStringContainsString('directory ' . $path, $e->getMessage());
+        self::assertStringContainsString('class ' . $class, $e->getMessage());
     }
 
     public function testClassExistsReturnsInstanceUsingPathAndClassProvided()
@@ -61,8 +61,8 @@ class CreateMiddlewareExceptionTest extends TestCase
         $path = __FILE__;
         $class = __CLASS__;
         $e = CreateMiddlewareException::classExists($path, $class);
-        $this->assertInstanceOf(CreateMiddlewareException::class, $e);
-        $this->assertStringContainsString('directory ' . $path, $e->getMessage());
-        $this->assertStringContainsString('Class ' . $class, $e->getMessage());
+        self::assertInstanceOf(CreateMiddlewareException::class, $e);
+        self::assertStringContainsString('directory ' . $path, $e->getMessage());
+        self::assertStringContainsString('Class ' . $class, $e->getMessage());
     }
 }

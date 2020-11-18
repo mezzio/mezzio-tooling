@@ -21,6 +21,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionMethod;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,6 +31,7 @@ class RegisterCommandTest extends TestCase
 {
     use CommonOptionsAndAttributesTrait;
     use MockeryPHPUnitIntegration;
+    use ProphecyTrait;
 
     /** @var vfsStreamDirectory */
     private $dir;
@@ -66,12 +68,12 @@ class RegisterCommandTest extends TestCase
 
     public function testConfigureSetsExpectedDescription()
     {
-        $this->assertStringContainsString('Register a middleware module', $this->command->getDescription());
+        self::assertStringContainsString('Register a middleware module', $this->command->getDescription());
     }
 
     public function testConfigureSetsExpectedHelp()
     {
-        $this->assertEquals(RegisterCommand::HELP, $this->command->getHelp());
+        self::assertEquals(RegisterCommand::HELP, $this->command->getHelp());
     }
 
     public function injectedEnabled()
@@ -132,7 +134,7 @@ class RegisterCommandTest extends TestCase
 
         $method = $this->reflectExecuteMethod();
 
-        $this->assertSame(0, $method->invoke(
+        self::assertSame(0, $method->invoke(
             $this->command,
             $this->input->reveal(),
             $this->output->reveal()

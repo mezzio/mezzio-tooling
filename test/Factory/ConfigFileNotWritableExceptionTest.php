@@ -18,7 +18,7 @@ class ConfigFileNotWritableExceptionTest extends TestCase
     public function testForFileGeneratesExpectedException()
     {
         $e = ConfigFileNotWritableException::forFile(__FILE__);
-        $this->assertInstanceOf(ConfigFileNotWritableException::class, $e);
-        $this->assertStringContainsString(sprintf('file "%s"', __FILE__), $e->getMessage());
+        self::assertInstanceOf(ConfigFileNotWritableException::class, $e);
+        self::assertStringContainsString(sprintf('file "%s"', __FILE__), $e->getMessage());
     }
 }

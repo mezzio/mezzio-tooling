@@ -13,6 +13,7 @@ namespace MezzioTest\Tooling\MigrateInteropMiddleware;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Assert;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -21,6 +22,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 trait ProjectSetupTrait
 {
+    use ProphecyTrait;
+
     private function setupSrcDir($dir) : void
     {
         $base = realpath(__DIR__ . '/TestAsset') . DIRECTORY_SEPARATOR;
@@ -28,7 +31,7 @@ trait ProjectSetupTrait
         $rii = new RecursiveIteratorIterator($rdi);
 
         foreach ($rii as $file) {
-            if (! $this->isPhpFile($file)) {
+            if (! self::isPhpFile($file)) {
                 continue;
             }
 

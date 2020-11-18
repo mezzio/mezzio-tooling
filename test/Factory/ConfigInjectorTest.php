@@ -59,11 +59,11 @@ class ConfigInjectorTest extends TestCase
     {
         $this->injector->injectFactoryForClass(__CLASS__ . 'Factory', __CLASS__);
         $config = include($this->projectRoot . '/' . ConfigInjector::CONFIG_FILE);
-        $this->assertIsArray($config);
-        $this->assertTrue(isset($config['dependencies']['factories']));
-        $this->assertCount(1, $config['dependencies']['factories']);
-        $this->assertTrue(isset($config['dependencies']['factories'][__CLASS__]));
-        $this->assertEquals(__CLASS__ . 'Factory', $config['dependencies']['factories'][__CLASS__]);
+        self::assertIsArray($config);
+        self::assertTrue(isset($config['dependencies']['factories']));
+        self::assertCount(1, $config['dependencies']['factories']);
+        self::assertTrue(isset($config['dependencies']['factories'][__CLASS__]));
+        self::assertEquals(__CLASS__ . 'Factory', $config['dependencies']['factories'][__CLASS__]);
     }
 
     public function testAddsNewEntryToConfigFile()
@@ -83,13 +83,13 @@ EOT;
 
         $this->injector->injectFactoryForClass(__CLASS__ . 'Factory', __CLASS__);
         $config = include($this->projectRoot . '/' . ConfigInjector::CONFIG_FILE);
-        $this->assertIsArray($config);
-        $this->assertTrue(isset($config['dependencies']['factories']));
+        self::assertIsArray($config);
+        self::assertTrue(isset($config['dependencies']['factories']));
 
         $factories = $config['dependencies']['factories'];
-        $this->assertCount(2, $factories);
+        self::assertCount(2, $factories);
 
-        $this->assertEquals('App\Handler\HelloWorldHandlerFactory', $factories['App\Handler\HelloWorldHandler']);
-        $this->assertEquals(__CLASS__ . 'Factory', $factories[__CLASS__]);
+        self::assertEquals('App\Handler\HelloWorldHandlerFactory', $factories['App\Handler\HelloWorldHandler']);
+        self::assertEquals(__CLASS__ . 'Factory', $factories[__CLASS__]);
     }
 }

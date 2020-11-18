@@ -18,6 +18,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionClass;
 use ReflectionMethod;
@@ -31,6 +32,7 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ProphecyTrait;
 
     /** @var InputInterface|ObjectProphecy */
     private $input;
@@ -58,7 +60,7 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
 
     public function testConfigureSetsExpectedDescription()
     {
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             'Migrate PSR-15 middleware to request handlers',
             $this->command->getDescription()
         );
@@ -76,16 +78,16 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
 
     public function testConfigureSetsExpectedHelp()
     {
-        $this->assertEquals($this->getConstantValue('HELP'), $this->command->getHelp());
+        self::assertEquals($this->getConstantValue('HELP'), $this->command->getHelp());
     }
 
     public function testConfigureSetsExpectedArguments()
     {
         $definition = $this->command->getDefinition();
-        $this->assertTrue($definition->hasOption('src'));
+        self::assertTrue($definition->hasOption('src'));
         $option = $definition->getOption('src');
-        $this->assertTrue($option->isValueRequired());
-        $this->assertEquals($this->getConstantValue('HELP_OPT_SRC'), $option->getDescription());
+        self::assertTrue($option->isValueRequired());
+        self::assertEquals($this->getConstantValue('HELP_OPT_SRC'), $option->getDescription());
     }
 
     public function testSuccessfulExecutionEmitsExpectedMessages()
@@ -114,7 +116,7 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
         $this->command->setProjectDir($path);
         $method = $this->reflectExecuteMethod();
 
-        $this->assertSame(0, $method->invoke(
+        self::assertSame(0, $method->invoke(
             $this->command,
             $this->input->reveal(),
             $this->output->reveal()

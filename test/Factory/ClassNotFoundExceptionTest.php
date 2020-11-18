@@ -18,7 +18,7 @@ class ClassNotFoundExceptionTest extends TestCase
     public function testForClassNameGeneratesExpectedException()
     {
         $e = ClassNotFoundException::forClassName(__CLASS__);
-        $this->assertInstanceOf(ClassNotFoundException::class, $e);
-        $this->assertStringContainsString(sprintf('Class "%s"', __CLASS__), $e->getMessage());
+        self::assertInstanceOf(ClassNotFoundException::class, $e);
+        self::assertStringContainsString(sprintf('Class "%s"', __CLASS__), $e->getMessage());
     }
 }

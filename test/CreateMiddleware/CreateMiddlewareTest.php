@@ -129,16 +129,16 @@ class CreateMiddlewareTest extends TestCase
         $generator = new CreateMiddleware();
 
         $expectedPath = vfsStream::url('project/src/Foo/BarMiddleware.php');
-        $this->assertEquals(
+        self::assertEquals(
             $expectedPath,
             $generator->process('Foo\BarMiddleware', $this->projectRoot)
         );
 
         $classFileContents = file_get_contents($expectedPath);
-        $this->assertRegexp('#^\<\?php#s', $classFileContents);
-        $this->assertRegexp('#^namespace Foo;$#m', $classFileContents);
-        $this->assertRegexp('#^class BarMiddleware implements MiddlewareInterface$#m', $classFileContents);
-        $this->assertRegexp(
+        self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
+        self::assertMatchesRegularExpression('#^namespace Foo;$#m', $classFileContents);
+        self::assertMatchesRegularExpression('#^class BarMiddleware implements MiddlewareInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
             '#^\s{4}public function process\(ServerRequestInterface \$request,'
                 . ' RequestHandlerInterface \$handler\) : ResponseInterface$#m',
             $classFileContents
@@ -160,16 +160,16 @@ class CreateMiddlewareTest extends TestCase
         $generator = new CreateMiddleware();
 
         $expectedPath = vfsStream::url('project/src/Foo/Bar/BazMiddleware.php');
-        $this->assertEquals(
+        self::assertEquals(
             $expectedPath,
             $generator->process('Foo\Bar\BazMiddleware', $this->projectRoot)
         );
 
         $classFileContents = file_get_contents($expectedPath);
-        $this->assertRegexp('#^\<\?php#s', $classFileContents);
-        $this->assertRegexp('#^namespace Foo\\\\Bar;$#m', $classFileContents);
-        $this->assertRegexp('#^class BazMiddleware implements MiddlewareInterface$#m', $classFileContents);
-        $this->assertRegexp(
+        self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
+        self::assertMatchesRegularExpression('#^namespace Foo\\\\Bar;$#m', $classFileContents);
+        self::assertMatchesRegularExpression('#^class BazMiddleware implements MiddlewareInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
             '#^\s{4}public function process\(ServerRequestInterface \$request,'
                 . ' RequestHandlerInterface \$handler\) : ResponseInterface$#m',
             $classFileContents
@@ -191,16 +191,16 @@ class CreateMiddlewareTest extends TestCase
         $generator = new CreateMiddleware();
 
         $expectedPath = vfsStream::url('project/src/Foo/src/BarMiddleware.php');
-        $this->assertEquals(
+        self::assertEquals(
             $expectedPath,
             $generator->process('Foo\BarMiddleware', $this->projectRoot)
         );
 
         $classFileContents = file_get_contents($expectedPath);
-        $this->assertRegexp('#^\<\?php#s', $classFileContents);
-        $this->assertRegexp('#^namespace Foo;$#m', $classFileContents);
-        $this->assertRegexp('#^class BarMiddleware implements MiddlewareInterface$#m', $classFileContents);
-        $this->assertRegexp(
+        self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
+        self::assertMatchesRegularExpression('#^namespace Foo;$#m', $classFileContents);
+        self::assertMatchesRegularExpression('#^class BarMiddleware implements MiddlewareInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
             '#^\s{4}public function process\(ServerRequestInterface \$request,'
                 . ' RequestHandlerInterface \$handler\) : ResponseInterface$#m',
             $classFileContents
@@ -222,16 +222,16 @@ class CreateMiddlewareTest extends TestCase
         $generator = new CreateMiddleware();
 
         $expectedPath = vfsStream::url('project/src/Foo/src/Bar/BazMiddleware.php');
-        $this->assertEquals(
+        self::assertEquals(
             $expectedPath,
             $generator->process('Foo\Bar\BazMiddleware', $this->projectRoot)
         );
 
         $classFileContents = file_get_contents($expectedPath);
-        $this->assertRegexp('#^\<\?php#s', $classFileContents);
-        $this->assertRegexp('#^namespace Foo\\\\Bar;$#m', $classFileContents);
-        $this->assertRegexp('#^class BazMiddleware implements MiddlewareInterface$#m', $classFileContents);
-        $this->assertRegexp(
+        self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
+        self::assertMatchesRegularExpression('#^namespace Foo\\\\Bar;$#m', $classFileContents);
+        self::assertMatchesRegularExpression('#^class BazMiddleware implements MiddlewareInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
             '#^\s{4}public function process\(ServerRequestInterface \$request,'
                 . ' RequestHandlerInterface \$handler\) : ResponseInterface$#m',
             $classFileContents
@@ -274,12 +274,12 @@ class CreateMiddlewareTest extends TestCase
         $generator = new CreateMiddleware();
 
         $expectedPath = vfsStream::url('project/src/Foo/Bar/BazMiddleware.php');
-        $this->assertEquals(
+        self::assertEquals(
             $expectedPath,
             $generator->process('Foo\Bar\BazMiddleware', $this->projectRoot, 'class Foo\Bar\BazMiddleware')
         );
 
         $classFileContents = file_get_contents($expectedPath);
-        $this->assertStringContainsString('class Foo\Bar\BazMiddleware', $classFileContents);
+        self::assertStringContainsString('class Foo\Bar\BazMiddleware', $classFileContents);
     }
 }

@@ -33,7 +33,7 @@ class FactoryClassGeneratorTest extends TestCase
         $className = InvokableObject::class;
         $factory = file_get_contents(__DIR__ . '/TestAsset/factories/InvokableObject.php');
 
-        $this->assertEquals($factory, $this->generator->createFactory($className));
+        self::assertEquals($factory, $this->generator->createFactory($className));
     }
 
     public function testCreateFactoryCreatesForSimpleDependencies()
@@ -41,7 +41,7 @@ class FactoryClassGeneratorTest extends TestCase
         $className = SimpleDependencyObject::class;
         $factory = file_get_contents(__DIR__. '/TestAsset/factories/SimpleDependencyObject.php');
 
-        $this->assertEquals($factory, $this->generator->createFactory($className));
+        self::assertEquals($factory, $this->generator->createFactory($className));
     }
 
     public function testCreateFactoryCreatesForComplexDependencies()
@@ -49,7 +49,7 @@ class FactoryClassGeneratorTest extends TestCase
         $className = ComplexDependencyObject::class;
         $factory = file_get_contents(__DIR__. '/TestAsset/factories/ComplexDependencyObject.php');
 
-        $this->assertEquals($factory, $this->generator->createFactory($className));
+        self::assertEquals($factory, $this->generator->createFactory($className));
     }
 
     /**
@@ -61,6 +61,6 @@ class FactoryClassGeneratorTest extends TestCase
         $className = 'This\Duplicates\ClassDuplicatingNamespaceNameCase\ClassDuplicatingNamespaceName';
         $factory = file_get_contents(__DIR__ . '/TestAsset/factories/ClassDuplicatingNamespaceName.php');
 
-        $this->assertEquals($factory, $this->generator->createFactory($className));
+        self::assertEquals($factory, $this->generator->createFactory($className));
     }
 }
