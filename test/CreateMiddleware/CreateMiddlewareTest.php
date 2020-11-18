@@ -137,7 +137,10 @@ class CreateMiddlewareTest extends TestCase
         $classFileContents = file_get_contents($expectedPath);
         self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
         self::assertMatchesRegularExpression('#^namespace Foo;$#m', $classFileContents);
-        self::assertMatchesRegularExpression('#^class BarMiddleware implements MiddlewareInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
+            '#^class BarMiddleware implements MiddlewareInterface$#m',
+            $classFileContents
+        );
         self::assertMatchesRegularExpression(
             '#^\s{4}public function process\(ServerRequestInterface \$request,'
                 . ' RequestHandlerInterface \$handler\) : ResponseInterface$#m',
@@ -168,7 +171,10 @@ class CreateMiddlewareTest extends TestCase
         $classFileContents = file_get_contents($expectedPath);
         self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
         self::assertMatchesRegularExpression('#^namespace Foo\\\\Bar;$#m', $classFileContents);
-        self::assertMatchesRegularExpression('#^class BazMiddleware implements MiddlewareInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
+            '#^class BazMiddleware implements MiddlewareInterface$#m',
+            $classFileContents
+        );
         self::assertMatchesRegularExpression(
             '#^\s{4}public function process\(ServerRequestInterface \$request,'
                 . ' RequestHandlerInterface \$handler\) : ResponseInterface$#m',
@@ -199,7 +205,10 @@ class CreateMiddlewareTest extends TestCase
         $classFileContents = file_get_contents($expectedPath);
         self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
         self::assertMatchesRegularExpression('#^namespace Foo;$#m', $classFileContents);
-        self::assertMatchesRegularExpression('#^class BarMiddleware implements MiddlewareInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
+            '#^class BarMiddleware implements MiddlewareInterface$#m',
+            $classFileContents
+        );
         self::assertMatchesRegularExpression(
             '#^\s{4}public function process\(ServerRequestInterface \$request,'
                 . ' RequestHandlerInterface \$handler\) : ResponseInterface$#m',
@@ -230,7 +239,10 @@ class CreateMiddlewareTest extends TestCase
         $classFileContents = file_get_contents($expectedPath);
         self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
         self::assertMatchesRegularExpression('#^namespace Foo\\\\Bar;$#m', $classFileContents);
-        self::assertMatchesRegularExpression('#^class BazMiddleware implements MiddlewareInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
+            '#^class BazMiddleware implements MiddlewareInterface$#m',
+            $classFileContents
+        );
         self::assertMatchesRegularExpression(
             '#^\s{4}public function process\(ServerRequestInterface \$request,'
                 . ' RequestHandlerInterface \$handler\) : ResponseInterface$#m',

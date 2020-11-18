@@ -137,7 +137,10 @@ class CreateHandlerTest extends TestCase
         $classFileContents = file_get_contents($expectedPath);
         self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
         self::assertMatchesRegularExpression('#^namespace Foo;$#m', $classFileContents);
-        self::assertMatchesRegularExpression('#^class BarHandler implements RequestHandlerInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
+            '#^class BarHandler implements RequestHandlerInterface$#m',
+            $classFileContents
+        );
         self::assertMatchesRegularExpression(
             '#^\s{4}public function handle\(ServerRequestInterface \$request\) : ResponseInterface$#m',
             $classFileContents
@@ -167,7 +170,10 @@ class CreateHandlerTest extends TestCase
         $classFileContents = file_get_contents($expectedPath);
         self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
         self::assertMatchesRegularExpression('#^namespace Foo\\\\Bar;$#m', $classFileContents);
-        self::assertMatchesRegularExpression('#^class BazHandler implements RequestHandlerInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
+            '#^class BazHandler implements RequestHandlerInterface$#m',
+            $classFileContents
+        );
         self::assertMatchesRegularExpression(
             '#^\s{4}public function handle\(ServerRequestInterface \$request\) : ResponseInterface$#m',
             $classFileContents
@@ -197,7 +203,10 @@ class CreateHandlerTest extends TestCase
         $classFileContents = file_get_contents($expectedPath);
         self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
         self::assertMatchesRegularExpression('#^namespace Foo;$#m', $classFileContents);
-        self::assertMatchesRegularExpression('#^class BarHandler implements RequestHandlerInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
+            '#^class BarHandler implements RequestHandlerInterface$#m',
+            $classFileContents
+        );
         self::assertMatchesRegularExpression(
             '#^\s{4}public function handle\(ServerRequestInterface \$request\) : ResponseInterface$#m',
             $classFileContents
@@ -227,7 +236,10 @@ class CreateHandlerTest extends TestCase
         $classFileContents = file_get_contents($expectedPath);
         self::assertMatchesRegularExpression('#^\<\?php#s', $classFileContents);
         self::assertMatchesRegularExpression('#^namespace Foo\\\\Bar;$#m', $classFileContents);
-        self::assertMatchesRegularExpression('#^class BazHandler implements RequestHandlerInterface$#m', $classFileContents);
+        self::assertMatchesRegularExpression(
+            '#^class BazHandler implements RequestHandlerInterface$#m',
+            $classFileContents
+        );
         self::assertMatchesRegularExpression(
             '#^\s{4}public function handle\(ServerRequestInterface \$request\) : ResponseInterface$#m',
             $classFileContents
