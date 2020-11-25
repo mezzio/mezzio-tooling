@@ -86,7 +86,7 @@ EOT;
                     return false;
                 }
 
-                if (null === $argument->getClass()) {
+                if (null === $argument->getType()) {
                     throw UnidentifiedTypeException::forArgument($argument->getName());
                 }
 
@@ -100,8 +100,11 @@ EOT;
 
         $mappedParameters = [];
         foreach ($constructorParameters as $parameter) {
-            $fqcn = $parameter->getClass()->getName();
-            $mappedParameters[$fqcn] = $this->getClassName($fqcn);
+            $reflectionType = $parameter->getType();
+            if ($reflectionType !== null) {
+                $fqcn = $reflectionType->getName();
+                $mappedParameters[$fqcn] = $this->getClassName($fqcn);
+            }
         }
 
         return $mappedParameters;
