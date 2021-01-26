@@ -27,7 +27,7 @@
     "require": {
         "php": "^7.3 || ~8.0.0",
         "ext-json": "*",
-        "composer/package-versions-deprecated": "1.11.99.1",
+        "composer/package-versions-deprecated": "^1.11",
         "laminas/laminas-code": "^2.6.3 || ^3.3",
         "laminas/laminas-component-installer": "^2.0",
         "laminas/laminas-composer-autoloading": "^2.0",
