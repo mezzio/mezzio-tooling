@@ -77,13 +77,10 @@ class CreateTest extends TestCase
         $baseModulePath = sprintf('%s/my-modules/MyApp', $this->dir->url());
 
         $mkdir = $this->getFunctionMock('Mezzio\Tooling\Module', 'mkdir');
-        $mkdir->expects(self::at(0))
-            ->with($baseModulePath)
-            ->willReturn(true);
-
-        $mkdir->expects(self::at(1))
-            ->with(sprintf('%s/src', $baseModulePath))
-            ->willReturn(false);
+        $mkdir
+            ->expects(self::exactly(2))
+            ->withConsecutive([$baseModulePath], [$baseModulePath . '/src'])
+            ->willReturnOnConsecutiveCalls(true, false);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(sprintf(
@@ -98,17 +95,10 @@ class CreateTest extends TestCase
         $baseModulePath = sprintf('%s/my-modules/MyApp', $this->dir->url());
 
         $mkdir = $this->getFunctionMock('Mezzio\Tooling\Module', 'mkdir');
-        $mkdir->expects(self::at(0))
-            ->with($baseModulePath)
-            ->willReturn(true);
-
-        $mkdir->expects(self::at(1))
-            ->with(sprintf('%s/src', $baseModulePath))
-            ->willReturn(true);
-
-        $mkdir->expects(self::at(2))
-            ->with(sprintf('%s/templates', $baseModulePath))
-            ->willReturn(false);
+        $mkdir
+            ->expects(self::exactly(3))
+            ->withConsecutive([$baseModulePath], [$baseModulePath . '/src'], [$baseModulePath . '/templates'])
+            ->willReturnOnConsecutiveCalls(true, true, false);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(sprintf(
