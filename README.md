@@ -1,6 +1,6 @@
 # mezzio-tooling
 
-[![Build Status](https://github.com/mezzio/mezzio-tooling/actions/workflows/continous-integration.yml/badge.svg)](https://github.com/mezzio/mezzio-tooling/actions/workflows/continous-integration.yml)
+[![Build Status](https://github.com/mezzio/mezzio-tooling/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/mezzio/mezzio-tooling/actions/workflows/continuous-integration.yml)
 
 *Migration and development tools for Mezzio.*
 
