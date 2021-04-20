@@ -1,7 +1,6 @@
 # mezzio-tooling
 
-[![Build Status](https://travis-ci.com/mezzio/mezzio-tooling.svg?branch=master)](https://travis-ci.com/mezzio/mezzio-tooling)
-[![Coverage Status](https://coveralls.io/repos/github/mezzio/mezzio-tooling/badge.svg?branch=master)](https://coveralls.io/github/mezzio/mezzio-tooling?branch=master)
+[![Build Status](https://github.com/mezzio/mezzio-tooling/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/mezzio/mezzio-tooling/actions/workflows/continuous-integration.yml)
 
 *Migration and development tools for Mezzio.*
 
