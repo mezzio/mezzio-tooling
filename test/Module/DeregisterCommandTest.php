@@ -14,6 +14,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionMethod;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,6 +24,7 @@ class DeregisterCommandTest extends TestCase
 {
     use CommonOptionsAndAttributesTrait;
     use MockeryPHPUnitIntegration;
+    use ProphecyTrait;
 
     /** @var vfsStreamDirectory */
     private $dir;
@@ -59,12 +61,12 @@ class DeregisterCommandTest extends TestCase
 
     public function testConfigureSetsExpectedDescription()
     {
-        $this->assertStringContainsString('Deregister a middleware module', $this->command->getDescription());
+        self::assertStringContainsString('Deregister a middleware module', $this->command->getDescription());
     }
 
     public function testConfigureSetsExpectedHelp()
     {
-        $this->assertEquals(DeregisterCommand::HELP, $this->command->getHelp());
+        self::assertEquals(DeregisterCommand::HELP, $this->command->getHelp());
     }
 
     public function removedDisabled()
@@ -121,7 +123,7 @@ class DeregisterCommandTest extends TestCase
 
         $method = $this->reflectExecuteMethod();
 
-        $this->assertSame(0, $method->invoke(
+        self::assertSame(0, $method->invoke(
             $this->command,
             $this->input->reveal(),
             $this->output->reveal()

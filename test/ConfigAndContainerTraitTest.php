@@ -9,12 +9,15 @@ use Mezzio\Tooling\ConfigAndContainerTrait;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 use stdClass;
 
 class ConfigAndContainerTraitTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var vfsStreamDirectory */
     private $dir;
 

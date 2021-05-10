@@ -12,32 +12,32 @@ class CreateHandlerExceptionTest extends TestCase
     public function testMissingComposerJsonReturnsInstance()
     {
         $e = CreateHandlerException::missingComposerJson();
-        $this->assertInstanceOf(CreateHandlerException::class, $e);
-        $this->assertStringContainsString('Could not find a composer.json', $e->getMessage());
+        self::assertInstanceOf(CreateHandlerException::class, $e);
+        self::assertStringContainsString('Could not find a composer.json', $e->getMessage());
     }
 
     public function testMissingComposerAutoloadersReturnsInstance()
     {
         $e = CreateHandlerException::missingComposerAutoloaders();
-        $this->assertInstanceOf(CreateHandlerException::class, $e);
-        $this->assertStringContainsString('PSR-4 autoloaders', $e->getMessage());
+        self::assertInstanceOf(CreateHandlerException::class, $e);
+        self::assertStringContainsString('PSR-4 autoloaders', $e->getMessage());
     }
 
     public function testInvalidComposerJsonReturnsInstanceWithErrorMessage()
     {
         $error = 'Invalid or malformed JSON';
         $e = CreateHandlerException::invalidComposerJson($error);
-        $this->assertInstanceOf(CreateHandlerException::class, $e);
-        $this->assertStringContainsString('Unable to parse composer.json: ', $e->getMessage());
-        $this->assertStringContainsString($error, $e->getMessage());
+        self::assertInstanceOf(CreateHandlerException::class, $e);
+        self::assertStringContainsString('Unable to parse composer.json: ', $e->getMessage());
+        self::assertStringContainsString($error, $e->getMessage());
     }
 
     public function testAutoloaderNotFoundReturnsInstanceUsingClassNameProvided()
     {
         $expected = __CLASS__;
         $e = CreateHandlerException::autoloaderNotFound($expected);
-        $this->assertInstanceOf(CreateHandlerException::class, $e);
-        $this->assertStringContainsString('match ' . $expected, $e->getMessage());
+        self::assertInstanceOf(CreateHandlerException::class, $e);
+        self::assertStringContainsString('match ' . $expected, $e->getMessage());
     }
 
     public function testUnableToCreatePathReturnsInstanceUsingPathAndClassProvided()
@@ -45,9 +45,9 @@ class CreateHandlerExceptionTest extends TestCase
         $path = __FILE__;
         $class = __CLASS__;
         $e = CreateHandlerException::unableToCreatePath($path, $class);
-        $this->assertInstanceOf(CreateHandlerException::class, $e);
-        $this->assertStringContainsString('directory ' . $path, $e->getMessage());
-        $this->assertStringContainsString('class ' . $class, $e->getMessage());
+        self::assertInstanceOf(CreateHandlerException::class, $e);
+        self::assertStringContainsString('directory ' . $path, $e->getMessage());
+        self::assertStringContainsString('class ' . $class, $e->getMessage());
     }
 
     public function testClassExistsReturnsInstanceUsingPathAndClassProvided()
@@ -55,8 +55,8 @@ class CreateHandlerExceptionTest extends TestCase
         $path = __FILE__;
         $class = __CLASS__;
         $e = CreateHandlerException::classExists($path, $class);
-        $this->assertInstanceOf(CreateHandlerException::class, $e);
-        $this->assertStringContainsString('directory ' . $path, $e->getMessage());
-        $this->assertStringContainsString('Class ' . $class, $e->getMessage());
+        self::assertInstanceOf(CreateHandlerException::class, $e);
+        self::assertStringContainsString('directory ' . $path, $e->getMessage());
+        self::assertStringContainsString('Class ' . $class, $e->getMessage());
     }
 }

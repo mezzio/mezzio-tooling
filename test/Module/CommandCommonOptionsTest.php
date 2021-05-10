@@ -6,11 +6,14 @@ namespace MezzioTest\Tooling\Module;
 
 use Mezzio\Tooling\Module\CommandCommonOptions;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Console\Input\InputInterface;
 
 class CommandCommonOptionsTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var InputInterface|ObjectProphecy */
     private $input;
 
@@ -24,7 +27,7 @@ class CommandCommonOptionsTest extends TestCase
         $this->input->getOption('modules-path')->willReturn('path-from-input');
         $config[CommandCommonOptions::class]['--modules-path'] = 'path-from-config';
 
-        $this->assertEquals(
+        self::assertEquals(
             'path-from-input',
             CommandCommonOptions::getModulesPath($this->input->reveal(), $config)
         );
@@ -35,7 +38,7 @@ class CommandCommonOptionsTest extends TestCase
         $this->input->getOption('modules-path')->willReturn(null);
         $config[CommandCommonOptions::class]['--modules-path'] = 'path-from-config';
 
-        $this->assertEquals(
+        self::assertEquals(
             'path-from-config',
             CommandCommonOptions::getModulesPath($this->input->reveal(), $config)
         );
@@ -45,7 +48,7 @@ class CommandCommonOptionsTest extends TestCase
     {
         $this->input->getOption('modules-path')->willReturn(null);
 
-        $this->assertEquals(
+        self::assertEquals(
             'src',
             CommandCommonOptions::getModulesPath($this->input->reveal())
         );

@@ -12,10 +12,13 @@ use Mezzio\Tooling\Factory\FactoryWriteException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
 class CreateTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var vfsStreamDirectory */
     private $dir;
 
@@ -84,7 +87,7 @@ class CreateTest extends TestCase
 
         $fileName = $factory->createForClass($className);
 
-        $this->assertStringContainsString('TestClassFactory.php', $fileName);
+        self::assertStringContainsString('TestClassFactory.php', $fileName);
 
         require $fileName;
         $factoryName = $className . 'Factory';
@@ -93,6 +96,6 @@ class CreateTest extends TestCase
         $container = $this->prophesize(ContainerInterface::class);
         $container->get(FactoryClassGenerator::class)->willReturn($generator);
         $instance = $factory($container->reveal());
-        $this->assertInstanceOf($className, $instance);
+        self::assertInstanceOf($className, $instance);
     }
 }

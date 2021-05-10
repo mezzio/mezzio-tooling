@@ -12,6 +12,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -29,6 +30,7 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 class CreateMiddlewareCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ProphecyTrait;
 
     /** @var InputInterface|ObjectProphecy */
     private $input;
@@ -88,36 +90,36 @@ class CreateMiddlewareCommandTest extends TestCase
 
     public function testConfigureSetsExpectedDescription()
     {
-        $this->assertStringContainsString('Create a PSR-15 middleware', $this->command->getDescription());
+        self::assertStringContainsString('Create a PSR-15 middleware', $this->command->getDescription());
     }
 
     public function testConfigureSetsExpectedHelp()
     {
-        $this->assertEquals(CreateMiddlewareCommand::HELP, $this->command->getHelp());
+        self::assertEquals(CreateMiddlewareCommand::HELP, $this->command->getHelp());
     }
 
     public function testConfigureSetsExpectedArguments()
     {
         $definition = $this->command->getDefinition();
-        $this->assertTrue($definition->hasArgument('middleware'));
+        self::assertTrue($definition->hasArgument('middleware'));
         $argument = $definition->getArgument('middleware');
-        $this->assertTrue($argument->isRequired());
-        $this->assertEquals(CreateMiddlewareCommand::HELP_ARG_MIDDLEWARE, $argument->getDescription());
+        self::assertTrue($argument->isRequired());
+        self::assertEquals(CreateMiddlewareCommand::HELP_ARG_MIDDLEWARE, $argument->getDescription());
     }
 
     public function testConfigureSetsExpectedOptions()
     {
         $definition = $this->command->getDefinition();
 
-        $this->assertTrue($definition->hasOption('no-factory'));
+        self::assertTrue($definition->hasOption('no-factory'));
         $option = $definition->getOption('no-factory');
-        $this->assertFalse($option->acceptValue());
-        $this->assertEquals(CreateMiddlewareCommand::HELP_OPT_NO_FACTORY, $option->getDescription());
+        self::assertFalse($option->acceptValue());
+        self::assertEquals(CreateMiddlewareCommand::HELP_OPT_NO_FACTORY, $option->getDescription());
 
-        $this->assertTrue($definition->hasOption('no-register'));
+        self::assertTrue($definition->hasOption('no-register'));
         $option = $definition->getOption('no-register');
-        $this->assertFalse($option->acceptValue());
-        $this->assertEquals(CreateMiddlewareCommand::HELP_OPT_NO_REGISTER, $option->getDescription());
+        self::assertFalse($option->acceptValue());
+        self::assertEquals(CreateMiddlewareCommand::HELP_OPT_NO_REGISTER, $option->getDescription());
     }
 
     public function testSuccessfulExecutionEmitsExpectedMessages()
@@ -145,7 +147,7 @@ class CreateMiddlewareCommandTest extends TestCase
 
         $method = $this->reflectExecuteMethod();
 
-        $this->assertSame(0, $method->invoke(
+        self::assertSame(0, $method->invoke(
             $this->command,
             $this->input->reveal(),
             $this->output->reveal()

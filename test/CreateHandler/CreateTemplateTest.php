@@ -16,6 +16,7 @@ use Mezzio\Twig\TwigRenderer;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use ReflectionProperty;
@@ -25,6 +26,8 @@ use ReflectionProperty;
  */
 class CreateTemplateTest extends TestCase
 {
+    use ProphecyTrait;
+
     private const COMMON_FILES = [
         '/TestAsset/common/PlatesRenderer.php'   => '/src/PlatesRenderer.php',
         '/TestAsset/common/TwigRenderer.php'     => '/src/TwigRenderer.php',
@@ -127,8 +130,8 @@ class CreateTemplateTest extends TestCase
         $this->injectContainerInGenerator($generator);
 
         $template = $generator->forHandler('Test\TestHandler');
-        $this->assertSame($this->projectRoot . '/config/../templates/test/test.' . $extension, $template->getPath());
-        $this->assertSame('test::test', $template->getName());
+        self::assertSame($this->projectRoot . '/config/../templates/test/test.' . $extension, $template->getPath());
+        self::assertSame('test::test', $template->getName());
     }
 
     /**
@@ -149,11 +152,11 @@ class CreateTemplateTest extends TestCase
         $this->injectContainerInGenerator($generator);
 
         $template = $generator->forHandler('Test\TestHandler');
-        $this->assertSame(
+        self::assertSame(
             $this->projectRoot . '/config/../src/Test/templates/test.' . $extension,
             $template->getPath()
         );
-        $this->assertSame('test::test', $template->getName());
+        self::assertSame('test::test', $template->getName());
     }
 
     /**
@@ -174,8 +177,8 @@ class CreateTemplateTest extends TestCase
         $this->injectContainerInGenerator($generator);
 
         $template = $generator->forHandler('Test\TestHandler');
-        $this->assertSame($this->projectRoot . '/templates/test/test.' . $extension, $template->getPath());
-        $this->assertSame('test::test', $template->getName());
+        self::assertSame($this->projectRoot . '/templates/test/test.' . $extension, $template->getPath());
+        self::assertSame('test::test', $template->getName());
     }
 
     /**
@@ -196,8 +199,8 @@ class CreateTemplateTest extends TestCase
         $this->injectContainerInGenerator($generator);
 
         $template = $generator->forHandler('Test\TestHandler');
-        $this->assertSame($this->projectRoot . '/src/Test/templates/test.' . $extension, $template->getPath());
-        $this->assertSame('test::test', $template->getName());
+        self::assertSame($this->projectRoot . '/src/Test/templates/test.' . $extension, $template->getPath());
+        self::assertSame('test::test', $template->getName());
     }
 
     /**
@@ -219,8 +222,8 @@ class CreateTemplateTest extends TestCase
         $this->injectContainerInGenerator($generator);
 
         $template = $generator->forHandler('Test\TestHandler');
-        $this->assertSame($this->projectRoot . '/config/../view/for-testing/test.' . $extension, $template->getPath());
-        $this->assertSame('test::test', $template->getName());
+        self::assertSame($this->projectRoot . '/config/../view/for-testing/test.' . $extension, $template->getPath());
+        self::assertSame('test::test', $template->getName());
     }
 
     /**
@@ -242,8 +245,8 @@ class CreateTemplateTest extends TestCase
         $this->injectContainerInGenerator($generator);
 
         $template = $generator->forHandler('Test\TestHandler');
-        $this->assertSame($this->projectRoot . '/config/../view/for-testing/test.' . $extension, $template->getPath());
-        $this->assertSame('test::test', $template->getName());
+        self::assertSame($this->projectRoot . '/config/../view/for-testing/test.' . $extension, $template->getPath());
+        self::assertSame('test::test', $template->getName());
     }
 
     /**
@@ -368,11 +371,11 @@ class CreateTemplateTest extends TestCase
         $this->injectContainerInGenerator($generator);
 
         $template = $generator->generateTemplate('Test\TestHandler', 'custom', 'also-custom');
-        $this->assertSame(
+        self::assertSame(
             $this->projectRoot . '/config/../templates/custom/also-custom.' . $extension,
             $template->getPath()
         );
-        $this->assertSame('custom::also-custom', $template->getName());
+        self::assertSame('custom::also-custom', $template->getName());
     }
 
     /**
@@ -394,11 +397,11 @@ class CreateTemplateTest extends TestCase
         $this->injectContainerInGenerator($generator);
 
         $template = $generator->generateTemplate('Test\TestHandler', 'custom', 'also-custom');
-        $this->assertSame(
+        self::assertSame(
             $this->projectRoot . '/config/../src/Custom/templates/also-custom.' . $extension,
             $template->getPath()
         );
-        $this->assertSame('custom::also-custom', $template->getName());
+        self::assertSame('custom::also-custom', $template->getName());
     }
 
     /**
@@ -419,10 +422,10 @@ class CreateTemplateTest extends TestCase
         $this->injectContainerInGenerator($generator);
 
         $template = $generator->generateTemplate('Test\TestHandler', 'custom', 'also-custom', 'XHTML');
-        $this->assertSame(
+        self::assertSame(
             $this->projectRoot . '/config/../src/Custom/templates/also-custom.XHTML',
             $template->getPath()
         );
-        $this->assertSame('custom::also-custom', $template->getName());
+        self::assertSame('custom::also-custom', $template->getName());
     }
 }

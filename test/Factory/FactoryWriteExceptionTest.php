@@ -12,7 +12,7 @@ class FactoryWriteExceptionTest extends TestCase
     public function testWhenCreatingFileGeneratesExpectedException()
     {
         $e = FactoryWriteException::whenCreatingFile(__FILE__);
-        $this->assertInstanceOf(FactoryWriteException::class, $e);
-        $this->assertStringContainsString('file "' . __FILE__ . '"', $e->getMessage());
+        self::assertInstanceOf(FactoryWriteException::class, $e);
+        self::assertStringContainsString('file "' . __FILE__ . '"', $e->getMessage());
     }
 }

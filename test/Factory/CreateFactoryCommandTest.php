@@ -12,6 +12,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionMethod;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,6 +25,7 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 class CreateFactoryCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ProphecyTrait;
 
     /** @var InputInterface|ObjectProphecy */
     private $input;
@@ -51,29 +53,29 @@ class CreateFactoryCommandTest extends TestCase
 
     public function testConfigureSetsExpectedDescription()
     {
-        $this->assertStringContainsString('Create a factory', $this->command->getDescription());
+        self::assertStringContainsString('Create a factory', $this->command->getDescription());
     }
 
     public function testConfigureSetsExpectedHelp()
     {
-        $this->assertEquals(CreateFactoryCommand::HELP, $this->command->getHelp());
+        self::assertEquals(CreateFactoryCommand::HELP, $this->command->getHelp());
     }
 
     public function testConfigureSetsExpectedArguments()
     {
         $definition = $this->command->getDefinition();
-        $this->assertTrue($definition->hasArgument('class'));
+        self::assertTrue($definition->hasArgument('class'));
         $argument = $definition->getArgument('class');
-        $this->assertTrue($argument->isRequired());
-        $this->assertEquals(CreateFactoryCommand::HELP_ARG_CLASS, $argument->getDescription());
+        self::assertTrue($argument->isRequired());
+        self::assertEquals(CreateFactoryCommand::HELP_ARG_CLASS, $argument->getDescription());
     }
 
     public function testConfigureSetsExpectedOptions()
     {
         $definition = $this->command->getDefinition();
-        $this->assertTrue($definition->hasOption('no-register'));
+        self::assertTrue($definition->hasOption('no-register'));
         $option = $definition->getOption('no-register');
-        $this->assertEquals(CreateFactoryCommand::HELP_OPT_NO_REGISTER, $option->getDescription());
+        self::assertEquals(CreateFactoryCommand::HELP_OPT_NO_REGISTER, $option->getDescription());
     }
 
     public function testSuccessfulExecutionEmitsExpectedMessages()
@@ -110,7 +112,7 @@ class CreateFactoryCommandTest extends TestCase
 
         $method = $this->reflectExecuteMethod();
 
-        $this->assertSame(0, $method->invoke(
+        self::assertSame(0, $method->invoke(
             $this->command,
             $this->input->reveal(),
             $this->output->reveal()

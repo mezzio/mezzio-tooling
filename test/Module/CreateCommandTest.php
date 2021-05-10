@@ -15,6 +15,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use ReflectionMethod;
@@ -34,6 +35,7 @@ class CreateCommandTest extends TestCase
 {
     use CommonOptionsAndAttributesTrait;
     use MockeryPHPUnitIntegration;
+    use ProphecyTrait;
 
     /** @var InputInterface|ObjectProphecy */
     private $input;
@@ -143,12 +145,12 @@ class CreateCommandTest extends TestCase
 
     public function testConfigureSetsExpectedDescription()
     {
-        $this->assertStringContainsString('Create and register a middleware module', $this->command->getDescription());
+        self::assertStringContainsString('Create and register a middleware module', $this->command->getDescription());
     }
 
     public function testConfigureSetsExpectedHelp()
     {
-        $this->assertEquals(CreateCommand::HELP, $this->command->getHelp());
+        self::assertEquals(CreateCommand::HELP, $this->command->getHelp());
     }
 
     /**
@@ -183,7 +185,7 @@ class CreateCommandTest extends TestCase
         $this->command->setApplication($app->reveal());
 
         $method = $this->reflectExecuteMethod();
-        $this->assertSame(0, $method->invoke(
+        self::assertSame(0, $method->invoke(
             $this->command,
             $this->input->reveal(),
             $this->output->reveal()
@@ -222,7 +224,7 @@ class CreateCommandTest extends TestCase
         $this->command->setApplication($app->reveal());
 
         $method = $this->reflectExecuteMethod();
-        $this->assertSame(1, $method->invoke(
+        self::assertSame(1, $method->invoke(
             $this->command,
             $this->input->reveal(),
             $this->output->reveal()
