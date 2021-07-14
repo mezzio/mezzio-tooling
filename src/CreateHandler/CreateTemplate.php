@@ -9,6 +9,7 @@ use Mezzio\Plates\PlatesRenderer;
 use Mezzio\Template\TemplateRendererInterface;
 use Mezzio\Tooling\TemplateResolutionTrait;
 use Mezzio\Twig\TwigRenderer;
+use Psr\Container\ContainerInterface;
 use ReflectionClass;
 
 class CreateTemplate
@@ -26,6 +27,9 @@ class CreateTemplate
         LaminasViewRenderer::class,
     ];
 
+    /** @var ContainerInterface */
+    private $container;
+
     /**
      * Root directory of project; used to determine if handler path indicates a
      * module.
@@ -34,9 +38,10 @@ class CreateTemplate
      */
     private $projectPath;
 
-    public function __construct(string $projectPath = null)
+    public function __construct(string $projectPath, ContainerInterface $container)
     {
-        $this->projectPath = $projectPath ?: realpath(getcwd());
+        $this->projectPath = $projectPath;
+        $this->container   = $container;
     }
 
     public function forHandler(string $handler) : Template
@@ -54,7 +59,7 @@ class CreateTemplate
         string $templateName,
         string $templateSuffix = null
     ) : Template {
-        $config = $this->getConfig($this->projectPath);
+        $config = $this->container->get('config');
         $rendererType = $this->resolveRendererType($templateSuffix);
         $handlerPath = $this->getHandlerPath($handler);
 
@@ -86,12 +91,11 @@ class CreateTemplate
 
     private function resolveRendererType(?string $templateSuffix) : string
     {
-        $container = $this->getContainer($this->projectPath);
-        if (! $this->containerDefinesRendererService($container)) {
+        if (! $this->containerDefinesRendererService($this->container)) {
             throw UnresolvableRendererException::dueToMissingAlias();
         }
 
-        $type = $this->getRendererServiceTypeFromContainer($container);
+        $type = $this->getRendererServiceTypeFromContainer($this->container);
 
         // We only need to test for a known renderer type if there is no
         // template suffix available.
@@ -116,12 +120,13 @@ class CreateTemplate
     /**
      * @todo If more than one template path exists, we should likely prompt the
      *     user for which one to which to install the template.
+     * @param array|ArrayAccess $config
      * @return null|string Returns null if no template path configuration
      *     exists for the namespace.
      * @throws TemplatePathResolutionException if configuration has zero paths
      *     defined for the namespace.
      */
-    private function getTemplatePathForNamespaceFromConfig(string $templateNamespace, array $config) : ?string
+    private function getTemplatePathForNamespaceFromConfig(string $templateNamespace, $config) : ?string
     {
         if (! isset($config['templates']['paths'][$templateNamespace])) {
             return null;

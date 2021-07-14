@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling;
 
+use Mezzio\Tooling\CreateHandler\CreateActionCommand;
+use Mezzio\Tooling\CreateHandler\CreateActionCommandFactory;
 use Mezzio\Tooling\CreateHandler\CreateHandlerCommand;
+use Mezzio\Tooling\CreateHandler\CreateHandlerCommandFactory;
 use Mezzio\Tooling\CreateMiddleware\CreateMiddlewareCommand;
 use Mezzio\Tooling\Factory\CreateFactoryCommand;
 use Mezzio\Tooling\MigrateInteropMiddleware\MigrateInteropMiddlewareCommand;
@@ -27,7 +30,7 @@ class ConfigProvider
     {
         return [
             'commands' => [
-                'mezzio:action:create'                 => CreateHandlerCommand::class,
+                'mezzio:action:create'                 => CreateActionCommand::class,
                 'mezzio:factory:create'                => CreateFactoryCommand::class,
                 'mezzio:handler:create'                => CreateHandlerCommand::class,
                 'mezzio:middleware:create'             => CreateMiddlewareCommand::class,
@@ -43,10 +46,13 @@ class ConfigProvider
     public function getDependencies(): array
     {
         return [
+            'factories' => [
+                CreateActionCommand::class                      => CreateActionCommandFactory::class,
+                CreateHandlerCommand::class                     => CreateHandlerCommandFactory::class,
+            ],
             'invokables' => [
                 CreateCommand::class                            => CreateCommand::class,
                 CreateFactoryCommand::class                     => CreateFactoryCommand::class,
-                CreateHandlerCommand::class                     => CreateHandlerCommand::class,
                 CreateMiddlewareCommand::class                  => CreateMiddlewareCommand::class,
                 DeregisterCommand::class                        => DeregisterCommand::class,
                 MigrateInteropMiddlewareCommand::class          => MigrateInteropMiddlewareCommand::class,

@@ -19,108 +19,75 @@ class CreateHandlerCommand extends Command
 
     public const DEFAULT_SRC = '/src';
 
-    public const HELP_HANDLER_DESCRIPTION = 'Create a PSR-15 request handler class file.';
+    public const HELP_DESCRIPTION = 'Create a PSR-15 request handler class file.';
 
-    public const HELP_HANDLER = <<< 'EOT'
-Creates a PSR-15 request handler class file named after the provided
-class. For a path, it matches the class namespace against PSR-4 autoloader
-namespaces in your composer.json.
-EOT;
+    public const HELP = <<< 'EOT'
+        Creates a PSR-15 request handler class file named after the provided
+        class. For a path, it matches the class namespace against PSR-4 autoloader
+        namespaces in your composer.json.
+        EOT;
 
-    public const HELP_HANDLER_ARG_HANDLER = <<< 'EOT'
-Fully qualified class name of the request handler to create. This value
-should be quoted to ensure namespace separators are not interpreted as
-escape sequences by your shell.
-EOT;
+    public const HELP_ARG_HANDLER = <<< 'EOT'
+        Fully qualified class name of the request handler to create. This value
+        should be quoted to ensure namespace separators are not interpreted as
+        escape sequences by your shell.
+        EOT;
 
-    public const HELP_HANDLER_OPT_NO_FACTORY = <<< 'EOT'
-By default, this command generates a factory for the request handler it
-creates, and registers it with the container. Passing this option disables
-that feature.
-EOT;
+    public const HELP_OPT_NO_FACTORY = <<< 'EOT'
+        By default, this command generates a factory for the request handler it
+        creates, and registers it with the container. Passing this option disables
+        that feature.
+        EOT;
 
-    public const HELP_HANDLER_OPT_NO_REGISTER = <<< 'EOT'
-By default, when this command generates a factory for the request handler it
-creates, it registers it with the container. Passing this option disables
-registration of the generated factory with the container.
-EOT;
-
-    public const HELP_ACTION_DESCRIPTION = 'Create an action class file.';
-
-    public const HELP_ACTION = <<< 'EOT'
-Creates an action class file named after the provided class. For a path, it
-matches the class namespace against PSR-4 autoloader namespaces in your
-composer.json.
-EOT;
-
-    public const HELP_ACTION_ARG_ACTION = <<< 'EOT'
-Fully qualified class name of the action class to create. This value
-should be quoted to ensure namespace separators are not interpreted as
-escape sequences by your shell.
-EOT;
-
-    public const HELP_ACTION_OPT_NO_FACTORY = <<< 'EOT'
-By default, this command generates a factory for the action class it creates,
-and registers it with the container. Passing this option disables that
-feature.
-EOT;
-
-    public const HELP_ACTION_OPT_NO_REGISTER = <<< 'EOT'
-By default, when this command generates a factory for the action class it
-creates, it registers it with the container. Passing this option disables
-registration of the generated factory with the container.
-EOT;
+    public const HELP_OPT_NO_REGISTER = <<< 'EOT'
+        By default, when this command generates a factory for the request handler it
+        creates, it registers it with the container. Passing this option disables
+        registration of the generated factory with the container.
+        EOT;
 
     public const HELP_OPTION_WITHOUT_TEMPLATE = <<< 'EOT'
-By default, this command generates a template for the newly generated class,
-and adds functionality to it render the template. Passing this flag
-disables template generation and invocation.
-EOT;
+        By default, this command generates a template for the newly generated class,
+        and adds functionality to it render the template. Passing this flag
+        disables template generation and invocation.
+        EOT;
 
     public const HELP_OPTION_WITH_TEMPLATE_EXTENSION = <<< 'EOT'
-By default, this command will look for a template file extension name
-first via the "templates.extension" configuration directive, and then
-falling back to defaults based on the renderer type detected. If the
-configuration directive is not found, and the command does not know
-how to map the renderer discovered, it will raise an exception. You
-may pass this option to specify a custom extension in that case.
-EOT;
+        By default, this command will look for a template file extension name
+        first via the "templates.extension" configuration directive, and then
+        falling back to defaults based on the renderer type detected. If the
+        configuration directive is not found, and the command does not know
+        how to map the renderer discovered, it will raise an exception. You
+        may pass this option to specify a custom extension in that case.
+        EOT;
 
     public const HELP_OPTION_WITH_TEMPLATE_NAME = <<< 'EOT'
-By default, this command uses a normalized version of the class name as the
-template name. Use this option to provide an alternative template name
-(minus the namespace) for the generated template. The template file will be
-named using this name, using an extension base on the configured template
-renderer.  If --without-template is provided, this option is ignored. 
-EOT;
+        By default, this command uses a normalized version of the class name as the
+        template name. Use this option to provide an alternative template name
+        (minus the namespace) for the generated template. The template file will be
+        named using this name, using an extension base on the configured template
+        renderer.  If --without-template is provided, this option is ignored. 
+        EOT;
 
     public const HELP_OPTION_WITH_TEMPLATE_NAMESPACE = <<< 'EOT'
-By default, this command uses a normalized version of the root namespace of the
-class generated as the template namespace.  Use this option to provide an
-alternate template namespace for the generated template. The template will be
-placed in the path defined for that namespace if discovered; otherwise, it will
-be placed in the path defined for the root namespace of the class created. If
---without-template is provided, this option is ignored.
-EOT;
+        By default, this command uses a normalized version of the root namespace of the
+        class generated as the template namespace.  Use this option to provide an
+        alternate template namespace for the generated template. The template will be
+        placed in the path defined for that namespace if discovered; otherwise, it will
+        be placed in the path defined for the root namespace of the class created. If
+        --without-template is provided, this option is ignored.
+        EOT;
 
-    public const STATUS_HANDLER_TEMPLATE = '<info>Creating request handler %s...</info>';
+    public const STATUS_TEMPLATE = '<info>Creating request handler %s...</info>';
 
-    public const STATUS_ACTION_TEMPLATE = '<info>Creating action %s...</info>';
+    /** @var null|string Cannot be defined explicitly due to parent class */
+    public static $defaultName = 'mezzio:handler:create';
 
     /**
      * Name of the argument that resolves to the new handler's name.
      *
      * @var string
      */
-    private $handlerArgument = 'handler';
-
-    /**
-     * Root path of the project. Defaults to getcwd(). Mainly exists for
-     * testing purposes, to allow injecting a virtual filesystem location.
-     *
-     * @var string
-     */
-    private $projectRoot;
+    protected $handlerArgument = 'handler';
 
     /**
      * Flag indicating whether or not to require the generated handler before
@@ -130,7 +97,18 @@ EOT;
      *
      * @var bool
      */
-    private $requireHandlerBeforeGeneratingFactory = true;
+    protected $requireHandlerBeforeGeneratingFactory = true;
+
+    /** @var ContainerInterface */
+    private $container;
+
+    /**
+     * Root path of the project. Defaults to getcwd(). Mainly exists for
+     * testing purposes, to allow injecting a virtual filesystem location.
+     *
+     * @var string
+     */
+    private $projectRoot;
 
     /**
      * Whether or not the template renderer is registered in the container.
@@ -143,57 +121,31 @@ EOT;
      */
     private $templateRendererIsRegistered = false;
 
-    public function __construct(string $name = null, string $projectRoot = null, ContainerInterface $container = null)
+    public function __construct(ContainerInterface $container, string $projectRoot)
     {
-        $this->projectRoot = $projectRoot ?: realpath(getcwd());
-        $this->container = $container;
-        $this->rendererIsRegistered = $this->containerDefinesRendererService(
-            $this->getContainer($this->projectRoot)
-        );
+        $this->projectRoot          = $projectRoot;
+        $this->container            = $container;
+        $this->rendererIsRegistered = $this->containerDefinesRendererService($container);
 
         // Must do last, so that container and/or project root are in scope
         // when configure() is called.
-        parent::__construct($name);
+        parent::__construct();
     }
 
     /**
      * Configure the console command.
-     *
-     * If the command is named `action:create`, this method sets the
-     * $handlerArgument to "action", and then invokes the configureAction()
-     * method before returning. Otherwise, it configures the command for
-     * producing a handler.
      */
     protected function configure() : void
     {
-        if (false !== strpos($this->getName(), 'action:')) {
-            $this->configureAction();
-        } else {
-            $this->configureHandler();
-        }
+        $this->setDescription(self::HELP_DESCRIPTION);
+        $this->setHelp(self::HELP);
+        $this->addArgument('handler', InputArgument::REQUIRED, self::HELP_ARG_HANDLER);
+        $this->addOption('no-factory', null, InputOption::VALUE_NONE, self::HELP_OPT_NO_FACTORY);
+        $this->addOption('no-register', null, InputOption::VALUE_NONE, self::HELP_OPT_NO_REGISTER);
 
         if ($this->rendererIsRegistered) {
             $this->configureTemplateOptions();
         }
-    }
-
-    protected function configureAction() : void
-    {
-        $this->handlerArgument = 'action';
-        $this->setDescription(self::HELP_ACTION_DESCRIPTION);
-        $this->setHelp(self::HELP_ACTION);
-        $this->addArgument('action', InputArgument::REQUIRED, self::HELP_ACTION_ARG_ACTION);
-        $this->addOption('no-factory', null, InputOption::VALUE_NONE, self::HELP_ACTION_OPT_NO_FACTORY);
-        $this->addOption('no-register', null, InputOption::VALUE_NONE, self::HELP_ACTION_OPT_NO_REGISTER);
-    }
-
-    protected function configureHandler() : void
-    {
-        $this->setDescription(self::HELP_HANDLER_DESCRIPTION);
-        $this->setHelp(self::HELP_HANDLER);
-        $this->addArgument('handler', InputArgument::REQUIRED, self::HELP_HANDLER_ARG_HANDLER);
-        $this->addOption('no-factory', null, InputOption::VALUE_NONE, self::HELP_HANDLER_OPT_NO_FACTORY);
-        $this->addOption('no-register', null, InputOption::VALUE_NONE, self::HELP_HANDLER_OPT_NO_REGISTER);
     }
 
     protected function configureTemplateOptions() : void
@@ -233,10 +185,7 @@ EOT;
     {
         $handler = $input->getArgument($this->handlerArgument);
 
-        $template = $this->handlerArgument === 'action'
-            ? self::STATUS_ACTION_TEMPLATE
-            : self::STATUS_HANDLER_TEMPLATE;
-        $output->writeln(sprintf($template, $handler));
+        $output->writeln(sprintf(static::STATUS_TEMPLATE, $handler));
 
         $skeleton = ClassSkeletons::CLASS_SKELETON;
         $substitutions = [];
@@ -297,7 +246,7 @@ EOT;
             require_once $path;
         }
 
-        $generator = new CreateTemplate($this->projectRoot);
+        $generator = new CreateTemplate($this->projectRoot, $this->container);
         $template = $generator->generateTemplate(
             $handlerClass,
             $templateNamespace,
@@ -323,11 +272,11 @@ EOT;
         }
 
         $factoryInput = new ArrayInput([
-            'command'       => 'factory:create',
+            'command'       => 'mezzio:factory:create',
             'class'         => $handlerClass,
             '--no-register' => $input->getOption('no-register'),
         ]);
-        $command = $this->getApplication()->find('factory:create');
+        $command = $this->getApplication()->find('mezzio:factory:create');
         return $command->run($factoryInput, $output);
     }
 }
