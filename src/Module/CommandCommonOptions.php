@@ -46,10 +46,10 @@ final class CommandCommonOptions
      * Retrieve the modules path from  1: $input, 2: project config or 3: default 'src'
      *
      * @param InputInterface $input
-     * @param array $config
+     * @param array|ArrayAccess $config
      * @return string
      */
-    public static function getModulesPath(InputInterface $input, array $config = []) : string
+    public static function getModulesPath(InputInterface $input, $config = []) : string
     {
         $configuredModulesPath = $config[self::class]['--modules-path'] ?? 'src';
         $modulesPath           = $input->getOption('modules-path') ?? $configuredModulesPath;

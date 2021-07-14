@@ -11,60 +11,60 @@ class Create
     use TemplateResolutionTrait;
 
     public const TEMPLATE_CONFIG_PROVIDER = <<< 'EOT'
-<?php
-
-declare(strict_types=1);
-
-namespace %1$s;
-
-/**
- * The configuration provider for the %1$s module
- *
- * @see https://docs.laminas.dev/laminas-component-installer/
- */
-class ConfigProvider
-{
-    /**
-     * Returns the configuration array
-     *
-     * To add a bit of a structure, each section is defined in a separate
-     * method which returns an array with its configuration.
-     */
-    public function __invoke() : array
-    {
-        return [
-            'dependencies' => $this->getDependencies(),
-            'templates'    => $this->getTemplates(),
-        ];
-    }
-
-    /**
-     * Returns the container dependencies
-     */
-    public function getDependencies() : array
-    {
-        return [
-            'invokables' => [
-            ],
-            'factories'  => [
-            ],
-        ];
-    }
-
-    /**
-     * Returns the templates configuration
-     */
-    public function getTemplates() : array
-    {
-        return [
-            'paths' => [
-                '%2$s'    => [__DIR__ . '/../templates/'],
-            ],
-        ];
-    }
-}
-
-EOT;
+        <?php
+        
+        declare(strict_types=1);
+        
+        namespace %1$s;
+        
+        /**
+         * The configuration provider for the %1$s module
+         *
+         * @see https://docs.laminas.dev/laminas-component-installer/
+         */
+        class ConfigProvider
+        {
+            /**
+             * Returns the configuration array
+             *
+             * To add a bit of a structure, each section is defined in a separate
+             * method which returns an array with its configuration.
+             */
+            public function __invoke() : array
+            {
+                return [
+                    'dependencies' => $this->getDependencies(),
+                    'templates'    => $this->getTemplates(),
+                ];
+            }
+        
+            /**
+             * Returns the container dependencies
+             */
+            public function getDependencies() : array
+            {
+                return [
+                    'invokables' => [
+                    ],
+                    'factories'  => [
+                    ],
+                ];
+            }
+        
+            /**
+             * Returns the templates configuration
+             */
+            public function getTemplates() : array
+            {
+                return [
+                    'paths' => [
+                        '%2$s'    => [__DIR__ . '/../templates/'],
+                    ],
+                ];
+            }
+        }
+        
+        EOT;
 
     /**
      * Create source tree for the mezzio module.
