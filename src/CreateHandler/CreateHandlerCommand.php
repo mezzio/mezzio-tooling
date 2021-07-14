@@ -166,7 +166,7 @@ EOT;
      */
     protected function configure() : void
     {
-        if (0 === strpos($this->getName(), 'action:')) {
+        if (false !== strpos($this->getName(), 'action:')) {
             $this->configureAction();
         } else {
             $this->configureHandler();
