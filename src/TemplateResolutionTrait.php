@@ -15,8 +15,6 @@ use function substr;
 
 trait TemplateResolutionTrait
 {
-    use ConfigAndContainerTrait;
-
     /**
      * Normalizes identifier to lowercase, dash-separated words.
      */
