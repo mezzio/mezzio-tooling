@@ -28,7 +28,7 @@ class MigrateMiddlewareToRequestHandlerCommand extends Command
         EOT;
 
     /** @var null|string Cannot be defined explicitly due to parent class */
-    public static $defaultName = 'mezzio:middleware-to-request-handler';
+    public static $defaultName = 'mezzio:middleware:to-request-handler';
 
     /**
      * @var string Path from which to resolve default src directory
