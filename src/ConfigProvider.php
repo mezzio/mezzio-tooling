@@ -39,15 +39,15 @@ class ConfigProvider
     {
         return [
             'commands' => [
-                'mezzio:action:create'                 => CreateActionCommand::class,
-                'mezzio:factory:create'                => CreateFactoryCommand::class,
-                'mezzio:handler:create'                => CreateHandlerCommand::class,
-                'mezzio:middleware:create'             => CreateMiddlewareCommand::class,
-                'mezzio:middleware-to-request-handler' => MigrateMiddlewareToRequestHandlerCommand::class,
-                'mezzio:migrate:interop-middleware'    => MigrateInteropMiddlewareCommand::class,
-                'mezzio:module:create'                 => CreateCommand::class,
-                'mezzio:module:deregister'             => DeregisterCommand::class,
-                'mezzio:module:register'               => RegisterCommand::class,
+                'mezzio:action:create'                   => CreateActionCommand::class,
+                'mezzio:factory:create'                  => CreateFactoryCommand::class,
+                'mezzio:handler:create'                  => CreateHandlerCommand::class,
+                'mezzio:middleware:create'               => CreateMiddlewareCommand::class,
+                'mezzio:middleware:migrate-from-interop' => MigrateInteropMiddlewareCommand::class,
+                'mezzio:middleware:to-request-handler'   => MigrateMiddlewareToRequestHandlerCommand::class,
+                'mezzio:module:create'                   => CreateCommand::class,
+                'mezzio:module:deregister'               => DeregisterCommand::class,
+                'mezzio:module:register'                 => RegisterCommand::class,
             ],
         ];
     }
