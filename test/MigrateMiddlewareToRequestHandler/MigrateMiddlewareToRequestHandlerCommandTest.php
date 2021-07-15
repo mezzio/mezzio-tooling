@@ -42,12 +42,12 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
         $this->input = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(ConsoleOutputInterface::class);
 
-        $this->command = new MigrateMiddlewareToRequestHandlerCommand('migrate:middleware-to-request-handler');
+        $this->command = new MigrateMiddlewareToRequestHandlerCommand('');
     }
 
-    private function reflectExecuteMethod() : ReflectionMethod
+    private function reflectExecuteMethod(MigrateMiddlewareToRequestHandlerCommand $command): ReflectionMethod
     {
-        $r = new ReflectionMethod($this->command, 'execute');
+        $r = new ReflectionMethod($command, 'execute');
         $r->setAccessible(true);
         return $r;
     }
@@ -107,11 +107,11 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
             ->writeln(Argument::containingString('Done!'))
             ->shouldBeCalledTimes(1);
 
-        $this->command->setProjectDir($path);
-        $method = $this->reflectExecuteMethod();
+        $command = new MigrateMiddlewareToRequestHandlerCommand($path);
+        $method = $this->reflectExecuteMethod($command);
 
         self::assertSame(0, $method->invoke(
-            $this->command,
+            $command,
             $this->input->reveal(),
             $this->output->reveal()
         ));
@@ -127,14 +127,14 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
 
         $this->input->getOption('src')->willReturn('src');
 
-        $this->command->setProjectDir($path);
-        $method = $this->reflectExecuteMethod();
+        $command = new MigrateMiddlewareToRequestHandlerCommand($path);
+        $method = $this->reflectExecuteMethod($command);
 
         $this->expectException(ArgvException::class);
         $this->expectExceptionMessage('Invalid --src argument');
 
         $method->invoke(
-            $this->command,
+            $command,
             $this->input->reveal(),
             $this->output->reveal()
         );
