@@ -13,9 +13,9 @@ class Create
      */
     private $generator;
 
-    public function __construct(FactoryClassGenerator $generator = null)
+    public function __construct(FactoryClassGenerator $generator)
     {
-        $this->generator = $generator ?: new FactoryClassGenerator();
+        $this->generator = $generator;
     }
 
     /**

@@ -10,23 +10,23 @@ use ReflectionParameter;
 class FactoryClassGenerator
 {
     public const FACTORY_TEMPLATE = <<<'EOT'
-<?php
-
-declare(strict_types=1);
-
-namespace %2$s;
-
-%3$s
-
-class %1$sFactory
-{
-    public function __invoke(ContainerInterface $container) : %1$s
-    {
-        return new %1$s(%4$s);
-    }
-}
-
-EOT;
+        <?php
+        
+        declare(strict_types=1);
+        
+        namespace %2$s;
+        
+        %3$s
+        
+        class %1$sFactory
+        {
+            public function __invoke(ContainerInterface $container) : %1$s
+            {
+                return new %1$s(%4$s);
+            }
+        }
+        
+        EOT;
 
     public function createFactory(string $className) : string
     {

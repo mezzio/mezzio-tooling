@@ -30,17 +30,10 @@ class CreateTest extends TestCase
 
     protected function setUp() : void
     {
-        $this->factory = new Create();
+        $this->factory = new Create(new FactoryClassGenerator());
         $this->dir = vfsStream::setup('project');
         $this->projectRoot = vfsStream::url('project');
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/classes', $this->dir);
-    }
-
-    public function testRaisesExceptionWhenClassDoesNotExist()
-    {
-        $class = __CLASS__ . '\NotFound';
-        $this->expectException(ClassNotFoundException::class);
-        $this->factory->createForClass($class);
     }
 
     /**

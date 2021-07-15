@@ -8,6 +8,7 @@ use Mezzio\Tooling\Factory\ClassNotFoundException;
 use Mezzio\Tooling\Factory\ConfigInjector;
 use Mezzio\Tooling\Factory\Create;
 use Mezzio\Tooling\Factory\CreateFactoryCommand;
+use Mezzio\Tooling\Factory\FactoryClassGenerator;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -41,12 +42,15 @@ class CreateFactoryCommandTest extends TestCase
         $this->input = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(ConsoleOutputInterface::class);
 
-        $this->command = new CreateFactoryCommand('factory:create');
+        $this->command = new CreateFactoryCommand(
+            new Create(new FactoryClassGenerator()),
+            ''
+        );
     }
 
-    private function reflectExecuteMethod()
+    private function reflectExecuteMethod(CreateFactoryCommand $command)
     {
-        $r = new ReflectionMethod($this->command, 'execute');
+        $r = new ReflectionMethod($command, 'execute');
         $r->setAccessible(true);
         return $r;
     }
@@ -80,14 +84,11 @@ class CreateFactoryCommandTest extends TestCase
 
     public function testSuccessfulExecutionEmitsExpectedMessages()
     {
-        $generator = Mockery::mock('overload:' . Create::class);
-        $generator->shouldReceive('createForClass')
-            ->once()
-            ->with('Foo\TestHandler')
-            ->andReturn(__DIR__);
+        $generator = $this->prophesize(Create::class);
+        $generator->createForClass('Foo\TestHandler')->willReturn(__DIR__)->shouldBeCalled();
 
-        $generator = Mockery::mock('overload:' . ConfigInjector::class);
-        $generator->shouldReceive('injectFactoryForClass')
+        $injector = Mockery::mock('overload:' . ConfigInjector::class);
+        $injector->shouldReceive('injectFactoryForClass')
             ->once()
             ->with('Foo\TestHandlerFactory', 'Foo\TestHandler')
             ->andReturn('some-file-name');
@@ -110,10 +111,12 @@ class CreateFactoryCommandTest extends TestCase
             ->writeln(Argument::containingString('Registered factory to container'))
             ->shouldBeCalled();
 
-        $method = $this->reflectExecuteMethod();
+        $command = new CreateFactoryCommand($generator->reveal(), '');
+
+        $method = $this->reflectExecuteMethod($command);
 
         self::assertSame(0, $method->invoke(
-            $this->command,
+            $command,
             $this->input->reveal(),
             $this->output->reveal()
         ));
@@ -121,11 +124,8 @@ class CreateFactoryCommandTest extends TestCase
 
     public function testAllowsExceptionsRaisedFromCreateToBubbleUp()
     {
-        $generator = Mockery::mock('overload:' . Create::class);
-        $generator->shouldReceive('createForClass')
-            ->once()
-            ->with('Foo\TestHandler')
-            ->andThrow(ClassNotFoundException::class, 'ERROR THROWN');
+        $generator = $this->prophesize(Create::class);
+        $generator->createForClass('Foo\TestHandler')->willThrow(ClassNotFoundException::class)->shouldBeCalled();
 
         $this->input->getArgument('class')->willReturn('Foo\TestHandler');
         $this->input->getOption('no-register')->willReturn(false);
@@ -137,13 +137,14 @@ class CreateFactoryCommandTest extends TestCase
             ->writeln(Argument::containingString('Success'))
             ->shouldNotBeCalled();
 
-        $method = $this->reflectExecuteMethod();
+        $command = new CreateFactoryCommand($generator->reveal(), '');
+
+        $method = $this->reflectExecuteMethod($command);
 
         $this->expectException(ClassNotFoundException::class);
-        $this->expectExceptionMessage('ERROR THROWN');
 
         $method->invoke(
-            $this->command,
+            $command,
             $this->input->reveal(),
             $this->output->reveal()
         );
