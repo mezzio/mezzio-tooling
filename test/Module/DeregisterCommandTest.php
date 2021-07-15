@@ -48,7 +48,7 @@ class DeregisterCommandTest extends TestCase
         $this->dir = vfsStream::setup('project');
         $this->input = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(ConsoleOutputInterface::class);
-        $this->command = new DeregisterCommand('module:deregister');
+        $this->command = new DeregisterCommand('');
         $this->expectedModuleArgumentDescription = DeregisterCommand::HELP_ARG_MODULE;
     }
 
