@@ -1,0 +1,14 @@
+<?php
+
+namespace Mezzio\Tooling\MigrateInteropMiddleware;
+
+use function getcwd;
+use function realpath;
+
+class MigrateInteropMiddlewareCommandFactory
+{
+    public function __invoke(): MigrateInteropMiddlewareCommand
+    {
+        return new MigrateInteropMiddlewareCommand(realpath(getcwd()));
+    }
+}
