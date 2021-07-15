@@ -49,8 +49,6 @@ class CreateActionCommand extends CreateHandlerCommand
         $this->addOption('no-factory', null, InputOption::VALUE_NONE, self::HELP_OPT_NO_FACTORY);
         $this->addOption('no-register', null, InputOption::VALUE_NONE, self::HELP_OPT_NO_REGISTER);
 
-        if ($this->rendererIsRegistered) {
-            $this->configureTemplateOptions();
-        }
+        $this->configureTemplateOptions();
     }
 }
