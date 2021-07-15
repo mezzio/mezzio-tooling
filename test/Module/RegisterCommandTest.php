@@ -49,7 +49,7 @@ class RegisterCommandTest extends TestCase
         $this->dir = vfsStream::setup('project');
         $this->input = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(ConsoleOutputInterface::class);
-        $this->command = new RegisterCommand('module:register');
+        $this->command = new RegisterCommand('');
         $this->expectedModuleArgumentDescription = RegisterCommand::HELP_ARG_MODULE;
     }
 

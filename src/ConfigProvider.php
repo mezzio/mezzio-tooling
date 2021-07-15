@@ -16,6 +16,7 @@ use Mezzio\Tooling\Module\CreateCommand;
 use Mezzio\Tooling\Module\CreateCommandFactory;
 use Mezzio\Tooling\Module\DeregisterCommand;
 use Mezzio\Tooling\Module\RegisterCommand;
+use Mezzio\Tooling\Module\RegisterCommandFactory;
 
 class ConfigProvider
 {
@@ -51,6 +52,7 @@ class ConfigProvider
                 CreateActionCommand::class                      => CreateActionCommandFactory::class,
                 CreateCommand::class                            => CreateCommandFactory::class,
                 CreateHandlerCommand::class                     => CreateHandlerCommandFactory::class,
+                RegisterCommand::class                          => RegisterCommandFactory::class,
             ],
             'invokables' => [
                 CreateFactoryCommand::class                     => CreateFactoryCommand::class,
@@ -58,7 +60,6 @@ class ConfigProvider
                 DeregisterCommand::class                        => DeregisterCommand::class,
                 MigrateInteropMiddlewareCommand::class          => MigrateInteropMiddlewareCommand::class,
                 MigrateMiddlewareToRequestHandlerCommand::class => MigrateMiddlewareToRequestHandlerCommand::class,
-                RegisterCommand::class                          => RegisterCommand::class,
             ],
         ];
     }
