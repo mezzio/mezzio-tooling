@@ -15,37 +15,35 @@ class CreateMiddleware
      * @var string Template for middleware class.
      */
     public const CLASS_SKELETON = <<< 'EOS'
-<?php
-
-declare(strict_types=1);
-
-namespace %namespace%;
-
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-
-class %class% implements MiddlewareInterface
-{
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
-    {
-        // $response = $handler->handle($request);
-    }
-}
-
-EOS;
+        <?php
+        
+        declare(strict_types=1);
+        
+        namespace %namespace%;
+        
+        use Psr\Http\Message\ResponseInterface;
+        use Psr\Http\Message\ServerRequestInterface;
+        use Psr\Http\Server\MiddlewareInterface;
+        use Psr\Http\Server\RequestHandlerInterface;
+        
+        class %class% implements MiddlewareInterface
+        {
+            public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+            {
+                // $response = $handler->handle($request);
+            }
+        }
+        
+        EOS;
 
     /**
      * @throws CreateMiddlewareException
      */
     public function process(
         string $class,
-        string $projectRoot = null,
+        string $projectRoot,
         string $classSkeleton = self::CLASS_SKELETON
     ) : string {
-        $projectRoot = $projectRoot ?: getcwd();
-
         $path = $this->getClassPath($class, $projectRoot);
 
         list($namespace, $class) = $this->getNamespaceAndClass($class);
