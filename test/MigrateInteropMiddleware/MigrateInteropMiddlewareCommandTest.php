@@ -42,12 +42,12 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
         $this->input = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(ConsoleOutputInterface::class);
 
-        $this->command = new MigrateInteropMiddlewareCommand('migrate:interop-middleware');
+        $this->command = new MigrateInteropMiddlewareCommand('');
     }
 
-    private function reflectExecuteMethod()
+    private function reflectExecuteMethod(MigrateInteropMiddlewareCommand $command)
     {
-        $r = new ReflectionMethod($this->command, 'execute');
+        $r = new ReflectionMethod($command, 'execute');
         $r->setAccessible(true);
         return $r;
     }
@@ -102,11 +102,11 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
             ->writeln(Argument::containingString('Done!'))
             ->shouldBeCalled();
 
-        $this->command->setProjectDir($path);
-        $method = $this->reflectExecuteMethod();
+        $command = new MigrateInteropMiddlewareCommand($path);
+        $method = $this->reflectExecuteMethod($command);
 
         self::assertSame(0, $method->invoke(
-            $this->command,
+            $command,
             $this->input->reveal(),
             $this->output->reveal()
         ));
@@ -122,14 +122,14 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
 
         $this->input->getOption('src')->willReturn('src');
 
-        $this->command->setProjectDir($path);
-        $method = $this->reflectExecuteMethod();
+        $command = new MigrateInteropMiddlewareCommand($path);
+        $method = $this->reflectExecuteMethod($command);
 
         $this->expectException(ArgvException::class);
         $this->expectExceptionMessage('Invalid --src argument');
 
         $method->invoke(
-            $this->command,
+            $command,
             $this->input->reveal(),
             $this->output->reveal()
         );

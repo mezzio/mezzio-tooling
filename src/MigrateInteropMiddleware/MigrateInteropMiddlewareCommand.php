@@ -30,6 +30,9 @@ class MigrateInteropMiddlewareCommand extends Command
         If not specified, assumes src/ under the current working path.
         EOT;
 
+    /** @var null|string Cannot be defined explicitly due to parent class */
+    public static $defaultName = 'mezzio:middleware:migrate-from-interop';
+
     /**
      * @var null|string Path from which to resolve default src directory
      */
