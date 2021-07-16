@@ -9,6 +9,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
+use function preg_replace;
+use function str_replace;
+
 /**
  * @internal
  */
@@ -16,10 +19,8 @@ final class CommandCommonOptions
 {
     /**
      * Add default arguments and options used by all commands.
-     *
-     * @param Command $command
      */
-    public static function addDefaultOptionsAndArguments(Command $command) : void
+    public static function addDefaultOptionsAndArguments(Command $command): void
     {
         $command->addArgument(
             'module',
@@ -45,11 +46,9 @@ final class CommandCommonOptions
     /**
      * Retrieve the modules path from  1: $input, 2: project config or 3: default 'src'
      *
-     * @param InputInterface $input
-     * @param array $config
-     * @return string
+     * @param array|ArrayAccess $config
      */
-    public static function getModulesPath(InputInterface $input, array $config = []) : string
+    public static function getModulesPath(InputInterface $input, $config = []): string
     {
         $configuredModulesPath = $config[self::class]['--modules-path'] ?? 'src';
         $modulesPath           = $input->getOption('modules-path') ?? $configuredModulesPath;

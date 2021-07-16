@@ -6,9 +6,11 @@ namespace Mezzio\Tooling\Factory;
 
 use RuntimeException;
 
+use function sprintf;
+
 class FactoryAlreadyExistsException extends RuntimeException
 {
-    public static function forClassUsingFile(string $className, string $fileName) : self
+    public static function forClassUsingFile(string $className, string $fileName): self
     {
         return new self(sprintf(
             'Cannot create factory for class "%s"; factory file "%s" already exists!',

@@ -10,14 +10,14 @@ use MezzioTest\Tooling\Factory\TestAsset\InvokableObject;
 use MezzioTest\Tooling\Factory\TestAsset\SimpleDependencyObject;
 use PHPUnit\Framework\TestCase;
 
+use function file_get_contents;
+
 class FactoryClassGeneratorTest extends TestCase
 {
-    /**
-     * @var FactoryClassGenerator
-     */
+    /** @var FactoryClassGenerator */
     private $generator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->generator = new FactoryClassGenerator();
     }
@@ -25,7 +25,7 @@ class FactoryClassGeneratorTest extends TestCase
     public function testCreateFactoryCreatesForInvokable()
     {
         $className = InvokableObject::class;
-        $factory = file_get_contents(__DIR__ . '/TestAsset/factories/InvokableObject.php');
+        $factory   = file_get_contents(__DIR__ . '/TestAsset/factories/InvokableObject.php');
 
         self::assertEquals($factory, $this->generator->createFactory($className));
     }
@@ -33,7 +33,7 @@ class FactoryClassGeneratorTest extends TestCase
     public function testCreateFactoryCreatesForSimpleDependencies()
     {
         $className = SimpleDependencyObject::class;
-        $factory = file_get_contents(__DIR__. '/TestAsset/factories/SimpleDependencyObject.php');
+        $factory   = file_get_contents(__DIR__ . '/TestAsset/factories/SimpleDependencyObject.php');
 
         self::assertEquals($factory, $this->generator->createFactory($className));
     }
@@ -41,7 +41,7 @@ class FactoryClassGeneratorTest extends TestCase
     public function testCreateFactoryCreatesForComplexDependencies()
     {
         $className = ComplexDependencyObject::class;
-        $factory = file_get_contents(__DIR__. '/TestAsset/factories/ComplexDependencyObject.php');
+        $factory   = file_get_contents(__DIR__ . '/TestAsset/factories/ComplexDependencyObject.php');
 
         self::assertEquals($factory, $this->generator->createFactory($className));
     }
@@ -53,7 +53,7 @@ class FactoryClassGeneratorTest extends TestCase
     {
         require __DIR__ . '/TestAsset/classes/ClassDuplicatingNamespaceName.php';
         $className = 'This\Duplicates\ClassDuplicatingNamespaceNameCase\ClassDuplicatingNamespaceName';
-        $factory = file_get_contents(__DIR__ . '/TestAsset/factories/ClassDuplicatingNamespaceName.php');
+        $factory   = file_get_contents(__DIR__ . '/TestAsset/factories/ClassDuplicatingNamespaceName.php');
 
         self::assertEquals($factory, $this->generator->createFactory($className));
     }

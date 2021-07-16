@@ -19,7 +19,15 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
-use ReflectionProperty;
+
+use function array_push;
+use function copy;
+use function file_get_contents;
+use function file_put_contents;
+use function sprintf;
+use function strrpos;
+use function substr;
+use function vsprintf;
 
 /**
  * @runTestsInSeparateProcesses
@@ -29,12 +37,12 @@ class CreateTemplateTest extends TestCase
     use ProphecyTrait;
 
     private const COMMON_FILES = [
-        '/TestAsset/common/PlatesRenderer.php'   => '/src/PlatesRenderer.php',
-        '/TestAsset/common/TwigRenderer.php'     => '/src/TwigRenderer.php',
+        '/TestAsset/common/PlatesRenderer.php'      => '/src/PlatesRenderer.php',
+        '/TestAsset/common/TwigRenderer.php'        => '/src/TwigRenderer.php',
         '/TestAsset/common/LaminasViewRenderer.php' => '/src/LaminasViewRenderer.php',
     ];
 
-    /** @var ContainerInterface|ObjectProphecy */
+    /** @var ContainerInterface&ObjectProphecy */
     private $container;
 
     /** @var vfsStreamDirectory */
@@ -46,11 +54,11 @@ class CreateTemplateTest extends TestCase
     /** @var PlatesRenderer|TwigRenderer|LaminasViewRenderer */
     private $renderer;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->dir = vfsStream::setup('project');
+        $this->dir         = vfsStream::setup('project');
         $this->projectRoot = vfsStream::url('project');
-        $this->container = $this->prophesize(ContainerInterface::class);
+        $this->container   = $this->prophesize(ContainerInterface::class);
     }
 
     public function prepareCommonAssets()
@@ -63,7 +71,7 @@ class CreateTemplateTest extends TestCase
     public function injectConfigInContainer(bool $configAsArrayObject = false)
     {
         $configFile = $this->projectRoot . '/config/config.php';
-        $config = include $configFile;
+        $config     = include $configFile;
 
         if ($configAsArrayObject) {
             $config = new ArrayObject($config);
@@ -72,7 +80,7 @@ class CreateTemplateTest extends TestCase
         $this->container->get('config')->willReturn($config);
     }
 
-    public function configType() : Generator
+    public function configType(): Generator
     {
         yield 'array'       => [false];
         yield 'ArrayObject' => [true];
@@ -80,7 +88,7 @@ class CreateTemplateTest extends TestCase
 
     public function injectRendererInContainer(string $renderer)
     {
-        $className = substr($renderer, strrpos($renderer, '\\') + 1);
+        $className  = substr($renderer, strrpos($renderer, '\\') + 1);
         $sourceFile = sprintf('%s/src/%s.php', $this->projectRoot, $className);
         require $sourceFile;
         $this->renderer = new $renderer();
@@ -88,26 +96,19 @@ class CreateTemplateTest extends TestCase
         $this->container->get(TemplateRendererInterface::class)->willReturn($this->renderer);
     }
 
-    public function injectContainerInGenerator(CreateTemplate $generator)
-    {
-        $r = new ReflectionProperty($generator, 'container');
-        $r->setAccessible(true);
-        $r->setValue($generator, $this->container->reveal());
-    }
-
     public function updateConfigContents(string ...$replacements)
     {
         $configFile = $this->projectRoot . '/config/config.php';
-        $contents = file_get_contents($configFile);
-        $contents = vsprintf($contents, $replacements);
+        $contents   = file_get_contents($configFile);
+        $contents   = vsprintf($contents, $replacements);
         file_put_contents($configFile, $contents);
     }
 
-    public function rendererTypes() : array
+    public function rendererTypes(): array
     {
         return [
-            PlatesRenderer::class   => [PlatesRenderer::class, 'phtml'],
-            TwigRenderer::class     => [TwigRenderer::class, 'html.twig'],
+            PlatesRenderer::class      => [PlatesRenderer::class, 'phtml'],
+            TwigRenderer::class        => [TwigRenderer::class, 'html.twig'],
             LaminasViewRenderer::class => [LaminasViewRenderer::class, 'phtml'],
         ];
     }
@@ -126,8 +127,7 @@ class CreateTemplateTest extends TestCase
         $this->injectConfigInContainer();
         $this->injectRendererInContainer($rendererType);
 
-        $generator = new CreateTemplate($this->projectRoot);
-        $this->injectContainerInGenerator($generator);
+        $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $template = $generator->forHandler('Test\TestHandler');
         self::assertSame($this->projectRoot . '/config/../templates/test/test.' . $extension, $template->getPath());
@@ -148,8 +148,7 @@ class CreateTemplateTest extends TestCase
         $this->injectConfigInContainer();
         $this->injectRendererInContainer($rendererType);
 
-        $generator = new CreateTemplate($this->projectRoot);
-        $this->injectContainerInGenerator($generator);
+        $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $template = $generator->forHandler('Test\TestHandler');
         self::assertSame(
@@ -173,8 +172,7 @@ class CreateTemplateTest extends TestCase
         $this->injectConfigInContainer();
         $this->injectRendererInContainer($rendererType);
 
-        $generator = new CreateTemplate($this->projectRoot);
-        $this->injectContainerInGenerator($generator);
+        $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $template = $generator->forHandler('Test\TestHandler');
         self::assertSame($this->projectRoot . '/templates/test/test.' . $extension, $template->getPath());
@@ -195,8 +193,7 @@ class CreateTemplateTest extends TestCase
         $this->injectConfigInContainer();
         $this->injectRendererInContainer($rendererType);
 
-        $generator = new CreateTemplate($this->projectRoot);
-        $this->injectContainerInGenerator($generator);
+        $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $template = $generator->forHandler('Test\TestHandler');
         self::assertSame($this->projectRoot . '/src/Test/templates/test.' . $extension, $template->getPath());
@@ -218,8 +215,7 @@ class CreateTemplateTest extends TestCase
         $this->injectConfigInContainer();
         $this->injectRendererInContainer($rendererType);
 
-        $generator = new CreateTemplate($this->projectRoot);
-        $this->injectContainerInGenerator($generator);
+        $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $template = $generator->forHandler('Test\TestHandler');
         self::assertSame($this->projectRoot . '/config/../view/for-testing/test.' . $extension, $template->getPath());
@@ -241,8 +237,7 @@ class CreateTemplateTest extends TestCase
         $this->injectConfigInContainer();
         $this->injectRendererInContainer($rendererType);
 
-        $generator = new CreateTemplate($this->projectRoot);
-        $this->injectContainerInGenerator($generator);
+        $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $template = $generator->forHandler('Test\TestHandler');
         self::assertSame($this->projectRoot . '/config/../view/for-testing/test.' . $extension, $template->getPath());
@@ -262,8 +257,7 @@ class CreateTemplateTest extends TestCase
         $this->container->has(TemplateRendererInterface::class)->willReturn(false);
         $this->container->get(TemplateRendererInterface::class)->shouldNotBeCalled();
 
-        $generator = new CreateTemplate($this->projectRoot);
-        $this->injectContainerInGenerator($generator);
+        $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $this->expectException(UnresolvableRendererException::class);
         $this->expectExceptionMessage('inability to detect a service alias');
@@ -287,15 +281,14 @@ class CreateTemplateTest extends TestCase
         $this->container->has(TemplateRendererInterface::class)->willReturn(true);
         $this->container->get(TemplateRendererInterface::class)->willReturn($this);
 
-        $generator = new CreateTemplate($this->projectRoot);
-        $this->injectContainerInGenerator($generator);
+        $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $this->expectException(UnresolvableRendererException::class);
         $this->expectExceptionMessage('unknown template renderer type');
         $generator->forHandler('Test\TestHandler');
     }
 
-    public function rendererTypesWithInvalidPathCounts() : iterable
+    public function rendererTypesWithInvalidPathCounts(): iterable
     {
         foreach (['empty-paths'] as $config) {
             foreach ($this->rendererTypes() as $key => $arguments) {
@@ -322,8 +315,7 @@ class CreateTemplateTest extends TestCase
         $this->injectConfigInContainer();
         $this->injectRendererInContainer($rendererType);
 
-        $generator = new CreateTemplate($this->projectRoot);
-        $this->injectContainerInGenerator($generator);
+        $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $this->expectException(TemplatePathResolutionException::class);
         $generator->forHandler('Test\TestHandler');
@@ -345,8 +337,7 @@ class CreateTemplateTest extends TestCase
         $this->injectConfigInContainer();
         $this->injectRendererInContainer($rendererType);
 
-        $generator = new CreateTemplate($this->projectRoot);
-        $this->injectContainerInGenerator($generator);
+        $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $this->expectException(TemplatePathResolutionException::class);
         $generator->forHandler('Test\TestHandler');
@@ -367,8 +358,7 @@ class CreateTemplateTest extends TestCase
         $this->injectConfigInContainer();
         $this->injectRendererInContainer($rendererType);
 
-        $generator = new CreateTemplate($this->projectRoot);
-        $this->injectContainerInGenerator($generator);
+        $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $template = $generator->generateTemplate('Test\TestHandler', 'custom', 'also-custom');
         self::assertSame(
@@ -393,8 +383,7 @@ class CreateTemplateTest extends TestCase
         $this->injectConfigInContainer();
         $this->injectRendererInContainer($rendererType);
 
-        $generator = new CreateTemplate($this->projectRoot);
-        $this->injectContainerInGenerator($generator);
+        $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $template = $generator->generateTemplate('Test\TestHandler', 'custom', 'also-custom');
         self::assertSame(
@@ -418,8 +407,7 @@ class CreateTemplateTest extends TestCase
         $this->container->has(TemplateRendererInterface::class)->willReturn(true);
         $this->container->get(TemplateRendererInterface::class)->willReturn($this);
 
-        $generator = new CreateTemplate($this->projectRoot);
-        $this->injectContainerInGenerator($generator);
+        $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $template = $generator->generateTemplate('Test\TestHandler', 'custom', 'also-custom', 'XHTML');
         self::assertSame(

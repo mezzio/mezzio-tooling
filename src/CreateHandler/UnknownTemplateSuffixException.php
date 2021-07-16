@@ -6,9 +6,11 @@ namespace Mezzio\Tooling\CreateHandler;
 
 use RuntimeException;
 
+use function sprintf;
+
 class UnknownTemplateSuffixException extends RuntimeException
 {
-    public static function forRendererType(string $type) : self
+    public static function forRendererType(string $type): self
     {
         return new self(sprintf(
             'Could not determine template file extension for renderer of type %s;'

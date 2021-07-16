@@ -6,9 +6,11 @@ namespace Mezzio\Tooling\Factory;
 
 use RuntimeException;
 
+use function sprintf;
+
 class UnidentifiedTypeException extends RuntimeException
 {
-    public static function forArgument(string $argument) : self
+    public static function forArgument(string $argument): self
     {
         return new self(sprintf(
             'Cannot identify type for constructor argument "%s"; '
