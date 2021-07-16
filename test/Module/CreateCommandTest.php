@@ -25,6 +25,9 @@ use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+use function getcwd;
 
 /**
  * @runTestsInSeparateProcesses
@@ -54,22 +57,23 @@ class CreateCommandTest extends TestCase
     /** @var string */
     private $expectedModuleArgumentDescription;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->dir = vfsStream::setup('project');
+        $this->dir         = vfsStream::setup('project');
         $this->projectRoot = vfsStream::url('project');
 
-        $this->input = $this->prophesize(InputInterface::class);
+        $this->input  = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(ConsoleOutputInterface::class);
 
-        $this->command = new CreateCommand([], '');
+        $this->command                           = new CreateCommand([], '');
         $this->expectedModuleArgumentDescription = CreateCommand::HELP_ARG_MODULE;
     }
 
+    /** @return array|ArrayObject */
     public function createConfig(bool $configAsArrayObject = false)
     {
         $configFile = $this->projectRoot . '/config/config.php';
-        $config = include $configFile;
+        $config     = include $configFile;
 
         if ($configAsArrayObject) {
             $config = new ArrayObject($config);
@@ -78,21 +82,31 @@ class CreateCommandTest extends TestCase
         return $config;
     }
 
-    public function configType() : Generator
+    public function configType(): Generator
     {
         yield 'array'       => [false];
         yield 'ArrayObject' => [true];
     }
 
-    private function reflectExecuteMethod(CreateCommand $command)
+    private function reflectExecuteMethod(CreateCommand $command): ReflectionMethod
     {
         $r = new ReflectionMethod($command, 'execute');
         $r->setAccessible(true);
         return $r;
     }
 
-    private function mockApplicationWithRegisterCommand($return, $name, $module, $composer, $modulesPath, $output)
-    {
+    /**
+     * @param OutputInterface&ObjectProphecy $output
+     * @return Application&ObjectProphecy
+     */
+    private function mockApplicationWithRegisterCommand(
+        int $return,
+        string $name,
+        string $module,
+        string $composer,
+        string $modulesPath,
+        $output
+    ) {
         $register = $this->prophesize(Command::class);
         $register
             ->run(
@@ -146,7 +160,7 @@ class CreateCommandTest extends TestCase
     public function testCommandEmitsExpectedSuccessMessages(bool $configAsArrayObject)
     {
         $projectRoot = getcwd();
-        $creation = Mockery::mock('overload:' . Create::class);
+        $creation    = Mockery::mock('overload:' . Create::class);
         $creation->shouldReceive('process')
             ->once()
             ->with('Foo', 'library/modules', $projectRoot)
@@ -185,7 +199,7 @@ class CreateCommandTest extends TestCase
     public function testCommandWillFailIfRegisterFails(bool $configAsArrayObject)
     {
         $projectRoot = getcwd();
-        $creation = Mockery::mock('overload:' . Create::class);
+        $creation    = Mockery::mock('overload:' . Create::class);
         $creation->shouldReceive('process')
             ->once()
             ->with('Foo', 'library/modules', $projectRoot)
@@ -225,7 +239,7 @@ class CreateCommandTest extends TestCase
     public function testCommandAllowsExceptionsToBubbleUp(bool $configAsArrayObject)
     {
         $projectRoot = getcwd();
-        $creation = Mockery::mock('overload:' . Create::class);
+        $creation    = Mockery::mock('overload:' . Create::class);
         $creation->shouldReceive('process')
             ->with('Foo', 'library/modules', $projectRoot)
             ->once()

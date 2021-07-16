@@ -27,6 +27,8 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
+use function sprintf;
+
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
@@ -45,15 +47,15 @@ class CreateHandlerCommandTest extends TestCase
     /** @var ConsoleOutputInterface&ObjectProphecy */
     private $output;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->input = $this->prophesize(InputInterface::class);
+        $this->input  = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(ConsoleOutputInterface::class);
 
         $this->container = $this->prophesize(ContainerInterface::class);
     }
 
-    private function createCommand() : CreateHandlerCommand
+    private function createCommand(): CreateHandlerCommand
     {
         return new CreateHandlerCommand(
             $this->container->reveal(),
@@ -64,14 +66,14 @@ class CreateHandlerCommandTest extends TestCase
     /**
      * Allows disabling of the `require` statement in the command class when testing.
      */
-    private function disableRequireHandlerDirective(CreateHandlerCommand $command) : void
+    private function disableRequireHandlerDirective(CreateHandlerCommand $command): void
     {
         $r = new ReflectionProperty($command, 'requireHandlerBeforeGeneratingFactory');
         $r->setAccessible(true);
         $r->setValue($command, false);
     }
 
-    private function reflectExecuteMethod(CreateHandlerCommand $command) : ReflectionMethod
+    private function reflectExecuteMethod(CreateHandlerCommand $command): ReflectionMethod
     {
         $r = new ReflectionMethod($command, 'execute');
         $r->setAccessible(true);
@@ -119,7 +121,7 @@ class CreateHandlerCommandTest extends TestCase
 
     public function testConfigureSetsExpectedArguments()
     {
-        $command = $this->createCommand();
+        $command    = $this->createCommand();
         $definition = $command->getDefinition();
 
         self::assertTrue($definition->hasArgument('handler'));
@@ -130,7 +132,7 @@ class CreateHandlerCommandTest extends TestCase
 
     public function testConfigureSetsExpectedOptionsWhenRequestingAHandler()
     {
-        $command = $this->createCommand();
+        $command    = $this->createCommand();
         $definition = $command->getDefinition();
 
         self::assertTrue($definition->hasOption('no-factory'));
@@ -152,7 +154,7 @@ class CreateHandlerCommandTest extends TestCase
     public function testConfigureSetsExpectedTemplateOptionsWhenRequestingAHandlerAndRendererIsPresent()
     {
         $this->container->has(TemplateRendererInterface::class)->willReturn(true);
-        $command = new CreateHandlerCommand($this->container->reveal(), '');
+        $command    = new CreateHandlerCommand($this->container->reveal(), '');
         $definition = $command->getDefinition();
 
         self::assertTrue($definition->hasOption('without-template'));
@@ -214,11 +216,11 @@ class CreateHandlerCommandTest extends TestCase
     {
         $expectedSubstitutions = [
             '%template-namespace%' => 'foo',
-            '%template-name%' => 'test',
+            '%template-name%'      => 'test',
         ];
-        $generatedTemplate = 'foo::test';
-        $templateNamespace = 'foo';
-        $templateName = 'test';
+        $generatedTemplate     = 'foo::test';
+        $templateNamespace     = 'foo';
+        $templateName          = 'test';
 
         $this->container->has(TemplateRendererInterface::class)->willReturn(true);
         $command = $this->createCommand();
@@ -231,7 +233,7 @@ class CreateHandlerCommandTest extends TestCase
             ->with('Foo\TestHandler', $expectedSubstitutions)
             ->andReturn(__DIR__);
 
-        $template = new Template(__FILE__, $generatedTemplate);
+        $template          = new Template(__FILE__, $generatedTemplate);
         $templateGenerator = Mockery::mock('overload:' . CreateTemplate::class);
         $templateGenerator->shouldReceive('generateTemplate')
             ->once()
@@ -267,15 +269,15 @@ class CreateHandlerCommandTest extends TestCase
         ));
     }
 
-    public function testCommandWillGenerateTemplateWithProvidedOptionsWhenRendererIsRegistered():void
+    public function testCommandWillGenerateTemplateWithProvidedOptionsWhenRendererIsRegistered(): void
     {
-        $templateNamespace = 'custom';
-        $templateName = 'also-custom';
-        $generatedTemplate = sprintf('%s::%s', $templateNamespace, $templateName);
-        $templateExtension = 'XHTML';
+        $templateNamespace     = 'custom';
+        $templateName          = 'also-custom';
+        $generatedTemplate     = sprintf('%s::%s', $templateNamespace, $templateName);
+        $templateExtension     = 'XHTML';
         $expectedSubstitutions = [
             '%template-namespace%' => $templateNamespace,
-            '%template-name%' => $templateName,
+            '%template-name%'      => $templateName,
         ];
 
         $this->container->has(TemplateRendererInterface::class)->willReturn(true);
@@ -289,7 +291,7 @@ class CreateHandlerCommandTest extends TestCase
             ->with('Foo\TestHandler', $expectedSubstitutions)
             ->andReturn(__DIR__);
 
-        $template = new Template(__FILE__, $generatedTemplate);
+        $template          = new Template(__FILE__, $generatedTemplate);
         $templateGenerator = Mockery::mock('overload:' . CreateTemplate::class);
         $templateGenerator->shouldReceive('generateTemplate')
             ->once()
@@ -411,7 +413,7 @@ class CreateHandlerCommandTest extends TestCase
             ->once()
             ->with('InvalidTestHandler', [
                 '%template-namespace%' => 'invalid-test-handler',
-                '%template-name%' => 'invalid-test',
+                '%template-name%'      => 'invalid-test',
             ])
             ->andThrow(CreateHandlerException::class, 'ERROR THROWN');
 

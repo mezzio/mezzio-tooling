@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mezzio\Tooling\Factory;
 
 use Psr\Container\ContainerInterface;

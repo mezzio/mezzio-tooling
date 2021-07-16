@@ -26,7 +26,7 @@ class CreateHandlerExceptionTest extends TestCase
     public function testInvalidComposerJsonReturnsInstanceWithErrorMessage()
     {
         $error = 'Invalid or malformed JSON';
-        $e = CreateHandlerException::invalidComposerJson($error);
+        $e     = CreateHandlerException::invalidComposerJson($error);
         self::assertInstanceOf(CreateHandlerException::class, $e);
         self::assertStringContainsString('Unable to parse composer.json: ', $e->getMessage());
         self::assertStringContainsString($error, $e->getMessage());
@@ -34,17 +34,17 @@ class CreateHandlerExceptionTest extends TestCase
 
     public function testAutoloaderNotFoundReturnsInstanceUsingClassNameProvided()
     {
-        $expected = __CLASS__;
-        $e = CreateHandlerException::autoloaderNotFound($expected);
+        $expected = self::class;
+        $e        = CreateHandlerException::autoloaderNotFound($expected);
         self::assertInstanceOf(CreateHandlerException::class, $e);
         self::assertStringContainsString('match ' . $expected, $e->getMessage());
     }
 
     public function testUnableToCreatePathReturnsInstanceUsingPathAndClassProvided()
     {
-        $path = __FILE__;
-        $class = __CLASS__;
-        $e = CreateHandlerException::unableToCreatePath($path, $class);
+        $path  = __FILE__;
+        $class = self::class;
+        $e     = CreateHandlerException::unableToCreatePath($path, $class);
         self::assertInstanceOf(CreateHandlerException::class, $e);
         self::assertStringContainsString('directory ' . $path, $e->getMessage());
         self::assertStringContainsString('class ' . $class, $e->getMessage());
@@ -52,9 +52,9 @@ class CreateHandlerExceptionTest extends TestCase
 
     public function testClassExistsReturnsInstanceUsingPathAndClassProvided()
     {
-        $path = __FILE__;
-        $class = __CLASS__;
-        $e = CreateHandlerException::classExists($path, $class);
+        $path  = __FILE__;
+        $class = self::class;
+        $e     = CreateHandlerException::classExists($path, $class);
         self::assertInstanceOf(CreateHandlerException::class, $e);
         self::assertStringContainsString('directory ' . $path, $e->getMessage());
         self::assertStringContainsString('Class ' . $class, $e->getMessage());

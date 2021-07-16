@@ -42,18 +42,18 @@ class RegisterCommandTest extends TestCase
     /** @var string */
     private $expectedModuleArgumentDescription;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->dir = vfsStream::setup('project');
-        $this->input = $this->prophesize(InputInterface::class);
-        $this->output = $this->prophesize(ConsoleOutputInterface::class);
-        $this->command = new RegisterCommand('');
+        $this->dir                               = vfsStream::setup('project');
+        $this->input                             = $this->prophesize(InputInterface::class);
+        $this->output                            = $this->prophesize(ConsoleOutputInterface::class);
+        $this->command                           = new RegisterCommand('');
         $this->expectedModuleArgumentDescription = RegisterCommand::HELP_ARG_MODULE;
     }
 
-    private function reflectExecuteMethod()
+    private function reflectExecuteMethod(): ReflectionMethod
     {
         $r = new ReflectionMethod($this->command, 'execute');
         $r->setAccessible(true);
@@ -70,7 +70,8 @@ class RegisterCommandTest extends TestCase
         self::assertEquals(RegisterCommand::HELP, $this->command->getHelp());
     }
 
-    public function injectedEnabled()
+    /** @psalm-return array<array-key, array{0: bool, 1: bool}> */
+    public function injectedEnabled(): array
     {
         return [
             // $injected, $enabled
@@ -83,7 +84,6 @@ class RegisterCommandTest extends TestCase
 
     /**
      * @dataProvider injectedEnabled
-     *
      * @param bool $injected
      * @param bool $enabled
      */

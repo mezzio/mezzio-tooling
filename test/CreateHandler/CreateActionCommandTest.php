@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace MezzioTest\Tooling\CreateHandler;
 
 use Mezzio\Template\TemplateRendererInterface;
-use Mezzio\Tooling\CreateHandler\CreateHandler;
 use Mezzio\Tooling\CreateHandler\CreateActionCommand;
+use Mezzio\Tooling\CreateHandler\CreateHandler;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\Assert;
@@ -42,15 +42,15 @@ class CreateActionCommandTest extends TestCase
     /** @var ConsoleOutputInterface&ObjectProphecy */
     private $output;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->input = $this->prophesize(InputInterface::class);
+        $this->input  = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(ConsoleOutputInterface::class);
 
         $this->container = $this->prophesize(ContainerInterface::class);
     }
 
-    private function createCommand() : CreateActionCommand
+    private function createCommand(): CreateActionCommand
     {
         return new CreateActionCommand(
             $this->container->reveal(),
@@ -61,14 +61,14 @@ class CreateActionCommandTest extends TestCase
     /**
      * Allows disabling of the `require` statement in the command class when testing.
      */
-    private function disableRequireHandlerDirective(CreateActionCommand $command) : void
+    private function disableRequireHandlerDirective(CreateActionCommand $command): void
     {
         $r = new ReflectionProperty($command, 'requireHandlerBeforeGeneratingFactory');
         $r->setAccessible(true);
         $r->setValue($command, false);
     }
 
-    private function reflectExecuteMethod(CreateActionCommand $command) : ReflectionMethod
+    private function reflectExecuteMethod(CreateActionCommand $command): ReflectionMethod
     {
         $r = new ReflectionMethod($command, 'execute');
         $r->setAccessible(true);
@@ -116,7 +116,7 @@ class CreateActionCommandTest extends TestCase
 
     public function testConfigureSetsExpectedArgumentsWhenRequestingAnAction()
     {
-        $command = $this->createCommand();
+        $command    = $this->createCommand();
         $definition = $command->getDefinition();
         self::assertTrue($definition->hasArgument('action'));
         $argument = $definition->getArgument('action');
@@ -126,7 +126,7 @@ class CreateActionCommandTest extends TestCase
 
     public function testConfigureSetsExpectedOptionsWhenRequestingAnAction()
     {
-        $command = $this->createCommand();
+        $command    = $this->createCommand();
         $definition = $command->getDefinition();
 
         self::assertTrue($definition->hasOption('no-factory'));
@@ -148,7 +148,7 @@ class CreateActionCommandTest extends TestCase
     public function testConfigureSetsExpectedTemplateOptionsWhenRequestingAnActionAndRendererIsPresent()
     {
         $this->container->has(TemplateRendererInterface::class)->willReturn(true);
-        $command = $this->createCommand();
+        $command    = $this->createCommand();
         $definition = $command->getDefinition();
 
         self::assertTrue($definition->hasOption('without-template'));

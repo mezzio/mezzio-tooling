@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mezzio\Tooling\CreateMiddleware;
 
 use function getcwd;

@@ -11,6 +11,10 @@ use org\bovigo\vfs\vfsStreamDirectory;
 use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 
+use function file_get_contents;
+use function preg_match;
+use function sprintf;
+
 class CreateTest extends TestCase
 {
     use PHPMock;
@@ -30,14 +34,14 @@ class CreateTest extends TestCase
     /** @var string */
     private $projectDir;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->dir = vfsStream::setup('project');
+        $this->dir        = vfsStream::setup('project');
         $this->modulesDir = vfsStream::newDirectory($this->modulesPath)->at($this->dir);
         $this->projectDir = vfsStream::url('project');
-        $this->command = new Create();
+        $this->command    = new Create();
     }
 
     public function testErrorsWhenModuleDirectoryAlreadyExists()
@@ -113,7 +117,7 @@ class CreateTest extends TestCase
         $configProviderContent = file_get_contents($configProvider);
         self::assertSame(1, preg_match('/\bnamespace MyApp\b/', $configProviderContent));
         self::assertSame(1, preg_match('/\bclass ConfigProvider\b/', $configProviderContent));
-        $command = $this->command;
+        $command         = $this->command;
         $expectedContent = sprintf($command::TEMPLATE_CONFIG_PROVIDER, 'MyApp', 'my-app');
         self::assertSame($expectedContent, $configProviderContent);
     }
@@ -121,20 +125,20 @@ class CreateTest extends TestCase
     public function testModuleTemplatePathNameWithNumber()
     {
         $this->command->process('My2App', $this->modulesPath, $this->projectDir);
-        $configProvider = vfsStream::url('project/my-modules/My2App/src/ConfigProvider.php');
+        $configProvider        = vfsStream::url('project/my-modules/My2App/src/ConfigProvider.php');
         $configProviderContent = file_get_contents($configProvider);
-        $command = $this->command;
-        $expectedContent = sprintf($command::TEMPLATE_CONFIG_PROVIDER, 'My2App', 'my2-app');
+        $command               = $this->command;
+        $expectedContent       = sprintf($command::TEMPLATE_CONFIG_PROVIDER, 'My2App', 'my2-app');
         self::assertSame($expectedContent, $configProviderContent);
     }
 
     public function testModuleTemplatePathNameWithSequentialUppercase()
     {
         $this->command->process('THEApp', $this->modulesPath, $this->projectDir);
-        $configProvider = vfsStream::url('project/my-modules/THEApp/src/ConfigProvider.php');
+        $configProvider        = vfsStream::url('project/my-modules/THEApp/src/ConfigProvider.php');
         $configProviderContent = file_get_contents($configProvider);
-        $command = $this->command;
-        $expectedContent = sprintf($command::TEMPLATE_CONFIG_PROVIDER, 'THEApp', 'the-app');
+        $command               = $this->command;
+        $expectedContent       = sprintf($command::TEMPLATE_CONFIG_PROVIDER, 'THEApp', 'the-app');
         self::assertSame($expectedContent, $configProviderContent);
     }
 }

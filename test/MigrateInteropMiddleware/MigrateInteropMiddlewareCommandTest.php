@@ -19,6 +19,8 @@ use ReflectionMethod;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
+use function mkdir;
+
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
@@ -37,15 +39,15 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
     /** @var MigrateInteropMiddlewareCommand */
     private $command;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->input = $this->prophesize(InputInterface::class);
+        $this->input  = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(ConsoleOutputInterface::class);
 
         $this->command = new MigrateInteropMiddlewareCommand('');
     }
 
-    private function reflectExecuteMethod(MigrateInteropMiddlewareCommand $command)
+    private function reflectExecuteMethod(MigrateInteropMiddlewareCommand $command): ReflectionMethod
     {
         $r = new ReflectionMethod($command, 'execute');
         $r->setAccessible(true);
@@ -60,6 +62,7 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
         );
     }
 
+    /** @return scalar */
     private function getConstantValue(string $const, string $class = MigrateInteropMiddlewareCommand::class)
     {
         $r = new ReflectionClass($class);
@@ -103,7 +106,7 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
             ->shouldBeCalled();
 
         $command = new MigrateInteropMiddlewareCommand($path);
-        $method = $this->reflectExecuteMethod($command);
+        $method  = $this->reflectExecuteMethod($command);
 
         self::assertSame(0, $method->invoke(
             $command,
@@ -123,7 +126,7 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
         $this->input->getOption('src')->willReturn('src');
 
         $command = new MigrateInteropMiddlewareCommand($path);
-        $method = $this->reflectExecuteMethod($command);
+        $method  = $this->reflectExecuteMethod($command);
 
         $this->expectException(ArgvException::class);
         $this->expectExceptionMessage('Invalid --src argument');

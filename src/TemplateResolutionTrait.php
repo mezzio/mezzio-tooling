@@ -18,7 +18,7 @@ trait TemplateResolutionTrait
     /**
      * Normalizes identifier to lowercase, dash-separated words.
      */
-    private function normalizeTemplateIdentifier(string $identifier) : string
+    private function normalizeTemplateIdentifier(string $identifier): string
     {
         $pattern     = ['#(?<=(?:\p{Lu}))(\p{Lu}\p{Ll})#', '#(?<=(?:\p{Ll}|\p{Nd}))(\p{Lu})#'];
         $replacement = ['-\1', '-\1'];
@@ -29,11 +29,11 @@ trait TemplateResolutionTrait
     /**
      * Returns the top-level namespace for the given class.
      */
-    private function getNamespace(string $class) : string
+    private function getNamespace(string $class): string
     {
         $topLevelOffset = strpos($class, '\\');
 
-        return ($topLevelOffset !== false)
+        return $topLevelOffset !== false
             ? substr($class, 0, $topLevelOffset)
             : $class;
     }
@@ -42,7 +42,7 @@ trait TemplateResolutionTrait
      * Retrieves the namespace for the class using getNamespace, passes
      * the result to normalizeTemplateIdentifier(), and returns the result.
      */
-    private function getTemplateNamespaceFromClass(string $class) : string
+    private function getTemplateNamespaceFromClass(string $class): string
     {
         return $this->normalizeTemplateIdentifier($this->getNamespace($class));
     }
@@ -50,9 +50,9 @@ trait TemplateResolutionTrait
     /**
      * Returns the unqualified class name (class minus namespace).
      */
-    private function getClassName(string $class) : string
+    private function getClassName(string $class): string
     {
-        return (strpos($class, '\\') !== false)
+        return strpos($class, '\\') !== false
             ? substr($class, strrpos($class, '\\') + 1)
             : $class;
     }
@@ -62,7 +62,7 @@ trait TemplateResolutionTrait
      * or "Middleware" suffixes, passes it to normalizeTemplateIdentifier(),
      * and returns the result.
      */
-    private function getTemplateNameFromClass(string $class) : string
+    private function getTemplateNameFromClass(string $class): string
     {
         return $this->normalizeTemplateIdentifier(
             preg_replace(
@@ -76,19 +76,19 @@ trait TemplateResolutionTrait
     /**
      * Returns true if a renderer service is found in the container.
      */
-    private function containerDefinesRendererService(ContainerInterface $container) : bool
+    private function containerDefinesRendererService(ContainerInterface $container): bool
     {
         // Casting to bool so that test prophecies work without needing to define
         // explicit expectations in every situation.
         return (bool) $container->has(TemplateRendererInterface::class);
     }
 
-    private function getRendererServiceTypeFromContainer(ContainerInterface $container) : ?string
+    private function getRendererServiceTypeFromContainer(ContainerInterface $container): ?string
     {
         if (! $container->has(TemplateRendererInterface::class)) {
             return null;
         }
         $renderer = $container->get(TemplateRendererInterface::class);
-        return get_class($renderer);
+        return $renderer::class;
     }
 }

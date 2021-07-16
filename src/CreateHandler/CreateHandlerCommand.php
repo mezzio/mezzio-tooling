@@ -13,6 +13,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function sprintf;
+
 class CreateHandlerCommand extends Command
 {
     use TemplateResolutionTrait;
@@ -21,37 +23,37 @@ class CreateHandlerCommand extends Command
 
     public const HELP_DESCRIPTION = 'Create a PSR-15 request handler class file.';
 
-    public const HELP = <<< 'EOT'
+    public const HELP = <<<'EOT'
         Creates a PSR-15 request handler class file named after the provided
         class. For a path, it matches the class namespace against PSR-4 autoloader
         namespaces in your composer.json.
         EOT;
 
-    public const HELP_ARG_HANDLER = <<< 'EOT'
+    public const HELP_ARG_HANDLER = <<<'EOT'
         Fully qualified class name of the request handler to create. This value
         should be quoted to ensure namespace separators are not interpreted as
         escape sequences by your shell.
         EOT;
 
-    public const HELP_OPT_NO_FACTORY = <<< 'EOT'
+    public const HELP_OPT_NO_FACTORY = <<<'EOT'
         By default, this command generates a factory for the request handler it
         creates, and registers it with the container. Passing this option disables
         that feature.
         EOT;
 
-    public const HELP_OPT_NO_REGISTER = <<< 'EOT'
+    public const HELP_OPT_NO_REGISTER = <<<'EOT'
         By default, when this command generates a factory for the request handler it
         creates, it registers it with the container. Passing this option disables
         registration of the generated factory with the container.
         EOT;
 
-    public const HELP_OPTION_WITHOUT_TEMPLATE = <<< 'EOT'
+    public const HELP_OPTION_WITHOUT_TEMPLATE = <<<'EOT'
         By default, this command generates a template for the newly generated class,
         and adds functionality to it render the template. Passing this flag
         disables template generation and invocation.
         EOT;
 
-    public const HELP_OPTION_WITH_TEMPLATE_EXTENSION = <<< 'EOT'
+    public const HELP_OPTION_WITH_TEMPLATE_EXTENSION = <<<'EOT'
         By default, this command will look for a template file extension name
         first via the "templates.extension" configuration directive, and then
         falling back to defaults based on the renderer type detected. If the
@@ -60,7 +62,7 @@ class CreateHandlerCommand extends Command
         may pass this option to specify a custom extension in that case.
         EOT;
 
-    public const HELP_OPTION_WITH_TEMPLATE_NAME = <<< 'EOT'
+    public const HELP_OPTION_WITH_TEMPLATE_NAME = <<<'EOT'
         By default, this command uses a normalized version of the class name as the
         template name. Use this option to provide an alternative template name
         (minus the namespace) for the generated template. The template file will be
@@ -68,7 +70,7 @@ class CreateHandlerCommand extends Command
         renderer.  If --without-template is provided, this option is ignored. 
         EOT;
 
-    public const HELP_OPTION_WITH_TEMPLATE_NAMESPACE = <<< 'EOT'
+    public const HELP_OPTION_WITH_TEMPLATE_NAMESPACE = <<<'EOT'
         By default, this command uses a normalized version of the root namespace of the
         class generated as the template namespace.  Use this option to provide an
         alternate template namespace for the generated template. The template will be
@@ -112,12 +114,15 @@ class CreateHandlerCommand extends Command
 
     /**
      * Whether or not the template renderer is registered in the container.
+     *
      * @var bool
      */
     private $rendererIsRegistered = false;
 
     /**
      * Whether or not a template renderer is registered in configuration.
+     *
+     * @var bool
      */
     private $templateRendererIsRegistered = false;
 
@@ -135,7 +140,7 @@ class CreateHandlerCommand extends Command
     /**
      * Configure the console command.
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription(self::HELP_DESCRIPTION);
         $this->setHelp(self::HELP);
@@ -146,7 +151,7 @@ class CreateHandlerCommand extends Command
         $this->configureTemplateOptions();
     }
 
-    protected function configureTemplateOptions() : void
+    protected function configureTemplateOptions(): void
     {
         if (! $this->rendererIsRegistered) {
             return;
@@ -183,31 +188,31 @@ class CreateHandlerCommand extends Command
      *
      * @return int Exit status
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $handler = $input->getArgument($this->handlerArgument);
 
         $output->writeln(sprintf(static::STATUS_TEMPLATE, $handler));
 
-        $skeleton = ClassSkeletons::CLASS_SKELETON;
-        $substitutions = [];
+        $skeleton          = ClassSkeletons::CLASS_SKELETON;
+        $substitutions     = [];
         $templateNamespace = null;
-        $templateName = null;
+        $templateName      = null;
         $templateExtension = null;
 
         if ($this->rendererIsRegistered && ! $input->getOption('without-template')) {
-            $skeleton = ClassSkeletons::CLASS_SKELETON_WITH_TEMPLATE;
-            $templateNamespace = $input->getOption('with-template-namespace')
+            $skeleton                              = ClassSkeletons::CLASS_SKELETON_WITH_TEMPLATE;
+            $templateNamespace                     = $input->getOption('with-template-namespace')
                 ?: $this->getTemplateNamespaceFromClass($handler);
-            $templateName = $input->getOption('with-template-name')
+            $templateName                          = $input->getOption('with-template-name')
                 ?: $this->getTemplateNameFromClass($handler);
-            $templateExtension = $input->getOption('with-template-extension');
+            $templateExtension                     = $input->getOption('with-template-extension');
             $substitutions['%template-namespace%'] = $templateNamespace;
-            $substitutions['%template-name%'] = $templateName;
+            $substitutions['%template-name%']      = $templateName;
         }
 
         $generator = new CreateHandler($skeleton, $this->projectRoot);
-        $path = $generator->process($handler, $substitutions);
+        $path      = $generator->process($handler, $substitutions);
 
         $output->writeln('<info>Success!</info>');
         $output->writeln(sprintf(
@@ -216,7 +221,8 @@ class CreateHandlerCommand extends Command
             $path
         ));
 
-        if ($this->rendererIsRegistered
+        if (
+            $this->rendererIsRegistered
             && ! $input->getOption('without-template')
         ) {
             $this->generateTemplate(
@@ -243,13 +249,13 @@ class CreateHandlerCommand extends Command
         ?string $templateExtension,
         string $path,
         OutputInterface $output
-    ) : void {
+    ): void {
         if ($this->requireHandlerBeforeGeneratingFactory) {
             require_once $path;
         }
 
         $generator = new CreateTemplate($this->projectRoot, $this->container);
-        $template = $generator->generateTemplate(
+        $template  = $generator->generateTemplate(
             $handlerClass,
             $templateNamespace,
             $templateName,
@@ -268,7 +274,7 @@ class CreateHandlerCommand extends Command
         string $path,
         InputInterface $input,
         OutputInterface $output
-    ) : int {
+    ): int {
         if ($this->requireHandlerBeforeGeneratingFactory) {
             require_once $path;
         }
@@ -278,7 +284,7 @@ class CreateHandlerCommand extends Command
             'class'         => $handlerClass,
             '--no-register' => $input->getOption('no-register'),
         ]);
-        $command = $this->getApplication()->find('mezzio:factory:create');
+        $command      = $this->getApplication()->find('mezzio:factory:create');
         return $command->run($factoryInput, $output);
     }
 }

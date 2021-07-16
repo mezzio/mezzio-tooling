@@ -37,9 +37,9 @@ class CreateFactoryCommandTest extends TestCase
     /** @var CreateFactoryCommand */
     private $command;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->input = $this->prophesize(InputInterface::class);
+        $this->input  = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(ConsoleOutputInterface::class);
 
         $this->command = new CreateFactoryCommand(
@@ -48,7 +48,7 @@ class CreateFactoryCommandTest extends TestCase
         );
     }
 
-    private function reflectExecuteMethod(CreateFactoryCommand $command)
+    private function reflectExecuteMethod(CreateFactoryCommand $command): ReflectionMethod
     {
         $r = new ReflectionMethod($command, 'execute');
         $r->setAccessible(true);

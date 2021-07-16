@@ -4,6 +4,16 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Factory;
 
+use function dirname;
+use function file_exists;
+use function file_put_contents;
+use function implode;
+use function is_writable;
+use function ksort;
+use function rtrim;
+use function sprintf;
+use function str_repeat;
+
 use const SORT_NATURAL;
 
 /**
@@ -41,9 +51,7 @@ class ConfigInjector
         
         EOT;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $configFile;
 
     public function __construct(string $projectRoot)
@@ -53,18 +61,18 @@ class ConfigInjector
             : sprintf('%s/%s', rtrim($projectRoot, '/'), self::CONFIG_FILE);
     }
 
-    public function injectFactoryForClass(string $factory, string $class) : string
+    public function injectFactoryForClass(string $factory, string $class): string
     {
         if (! $this->configIsWritable()) {
             throw ConfigFileNotWritableException::forFile($this->configFile);
         }
 
-        $config = file_exists($this->configFile) ? include $this->configFile : [];
-        $config = $config['dependencies']['factories'] ?? [];
+        $config         = file_exists($this->configFile) ? include $this->configFile : [];
+        $config         = $config['dependencies']['factories'] ?? [];
         $config[$class] = $factory;
         $configContents = sprintf(
             self::TEMPLATE,
-            __CLASS__,
+            self::class,
             $this->normalizeConfig($config)
         );
         file_put_contents($this->configFile, $configContents);
@@ -72,18 +80,18 @@ class ConfigInjector
         return $this->configFile;
     }
 
-    private function configIsWritable() : bool
+    private function configIsWritable(): bool
     {
         return is_writable($this->configFile)
             || (! file_exists($this->configFile) && is_writable(dirname($this->configFile)));
     }
 
-    private function normalizeConfig(array $config) : string
+    private function normalizeConfig(array $config): string
     {
         $normalized = [];
         ksort($config, SORT_NATURAL);
         foreach ($config as $class => $factory) {
-            $class .= '::class';
+            $class   .= '::class';
             $factory .= '::class';
 
             $normalized[] = sprintf('%s%s => %s', str_repeat(' ', 12), $class, $factory);

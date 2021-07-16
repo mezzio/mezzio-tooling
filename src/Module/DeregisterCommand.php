@@ -10,9 +10,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function sprintf;
+
 class DeregisterCommand extends Command
 {
-    public const HELP = <<< 'EOT'
+    public const HELP = <<<'EOT'
         Deregister an existing middleware module from the application, by:
         
         - Removing the associated PSR-4 autoloader entry from composer.json, and
@@ -39,7 +41,7 @@ class DeregisterCommand extends Command
     /**
      * Configure command.
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Deregister a middleware module from the application');
         $this->setHelp(self::HELP);
@@ -51,13 +53,13 @@ class DeregisterCommand extends Command
      *
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $module = $input->getArgument('module');
-        $composer = $input->getOption('composer') ?: 'composer';
+        $module      = $input->getArgument('module');
+        $composer    = $input->getOption('composer') ?: 'composer';
         $modulesPath = CommandCommonOptions::getModulesPath($input);
 
-        $injector = new ConfigAggregatorInjector($this->projectRoot);
+        $injector       = new ConfigAggregatorInjector($this->projectRoot);
         $configProvider = sprintf('%s\ConfigProvider', $module);
         if ($injector->isRegistered($configProvider)) {
             $injector->remove($configProvider);

@@ -6,11 +6,18 @@ namespace Mezzio\Tooling\Factory;
 
 use ReflectionClass;
 
+use function class_exists;
+use function dirname;
+use function file_exists;
+use function file_put_contents;
+use function is_writable;
+use function sprintf;
+use function strrpos;
+use function substr;
+
 class Create
 {
-    /**
-     * @var FactoryClassGenerator
-     */
+    /** @var FactoryClassGenerator */
     private $generator;
 
     public function __construct(FactoryClassGenerator $generator)
@@ -20,12 +27,12 @@ class Create
 
     /**
      * @return string Filename where factory was created
-     * @throws FactoryAlreadyExistsException if a matching factory class file
-     *     already exists in the filesystem
-     * @throws ClassNotFoundException if the class cannot be autoloaded
-     * @throws FactoryWriteException if unable to write the factory class file
+     * @throws FactoryAlreadyExistsException If a matching factory class file
+     *     already exists in the filesystem.
+     * @throws ClassNotFoundException If the class cannot be autoloaded.
+     * @throws FactoryWriteException If unable to write the factory class file.
      */
-    public function createForClass(string $className) : string
+    public function createForClass(string $className): string
     {
         if (! class_exists($className)) {
             throw ClassNotFoundException::forClassName($className);
@@ -54,13 +61,13 @@ class Create
         return $factoryFileName;
     }
 
-    private function getPathForClass(string $className) : string
+    private function getPathForClass(string $className): string
     {
         $fileName = (new ReflectionClass($className))->getFileName();
         return dirname($fileName);
     }
 
-    public function getClassName($class) : string
+    public function getClassName(string $class): string
     {
         return substr($class, strrpos($class, '\\') + 1);
     }

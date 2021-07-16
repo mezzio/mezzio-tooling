@@ -9,9 +9,11 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function sprintf;
+
 class CreateCommand extends Command
 {
-    public const HELP = <<< 'EOT'
+    public const HELP = <<<'EOT'
         Create a new middleware module for the application.
         
         - Creates an appropriate module structure containing a source code tree,
@@ -36,7 +38,7 @@ class CreateCommand extends Command
     /** @param array|ArrayAccess $config */
     public function __construct($config, string $projectRoot)
     {
-        $this->config = $config;
+        $this->config      = $config;
         $this->projectRoot = $projectRoot;
 
         parent::__construct();
@@ -45,7 +47,7 @@ class CreateCommand extends Command
     /**
      * Configure command.
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Create and register a middleware module with the application');
         $this->setHelp(self::HELP);
@@ -60,7 +62,7 @@ class CreateCommand extends Command
      *
      * {@inheritDoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $module      = $input->getArgument('module');
         $composer    = $input->getOption('composer') ?: 'composer';

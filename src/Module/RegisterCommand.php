@@ -11,9 +11,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function sprintf;
+
 class RegisterCommand extends Command
 {
-    public const HELP = <<< 'EOT'
+    public const HELP = <<<'EOT'
         Register an existing middleware module with the application, by:
         
         - Ensuring a PSR-4 autoloader entry is present in composer.json, and the
@@ -40,20 +42,20 @@ class RegisterCommand extends Command
     /**
      * Configure command.
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Register a middleware module with the application');
         $this->setHelp(self::HELP);
         CommandCommonOptions::addDefaultOptionsAndArguments($this);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $module = $input->getArgument('module');
-        $composer = $input->getOption('composer') ?: 'composer';
+        $module      = $input->getArgument('module');
+        $composer    = $input->getOption('composer') ?: 'composer';
         $modulesPath = CommandCommonOptions::getModulesPath($input);
 
-        $injector = new ConfigAggregatorInjector($this->projectRoot);
+        $injector       = new ConfigAggregatorInjector($this->projectRoot);
         $configProvider = sprintf('%s\ConfigProvider', $module);
         if (! $injector->isRegistered($configProvider)) {
             $injector->inject(

@@ -41,9 +41,9 @@ class CreateMiddlewareCommandTest extends TestCase
     /** @var CreateMiddlewareCommand */
     private $command;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->input = $this->prophesize(InputInterface::class);
+        $this->input  = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(ConsoleOutputInterface::class);
 
         $this->command = new CreateMiddlewareCommand('');
@@ -54,7 +54,7 @@ class CreateMiddlewareCommandTest extends TestCase
         $r->setValue($this->command, false);
     }
 
-    private function reflectExecuteMethod()
+    private function reflectExecuteMethod(): ReflectionMethod
     {
         $r = new ReflectionMethod($this->command, 'execute');
         $r->setAccessible(true);

@@ -19,6 +19,9 @@ use ReflectionMethod;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
+use function mkdir;
+use function preg_match;
+
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
@@ -37,9 +40,9 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
     /** @var MigrateMiddlewareToRequestHandlerCommand */
     private $command;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->input = $this->prophesize(InputInterface::class);
+        $this->input  = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(ConsoleOutputInterface::class);
 
         $this->command = new MigrateMiddlewareToRequestHandlerCommand('');
@@ -108,7 +111,7 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
             ->shouldBeCalledTimes(1);
 
         $command = new MigrateMiddlewareToRequestHandlerCommand($path);
-        $method = $this->reflectExecuteMethod($command);
+        $method  = $this->reflectExecuteMethod($command);
 
         self::assertSame(0, $method->invoke(
             $command,
@@ -128,7 +131,7 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
         $this->input->getOption('src')->willReturn('src');
 
         $command = new MigrateMiddlewareToRequestHandlerCommand($path);
-        $method = $this->reflectExecuteMethod($command);
+        $method  = $this->reflectExecuteMethod($command);
 
         $this->expectException(ArgvException::class);
         $this->expectExceptionMessage('Invalid --src argument');

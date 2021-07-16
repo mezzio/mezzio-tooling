@@ -6,9 +6,11 @@ namespace Mezzio\Tooling\Factory;
 
 use RuntimeException;
 
+use function sprintf;
+
 class ConfigFileNotWritableException extends RuntimeException
 {
-    public static function forFile(string $file) : self
+    public static function forFile(string $file): self
     {
         return new self(sprintf(
             'Cannot write factory configuration to file "%s";'

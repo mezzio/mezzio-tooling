@@ -11,28 +11,30 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function sprintf;
+
 class CreateMiddlewareCommand extends Command
 {
     public const DEFAULT_SRC = '/src';
 
-    public const HELP = <<< 'EOT'
+    public const HELP = <<<'EOT'
         Creates a PSR-15 middleware class file named after the provided class. For a
         path, it matches the class namespace against PSR-4 autoloader namespaces in
         your composer.json.
         EOT;
 
-    public const HELP_ARG_MIDDLEWARE = <<< 'EOT'
+    public const HELP_ARG_MIDDLEWARE = <<<'EOT'
         Fully qualified class name of the middleware to create. This value
         should be quoted to ensure namespace separators are not interpreted as
         escape sequences by your shell.
         EOT;
 
-    public const HELP_OPT_NO_FACTORY = <<< 'EOT'
+    public const HELP_OPT_NO_FACTORY = <<<'EOT'
         By default, this command generates a factory for the middleware it creates, and
         registers it with the container. Passing this option disables that feature.
         EOT;
 
-    public const HELP_OPT_NO_REGISTER = <<< 'EOT'
+    public const HELP_OPT_NO_REGISTER = <<<'EOT'
         By default, when this command generates a factory for the middleware it
         creates, it registers it with the container. Passing this option disables
         registration of the generated factory with the container.
@@ -64,7 +66,7 @@ class CreateMiddlewareCommand extends Command
     /**
      * Configure the console command.
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Create a PSR-15 middleware class file.');
         $this->setHelp(self::HELP);
@@ -78,14 +80,14 @@ class CreateMiddlewareCommand extends Command
      *
      * @return int Exit status
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $middleware = $input->getArgument('middleware');
 
         $output->writeln(sprintf('<info>Creating middleware %s...</info>', $middleware));
 
         $generator = new CreateMiddleware();
-        $path = $generator->process($middleware, $this->projectRoot);
+        $path      = $generator->process($middleware, $this->projectRoot);
 
         $output->writeln('<info>Success!</info>');
         $output->writeln(sprintf(
@@ -104,14 +106,14 @@ class CreateMiddlewareCommand extends Command
         return 0;
     }
 
-    private function generateFactory(string $middlewareClass, InputInterface $input, OutputInterface $output) : int
+    private function generateFactory(string $middlewareClass, InputInterface $input, OutputInterface $output): int
     {
         $factoryInput = new ArrayInput([
             'command'       => 'mezzio:factory:create',
             'class'         => $middlewareClass,
             '--no-register' => $input->getOption('no-register'),
         ]);
-        $command = $this->getApplication()->find('mezzio:factory:create');
+        $command      = $this->getApplication()->find('mezzio:factory:create');
         return $command->run($factoryInput, $output);
     }
 }

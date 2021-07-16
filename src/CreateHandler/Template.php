@@ -21,12 +21,12 @@ class Template
         $this->name = $name;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getPath() : string
+    public function getPath(): string
     {
         return $this->path;
     }

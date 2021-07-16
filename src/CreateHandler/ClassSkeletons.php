@@ -9,7 +9,7 @@ class ClassSkeletons
     /**
      * @var string Template for request handler class.
      */
-    public const CLASS_SKELETON = <<< 'EOS'
+    public const CLASS_SKELETON = <<<'EOS'
 <?php
 
 declare(strict_types=1);
@@ -33,7 +33,7 @@ EOS;
     /**
      * @var string Template for request handler class that will render a template.
      */
-    public const CLASS_SKELETON_WITH_TEMPLATE = <<< 'EOS'
+    public const CLASS_SKELETON_WITH_TEMPLATE = <<<'EOS'
 <?php
 
 declare(strict_types=1);

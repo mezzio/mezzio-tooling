@@ -7,12 +7,14 @@ namespace MezzioTest\Tooling\Factory;
 use Mezzio\Tooling\Factory\ClassNotFoundException;
 use PHPUnit\Framework\TestCase;
 
+use function sprintf;
+
 class ClassNotFoundExceptionTest extends TestCase
 {
     public function testForClassNameGeneratesExpectedException()
     {
-        $e = ClassNotFoundException::forClassName(__CLASS__);
+        $e = ClassNotFoundException::forClassName(self::class);
         self::assertInstanceOf(ClassNotFoundException::class, $e);
-        self::assertStringContainsString(sprintf('Class "%s"', __CLASS__), $e->getMessage());
+        self::assertStringContainsString(sprintf('Class "%s"', self::class), $e->getMessage());
     }
 }

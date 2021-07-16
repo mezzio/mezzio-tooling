@@ -9,11 +9,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function is_dir;
+use function sprintf;
+
 class MigrateInteropMiddlewareCommand extends Command
 {
     private const DEFAULT_SRC = '/src';
 
-    private const HELP = <<< 'EOT'
+    private const HELP = <<<'EOT'
         Migrate an Mezzio application to PSR-15 middleware.
         
         Scans all PHP files under the --src directory for interop middleware
@@ -25,7 +28,7 @@ class MigrateInteropMiddlewareCommand extends Command
         mezzio-tooling.
         EOT;
 
-    private const HELP_OPT_SRC = <<< 'EOT'
+    private const HELP_OPT_SRC = <<<'EOT'
         Specify a path to PHP files to migrate interop middleware.
         If not specified, assumes src/ under the current working path.
         EOT;
@@ -33,12 +36,9 @@ class MigrateInteropMiddlewareCommand extends Command
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:middleware:migrate-from-interop';
 
-    /**
-     * @var null|string Path from which to resolve default src directory
-     */
+    /** @var null|string Path from which to resolve default src directory */
     private $projectRoot;
 
-    /** @param string Project root against which to scan.  */
     public function __construct(string $projectRoot)
     {
         $this->projectRoot = $projectRoot;
@@ -46,14 +46,14 @@ class MigrateInteropMiddlewareCommand extends Command
         parent::__construct();
     }
 
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Migrate http-interop middleware and delegators');
         $this->setHelp(self::HELP);
         $this->addOption('src', 's', InputOption::VALUE_REQUIRED, self::HELP_OPT_SRC);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $src = $this->getSrcDir($input);
 
@@ -70,7 +70,7 @@ class MigrateInteropMiddlewareCommand extends Command
     /**
      * @throws ArgvException
      */
-    private function getSrcDir(InputInterface $input) : string
+    private function getSrcDir(InputInterface $input): string
     {
         $path = $input->getOption('src') ?: self::DEFAULT_SRC;
         $path = $this->projectRoot . '/' . $path;

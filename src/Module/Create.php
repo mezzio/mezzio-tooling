@@ -6,11 +6,15 @@ namespace Mezzio\Tooling\Module;
 
 use Mezzio\Tooling\TemplateResolutionTrait;
 
+use function file_exists;
+use function file_put_contents;
+use function sprintf;
+
 class Create
 {
     use TemplateResolutionTrait;
 
-    public const TEMPLATE_CONFIG_PROVIDER = <<< 'EOT'
+    public const TEMPLATE_CONFIG_PROVIDER = <<<'EOT'
         <?php
         
         declare(strict_types=1);
@@ -69,7 +73,7 @@ class Create
     /**
      * Create source tree for the mezzio module.
      */
-    public function process(string $moduleName, string $modulesPath, string $projectDir) : string
+    public function process(string $moduleName, string $modulesPath, string $projectDir): string
     {
         $modulePath = sprintf('%s/%s/%s', $projectDir, $modulesPath, $moduleName);
 
@@ -84,7 +88,7 @@ class Create
      *
      * @throws RuntimeException
      */
-    private function createDirectoryStructure(string $modulePath, string $moduleName) : void
+    private function createDirectoryStructure(string $modulePath, string $moduleName): void
     {
         if (file_exists($modulePath)) {
             throw new RuntimeException(sprintf(
@@ -93,6 +97,8 @@ class Create
             ));
         }
 
+        // Not importing mkdir to allow testing of this path
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         if (! mkdir($modulePath)) {
             throw new RuntimeException(sprintf(
                 'Module directory "%s" cannot be created',
@@ -100,6 +106,8 @@ class Create
             ));
         }
 
+        // Not importing mkdir to allow testing of this path
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         if (! mkdir($modulePath . '/src')) {
             throw new RuntimeException(sprintf(
                 'Module source directory "%s/src" cannot be created',
@@ -108,6 +116,9 @@ class Create
         }
 
         $templatePath = sprintf('%s/templates', $modulePath);
+
+        // Not importing mkdir to allow testing of this path
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         if (! mkdir($templatePath)) {
             throw new RuntimeException(sprintf(
                 'Module templates directory "%s" cannot be created',
@@ -119,7 +130,7 @@ class Create
     /**
      * Creates ConfigProvider for new mezzio module.
      */
-    private function createConfigProvider(string $modulePath, string $moduleName) : void
+    private function createConfigProvider(string $modulePath, string $moduleName): void
     {
         file_put_contents(
             sprintf('%s/src/ConfigProvider.php', $modulePath),

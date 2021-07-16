@@ -6,11 +6,23 @@ namespace Mezzio\Tooling\CreateHandler;
 
 use Mezzio\LaminasView\LaminasViewRenderer;
 use Mezzio\Plates\PlatesRenderer;
-use Mezzio\Template\TemplateRendererInterface;
 use Mezzio\Tooling\TemplateResolutionTrait;
 use Mezzio\Twig\TwigRenderer;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
+
+use function array_shift;
+use function count;
+use function file_put_contents;
+use function in_array;
+use function is_dir;
+use function ltrim;
+use function mkdir;
+use function preg_match;
+use function preg_quote;
+use function preg_replace;
+use function rtrim;
+use function sprintf;
 
 class CreateTemplate
 {
@@ -44,7 +56,7 @@ class CreateTemplate
         $this->container   = $container;
     }
 
-    public function forHandler(string $handler) : Template
+    public function forHandler(string $handler): Template
     {
         return $this->generateTemplate(
             $handler,
@@ -57,11 +69,11 @@ class CreateTemplate
         string $handler,
         string $templateNamespace,
         string $templateName,
-        string $templateSuffix = null
-    ) : Template {
-        $config = $this->container->get('config');
+        ?string $templateSuffix = null
+    ): Template {
+        $config       = $this->container->get('config');
         $rendererType = $this->resolveRendererType($templateSuffix);
-        $handlerPath = $this->getHandlerPath($handler);
+        $handlerPath  = $this->getHandlerPath($handler);
 
         $templatePath = $this->getTemplatePathForNamespaceFromConfig($templateNamespace, $config)
             ?: $this->getTemplatePathForNamespaceBasedOnHandlerPath(
@@ -89,7 +101,7 @@ class CreateTemplate
         );
     }
 
-    private function resolveRendererType(?string $templateSuffix) : string
+    private function resolveRendererType(?string $templateSuffix): string
     {
         if (! $this->containerDefinesRendererService($this->container)) {
             throw UnresolvableRendererException::dueToMissingAlias();
@@ -108,9 +120,9 @@ class CreateTemplate
         return $type;
     }
 
-    private function getHandlerPath(string $handler) : string
+    private function getHandlerPath(string $handler): string
     {
-        $r = new ReflectionClass($handler);
+        $r    = new ReflectionClass($handler);
         $path = $r->getFileName();
         $path = preg_replace('#^' . preg_quote($this->projectPath) . '#', '', $path);
         $path = ltrim($path, '/\\');
@@ -123,10 +135,10 @@ class CreateTemplate
      * @param array|ArrayAccess $config
      * @return null|string Returns null if no template path configuration
      *     exists for the namespace.
-     * @throws TemplatePathResolutionException if configuration has zero paths
+     * @throws TemplatePathResolutionException If configuration has zero paths
      *     defined for the namespace.
      */
-    private function getTemplatePathForNamespaceFromConfig(string $templateNamespace, $config) : ?string
+    private function getTemplatePathForNamespaceFromConfig(string $templateNamespace, $config): ?string
     {
         if (! isset($config['templates']['paths'][$templateNamespace])) {
             return null;
@@ -144,22 +156,22 @@ class CreateTemplate
         string $namespace,
         string $templateNamespace,
         string $path
-    ) : string {
+    ): string {
         if ($this->pathRepresentsModule($path, $namespace)) {
             return sprintf('%s/src/%s/templates', $this->projectPath, $namespace);
         }
         return sprintf('%s/templates/%s', $this->projectPath, $templateNamespace);
     }
 
-    private function pathRepresentsModule(string $path, string $namespace) : bool
+    private function pathRepresentsModule(string $path, string $namespace): bool
     {
-        $regex = sprintf('#^src/%s/(?P<isModule>src/)?#', $namespace);
+        $regex   = sprintf('#^src/%s/(?P<isModule>src/)?#', $namespace);
         $matches = [];
         preg_match($regex, $path, $matches);
         return isset($matches['isModule']);
     }
 
-    private function getTemplateSuffixFromConfig(string $type, array $config) : string
+    private function getTemplateSuffixFromConfig(string $type, array $config): string
     {
         if (! isset($config['templates']['extension'])) {
             return $this->getDefaultTemplateSuffix($type);
@@ -171,7 +183,7 @@ class CreateTemplate
      * This method will only be triggered if we know we have a known
      * renderer type.
      */
-    private function getDefaultTemplateSuffix(string $type) : string
+    private function getDefaultTemplateSuffix(string $type): string
     {
         switch ($type) {
             case TwigRenderer::class:
