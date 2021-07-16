@@ -7,6 +7,7 @@ namespace Mezzio\Tooling;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 
+use function get_class;
 use function preg_replace;
 use function strpos;
 use function strrpos;
@@ -89,6 +90,6 @@ trait TemplateResolutionTrait
             return null;
         }
         $renderer = $container->get(TemplateRendererInterface::class);
-        return $renderer::class;
+        return get_class($renderer);
     }
 }
