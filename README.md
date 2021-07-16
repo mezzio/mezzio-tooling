@@ -22,15 +22,18 @@ This package exposes commands for [laminas-cli](https://docs.laminas.dev/laminas
 - **mezzio:handler:create**: Create a PSR-15 request handler class file.
   Also generates a factory for the generated class, and, if a template renderer is registered with the application container, generates a template and modifies the class to render it into a laminas-diactoros `HtmlResponse`.
 - **mezzio:middleware:create**: Create a PSR-15 middleware class file.
-- **mezzio:migrate:interop-middleware**: Migrate interop middlewares and delegators to PSR-15 middlewares and request handlers.
-- **mezzio:migrate:middleware-to-request-handler**: Migrate PSR-15 middleware to request handlers.
+- **mezzio:middleware:migrate-from-interop**: Migrate interop middlewares and delegators to PSR-15 middlewares and request handlers.
+- **mezzio:middleware:to-request-handler**: Migrate PSR-15 middleware to request handlers.
 - **mezzio:module:create**: Create and register a middleware module with the application.
 - **mezzio:module:deregister**: Deregister a middleware module from the application.
 - **mezzio:module:register**: Register a middleware module with the application.
 
 > ### Previous versions
 >
-> Versions of mezzio/mezzio-tooling prior to v2.0 exposed a `vendor/bin/mezzio` binary, and the various commands exposed all lacked the `mezzio:` prefix.
+> Versions of mezzio/mezzio-tooling prior to v2.0 exposed a `vendor/bin/mezzio` binary, and the various commands exposed all lacked the `mezzio:` prefix, with the following more specific changes:
+>
+> - `mezzio:middleware:migrate-from-interop` was previously `migrate:interop-middleware`
+> - `mezzio:middleware:to-request-handler` was previously `migrate:middleware-to-request-handler`
 
 ## Configurable command option values
 
