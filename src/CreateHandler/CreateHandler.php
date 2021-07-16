@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\CreateHandler;
 
+use JsonException;
+
 /**
  * Create a request handler
  *
@@ -110,10 +112,10 @@ class CreateHandler extends ClassSkeletons
             throw CreateHandlerException::missingComposerJson();
         }
 
-        $composer = json_decode(file_get_contents($composerPath), true);
-
-        if (json_last_error() !== \JSON_ERROR_NONE) {
-            throw CreateHandlerException::invalidComposerJson(json_last_error_msg());
+        try {
+            $composer = json_decode(file_get_contents($composerPath), true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            throw CreateHandlerException::invalidComposerJson($e->getMessage());
         }
 
         if (! isset($composer['autoload']['psr-4'])) {
