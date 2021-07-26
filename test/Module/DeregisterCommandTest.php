@@ -41,18 +41,18 @@ class DeregisterCommandTest extends TestCase
     /** @var string */
     private $expectedModuleArgumentDescription;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->dir = vfsStream::setup('project');
-        $this->input = $this->prophesize(InputInterface::class);
-        $this->output = $this->prophesize(ConsoleOutputInterface::class);
-        $this->command = new DeregisterCommand('module:deregister');
+        $this->dir                               = vfsStream::setup('project');
+        $this->input                             = $this->prophesize(InputInterface::class);
+        $this->output                            = $this->prophesize(ConsoleOutputInterface::class);
+        $this->command                           = new DeregisterCommand('');
         $this->expectedModuleArgumentDescription = DeregisterCommand::HELP_ARG_MODULE;
     }
 
-    private function reflectExecuteMethod()
+    private function reflectExecuteMethod(): ReflectionMethod
     {
         $r = new ReflectionMethod($this->command, 'execute');
         $r->setAccessible(true);
@@ -69,7 +69,8 @@ class DeregisterCommandTest extends TestCase
         self::assertEquals(DeregisterCommand::HELP, $this->command->getHelp());
     }
 
-    public function removedDisabled()
+    /** @psalm-return array<array-key, array{0: bool, 1: bool}> */
+    public function removedDisabled(): array
     {
         return [
             // $removed, $disabled
@@ -82,7 +83,6 @@ class DeregisterCommandTest extends TestCase
 
     /**
      * @dataProvider removedDisabled
-     *
      * @param bool $removed
      * @param bool $disabled
      */

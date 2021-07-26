@@ -7,9 +7,11 @@ namespace Mezzio\Tooling\CreateHandler;
 use Mezzio\Template\TemplateRendererInterface;
 use RuntimeException;
 
-class UnresolvableRendererException extends RuntimeException
+use function sprintf;
+
+final class UnresolvableRendererException extends RuntimeException
 {
-    public static function dueToMissingAlias() : self
+    public static function dueToMissingAlias(): self
     {
         return new self(sprintf(
             'Unable to determine what type of template renderer is in use due'
@@ -19,7 +21,7 @@ class UnresolvableRendererException extends RuntimeException
         ));
     }
 
-    public static function dueToUnknownType(string $type) : self
+    public static function dueToUnknownType(string $type): self
     {
         return new self(sprintf(
             'Detected an unknown template renderer type "%s", and thus cannot'

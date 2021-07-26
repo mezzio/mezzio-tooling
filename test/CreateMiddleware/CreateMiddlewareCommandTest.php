@@ -41,12 +41,12 @@ class CreateMiddlewareCommandTest extends TestCase
     /** @var CreateMiddlewareCommand */
     private $command;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->input = $this->prophesize(InputInterface::class);
+        $this->input  = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(ConsoleOutputInterface::class);
 
-        $this->command = new CreateMiddlewareCommand('middleware:create');
+        $this->command = new CreateMiddlewareCommand('');
 
         // Do not require the generated middleware during testing
         $r = new ReflectionProperty($this->command, 'requireMiddlewareBeforeGeneratingFactory');
@@ -54,7 +54,7 @@ class CreateMiddlewareCommandTest extends TestCase
         $r->setValue($this->command, false);
     }
 
-    private function reflectExecuteMethod()
+    private function reflectExecuteMethod(): ReflectionMethod
     {
         $r = new ReflectionMethod($this->command, 'execute');
         $r->setAccessible(true);
@@ -73,7 +73,7 @@ class CreateMiddlewareCommandTest extends TestCase
             ->run(
                 Argument::that(function ($input) {
                     Assert::assertInstanceOf(ArrayInput::class, $input);
-                    Assert::assertStringContainsString('factory:create', (string) $input);
+                    Assert::assertStringContainsString('mezzio:factory:create', (string) $input);
                     Assert::assertStringContainsString('Foo\TestMiddleware', (string) $input);
                     return $input;
                 }),
@@ -83,7 +83,7 @@ class CreateMiddlewareCommandTest extends TestCase
 
         $application = $this->prophesize(Application::class);
         $application->getHelperSet()->willReturn($helperSet);
-        $application->find('factory:create')->will([$factoryCommand, 'reveal']);
+        $application->find('mezzio:factory:create')->will([$factoryCommand, 'reveal']);
 
         return $application;
     }
@@ -129,7 +129,7 @@ class CreateMiddlewareCommandTest extends TestCase
         $generator = Mockery::mock('overload:' . CreateMiddleware::class);
         $generator->shouldReceive('process')
             ->once()
-            ->with('Foo\TestMiddleware')
+            ->with('Foo\TestMiddleware', '')
             ->andReturn(__DIR__);
 
         $this->input->getArgument('middleware')->willReturn('Foo\TestMiddleware');
@@ -161,7 +161,7 @@ class CreateMiddlewareCommandTest extends TestCase
         $generator = Mockery::mock('overload:' . CreateMiddleware::class);
         $generator->shouldReceive('process')
             ->once()
-            ->with('Foo\TestMiddleware')
+            ->with('Foo\TestMiddleware', '')
             ->andThrow(CreateMiddlewareException::class, 'ERROR THROWN');
 
         $this->input->getArgument('middleware')->willReturn('Foo\TestMiddleware');

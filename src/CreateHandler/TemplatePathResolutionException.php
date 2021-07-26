@@ -6,9 +6,11 @@ namespace Mezzio\Tooling\CreateHandler;
 
 use RuntimeException;
 
-class TemplatePathResolutionException extends RuntimeException
+use function sprintf;
+
+final class TemplatePathResolutionException extends RuntimeException
 {
-    public static function forNamespace(string $namespace) : self
+    public static function forNamespace(string $namespace): self
     {
         return new self(sprintf(
             'Template path configuration for the namespace "%s" either'

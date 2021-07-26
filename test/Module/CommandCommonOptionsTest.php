@@ -17,12 +17,12 @@ class CommandCommonOptionsTest extends TestCase
     /** @var InputInterface|ObjectProphecy */
     private $input;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->input = $this->prophesize(InputInterface::class);
     }
 
-    public function testGetModulesPathGetsOptionsFromInput() : void
+    public function testGetModulesPathGetsOptionsFromInput(): void
     {
         $this->input->getOption('modules-path')->willReturn('path-from-input');
         $config[CommandCommonOptions::class]['--modules-path'] = 'path-from-config';
@@ -33,7 +33,7 @@ class CommandCommonOptionsTest extends TestCase
         );
     }
 
-    public function testGetModulesPathGetsOptionsFromConfig() : void
+    public function testGetModulesPathGetsOptionsFromConfig(): void
     {
         $this->input->getOption('modules-path')->willReturn(null);
         $config[CommandCommonOptions::class]['--modules-path'] = 'path-from-config';
@@ -44,7 +44,7 @@ class CommandCommonOptionsTest extends TestCase
         );
     }
 
-    public function testGetModulesPathGetsDefaultOption() : void
+    public function testGetModulesPathGetsDefaultOption(): void
     {
         $this->input->getOption('modules-path')->willReturn(null);
 

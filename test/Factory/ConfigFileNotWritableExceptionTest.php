@@ -7,6 +7,8 @@ namespace MezzioTest\Tooling\Factory;
 use Mezzio\Tooling\Factory\ConfigFileNotWritableException;
 use PHPUnit\Framework\TestCase;
 
+use function sprintf;
+
 class ConfigFileNotWritableExceptionTest extends TestCase
 {
     public function testForFileGeneratesExpectedException()

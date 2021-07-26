@@ -10,6 +10,10 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 
+use function file_get_contents;
+use function file_put_contents;
+use function json_encode;
+
 class CreateHandlerTest extends TestCase
 {
     /** @var vfsStreamDirectory */
@@ -18,9 +22,9 @@ class CreateHandlerTest extends TestCase
     /** @var string */
     private $projectRoot;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->dir = vfsStream::setup('project');
+        $this->dir         = vfsStream::setup('project');
         $this->projectRoot = vfsStream::url('project');
     }
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MezzioTest\Tooling\Factory;
 
-use Mezzio\Tooling\Factory\ClassNotFoundException;
 use Mezzio\Tooling\Factory\Create;
 use Mezzio\Tooling\Factory\FactoryAlreadyExistsException;
 use Mezzio\Tooling\Factory\FactoryClassGenerator;
@@ -14,6 +13,8 @@ use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
+
+use function file_put_contents;
 
 class CreateTest extends TestCase
 {
@@ -28,19 +29,12 @@ class CreateTest extends TestCase
     /** @var string */
     private $projectRoot;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->factory = new Create();
-        $this->dir = vfsStream::setup('project');
+        $this->factory     = new Create(new FactoryClassGenerator());
+        $this->dir         = vfsStream::setup('project');
         $this->projectRoot = vfsStream::url('project');
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/classes', $this->dir);
-    }
-
-    public function testRaisesExceptionWhenClassDoesNotExist()
-    {
-        $class = __CLASS__ . '\NotFound';
-        $this->expectException(ClassNotFoundException::class);
-        $this->factory->createForClass($class);
     }
 
     /**
@@ -83,7 +77,7 @@ class CreateTest extends TestCase
         $className = 'TestHarness\NotReal\TestClass';
 
         $generator = new FactoryClassGenerator();
-        $factory = new Create($generator);
+        $factory   = new Create($generator);
 
         $fileName = $factory->createForClass($className);
 
@@ -91,7 +85,7 @@ class CreateTest extends TestCase
 
         require $fileName;
         $factoryName = $className . 'Factory';
-        $factory = new $factoryName();
+        $factory     = new $factoryName();
 
         $container = $this->prophesize(ContainerInterface::class);
         $container->get(FactoryClassGenerator::class)->willReturn($generator);

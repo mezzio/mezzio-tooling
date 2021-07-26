@@ -6,70 +6,74 @@ namespace Mezzio\Tooling\Module;
 
 use Mezzio\Tooling\TemplateResolutionTrait;
 
-class Create
+use function file_exists;
+use function file_put_contents;
+use function sprintf;
+
+final class Create
 {
     use TemplateResolutionTrait;
 
-    public const TEMPLATE_CONFIG_PROVIDER = <<< 'EOT'
-<?php
-
-declare(strict_types=1);
-
-namespace %1$s;
-
-/**
- * The configuration provider for the %1$s module
- *
- * @see https://docs.laminas.dev/laminas-component-installer/
- */
-class ConfigProvider
-{
-    /**
-     * Returns the configuration array
-     *
-     * To add a bit of a structure, each section is defined in a separate
-     * method which returns an array with its configuration.
-     */
-    public function __invoke() : array
-    {
-        return [
-            'dependencies' => $this->getDependencies(),
-            'templates'    => $this->getTemplates(),
-        ];
-    }
-
-    /**
-     * Returns the container dependencies
-     */
-    public function getDependencies() : array
-    {
-        return [
-            'invokables' => [
-            ],
-            'factories'  => [
-            ],
-        ];
-    }
-
-    /**
-     * Returns the templates configuration
-     */
-    public function getTemplates() : array
-    {
-        return [
-            'paths' => [
-                '%2$s'    => [__DIR__ . '/../templates/'],
-            ],
-        ];
-    }
-}
-
-EOT;
+    public const TEMPLATE_CONFIG_PROVIDER = <<<'EOT'
+        <?php
+        
+        declare(strict_types=1);
+        
+        namespace %1$s;
+        
+        /**
+         * The configuration provider for the %1$s module
+         *
+         * @see https://docs.laminas.dev/laminas-component-installer/
+         */
+        class ConfigProvider
+        {
+            /**
+             * Returns the configuration array
+             *
+             * To add a bit of a structure, each section is defined in a separate
+             * method which returns an array with its configuration.
+             */
+            public function __invoke() : array
+            {
+                return [
+                    'dependencies' => $this->getDependencies(),
+                    'templates'    => $this->getTemplates(),
+                ];
+            }
+        
+            /**
+             * Returns the container dependencies
+             */
+            public function getDependencies() : array
+            {
+                return [
+                    'invokables' => [
+                    ],
+                    'factories'  => [
+                    ],
+                ];
+            }
+        
+            /**
+             * Returns the templates configuration
+             */
+            public function getTemplates() : array
+            {
+                return [
+                    'paths' => [
+                        '%2$s'    => [__DIR__ . '/../templates/'],
+                    ],
+                ];
+            }
+        }
+        
+        EOT;
 
     /**
      * Create source tree for the mezzio module.
      */
-    public function process(string $moduleName, string $modulesPath, string $projectDir) : string
+    public function process(string $moduleName, string $modulesPath, string $projectDir): string
     {
         $modulePath = sprintf('%s/%s/%s', $projectDir, $modulesPath, $moduleName);
 
@@ -84,7 +88,7 @@ EOT;
      *
      * @throws RuntimeException
      */
-    private function createDirectoryStructure(string $modulePath, string $moduleName) : void
+    private function createDirectoryStructure(string $modulePath, string $moduleName): void
     {
         if (file_exists($modulePath)) {
             throw new RuntimeException(sprintf(
@@ -93,6 +97,8 @@ EOT;
             ));
         }
 
+        // Not importing mkdir to allow testing of this path
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         if (! mkdir($modulePath)) {
             throw new RuntimeException(sprintf(
                 'Module directory "%s" cannot be created',
@@ -100,6 +106,8 @@ EOT;
             ));
         }
 
+        // Not importing mkdir to allow testing of this path
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         if (! mkdir($modulePath . '/src')) {
             throw new RuntimeException(sprintf(
                 'Module source directory "%s/src" cannot be created',
@@ -108,6 +116,9 @@ EOT;
         }
 
         $templatePath = sprintf('%s/templates', $modulePath);
+
+        // Not importing mkdir to allow testing of this path
+        // phpcs:ignore SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFallbackGlobalName
         if (! mkdir($templatePath)) {
             throw new RuntimeException(sprintf(
                 'Module templates directory "%s" cannot be created',
@@ -119,7 +130,7 @@ EOT;
     /**
      * Creates ConfigProvider for new mezzio module.
      */
-    private function createConfigProvider(string $modulePath, string $moduleName) : void
+    private function createConfigProvider(string $modulePath, string $moduleName): void
     {
         file_put_contents(
             sprintf('%s/src/ConfigProvider.php', $modulePath),

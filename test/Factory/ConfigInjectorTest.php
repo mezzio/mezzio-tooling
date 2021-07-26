@@ -10,6 +10,9 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 
+use function file_put_contents;
+use function touch;
+
 class ConfigInjectorTest extends TestCase
 {
     /** @var vfsStreamDirectory */
@@ -21,9 +24,9 @@ class ConfigInjectorTest extends TestCase
     /** @var string */
     private $projectRoot;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->dir = vfsStream::setup('project');
+        $this->dir         = vfsStream::setup('project');
         $this->projectRoot = vfsStream::url('project');
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/config', $this->dir);
 
@@ -36,7 +39,7 @@ class ConfigInjectorTest extends TestCase
         $dir->chmod(0544);
 
         $this->expectException(ConfigFileNotWritableException::class);
-        $this->injector->injectFactoryForClass(__CLASS__ . 'Factory', __CLASS__);
+        $this->injector->injectFactoryForClass(self::class . 'Factory', self::class);
     }
 
     public function testRaisesExceptionIfConfigPresentButIsNotWritable()
@@ -46,24 +49,24 @@ class ConfigInjectorTest extends TestCase
         $file->chmod(0444);
 
         $this->expectException(ConfigFileNotWritableException::class);
-        $this->injector->injectFactoryForClass(__CLASS__ . 'Factory', __CLASS__);
+        $this->injector->injectFactoryForClass(self::class . 'Factory', self::class);
     }
 
     public function testCreatesConfigFileIfItDidNotPreviouslyExist()
     {
-        $this->injector->injectFactoryForClass(__CLASS__ . 'Factory', __CLASS__);
-        $config = include($this->projectRoot . '/' . ConfigInjector::CONFIG_FILE);
+        $this->injector->injectFactoryForClass(self::class . 'Factory', self::class);
+        $config = include $this->projectRoot . '/' . ConfigInjector::CONFIG_FILE;
         self::assertIsArray($config);
         self::assertTrue(isset($config['dependencies']['factories']));
         self::assertCount(1, $config['dependencies']['factories']);
-        self::assertTrue(isset($config['dependencies']['factories'][__CLASS__]));
-        self::assertEquals(__CLASS__ . 'Factory', $config['dependencies']['factories'][__CLASS__]);
+        self::assertTrue(isset($config['dependencies']['factories'][self::class]));
+        self::assertEquals(self::class . 'Factory', $config['dependencies']['factories'][self::class]);
     }
 
     public function testAddsNewEntryToConfigFile()
     {
         $configFile = $this->projectRoot . '/' . ConfigInjector::CONFIG_FILE;
-        $contents = <<<'EOT'
+        $contents   = <<<'EOT'
 <?php
 return [
     'dependencies' => [
@@ -75,8 +78,8 @@ return [
 EOT;
         file_put_contents($configFile, $contents);
 
-        $this->injector->injectFactoryForClass(__CLASS__ . 'Factory', __CLASS__);
-        $config = include($this->projectRoot . '/' . ConfigInjector::CONFIG_FILE);
+        $this->injector->injectFactoryForClass(self::class . 'Factory', self::class);
+        $config = include $this->projectRoot . '/' . ConfigInjector::CONFIG_FILE;
         self::assertIsArray($config);
         self::assertTrue(isset($config['dependencies']['factories']));
 
@@ -84,6 +87,6 @@ EOT;
         self::assertCount(2, $factories);
 
         self::assertEquals('App\Handler\HelloWorldHandlerFactory', $factories['App\Handler\HelloWorldHandler']);
-        self::assertEquals(__CLASS__ . 'Factory', $factories[__CLASS__]);
+        self::assertEquals(self::class . 'Factory', $factories[self::class]);
     }
 }

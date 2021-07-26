@@ -10,26 +10,45 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateFactoryCommand extends Command
+use function sprintf;
+
+final class CreateFactoryCommand extends Command
 {
     public const DEFAULT_SRC = '/src';
 
-    public const HELP = <<< 'EOT'
-Creates a factory class file for generating the provided class, in the
-same directory as the provided class.
-EOT;
+    public const HELP = <<<'EOT'
+        Creates a factory class file for generating the provided class, in the
+        same directory as the provided class.
+        EOT;
 
-    public const HELP_ARG_CLASS = <<< 'EOT'
-Fully qualified class name of the class for which to create a factory.
-This value should be quoted to ensure namespace separators are not
-interpreted as escape sequences by your shell. The class should be
-autoloadable.
-EOT;
+    public const HELP_ARG_CLASS = <<<'EOT'
+        Fully qualified class name of the class for which to create a factory.
+        This value should be quoted to ensure namespace separators are not
+        interpreted as escape sequences by your shell. The class should be
+        autoloadable.
+        EOT;
 
-    public const HELP_OPT_NO_REGISTER = <<< 'EOT'
-When this flag is present, the command WILL NOT register the factory
-with the application container.
-EOT;
+    public const HELP_OPT_NO_REGISTER = <<<'EOT'
+        When this flag is present, the command WILL NOT register the factory
+        with the application container.
+        EOT;
+
+    /** @var null|string Cannot be defined explicitly due to parent class */
+    public static $defaultName = 'mezzio:factory:create';
+
+    /** @var Create */
+    private $generator;
+
+    /** @var string */
+    private $projectRoot;
+
+    public function __construct(Create $generator, string $projectRoot)
+    {
+        $this->generator   = $generator;
+        $this->projectRoot = $projectRoot;
+
+        parent::__construct();
+    }
 
     /**
      * Configure the console command.
@@ -45,21 +64,20 @@ EOT;
     /**
      * Execute console command.
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $className = $input->getArgument('class');
-        $factoryName = $className . 'Factory';
+        $className       = $input->getArgument('class');
+        $factoryName     = $className . 'Factory';
         $registerFactory = ! $input->getOption('no-register');
-        $configFile = null;
+        $configFile      = null;
 
         $output->writeln(sprintf('<info>Creating factory for class %s...</info>', $className));
 
-        $generator = new Create();
-        $path = $generator->createForClass($className);
+        $path = $this->generator->createForClass($className);
 
         if ($registerFactory) {
             $output->writeln('<info>Registering factory with container</info>');
-            $injector = new ConfigInjector();
+            $injector   = new ConfigInjector($this->projectRoot);
             $configFile = $injector->injectFactoryForClass($factoryName, $className);
         }
 

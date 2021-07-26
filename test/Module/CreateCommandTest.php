@@ -17,7 +17,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Container\ContainerInterface;
 use ReflectionMethod;
 use ReflectionProperty;
 use Symfony\Component\Console\Application;
@@ -26,6 +25,9 @@ use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+use function getcwd;
 
 /**
  * @runTestsInSeparateProcesses
@@ -46,9 +48,6 @@ class CreateCommandTest extends TestCase
     /** @var CreateCommand */
     private $command;
 
-    /** @var ContainerInterface|ObjectProphecy */
-    private $container;
-
     /** @var vfsStreamDirectory */
     private $dir;
 
@@ -58,54 +57,56 @@ class CreateCommandTest extends TestCase
     /** @var string */
     private $expectedModuleArgumentDescription;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->dir = vfsStream::setup('project');
+        $this->dir         = vfsStream::setup('project');
         $this->projectRoot = vfsStream::url('project');
 
-        $this->input = $this->prophesize(InputInterface::class);
+        $this->input  = $this->prophesize(InputInterface::class);
         $this->output = $this->prophesize(ConsoleOutputInterface::class);
 
-        $this->command = new CreateCommand('module:create');
+        $this->command                           = new CreateCommand([], '');
         $this->expectedModuleArgumentDescription = CreateCommand::HELP_ARG_MODULE;
-
-        $this->container = $this->prophesize(ContainerInterface::class);
     }
 
-    public function injectConfigInContainer(bool $configAsArrayObject = false)
+    /** @return array|ArrayObject */
+    public function createConfig(bool $configAsArrayObject = false)
     {
         $configFile = $this->projectRoot . '/config/config.php';
-        $config = include $configFile;
+        $config     = include $configFile;
 
         if ($configAsArrayObject) {
             $config = new ArrayObject($config);
         }
 
-        $this->container->get('config')->willReturn($config);
+        return $config;
     }
 
-    public function configType() : Generator
+    public function configType(): Generator
     {
         yield 'array'       => [false];
         yield 'ArrayObject' => [true];
     }
 
-    public function injectContainerInCommand()
+    private function reflectExecuteMethod(CreateCommand $command): ReflectionMethod
     {
-        $r = new ReflectionProperty($this->command, 'container');
-        $r->setAccessible(true);
-        $r->setValue($this->command, $this->container->reveal());
-    }
-
-    private function reflectExecuteMethod()
-    {
-        $r = new ReflectionMethod($this->command, 'execute');
+        $r = new ReflectionMethod($command, 'execute');
         $r->setAccessible(true);
         return $r;
     }
 
-    private function mockApplicationWithRegisterCommand($return, $name, $module, $composer, $modulesPath, $output)
-    {
+    /**
+     * @param OutputInterface&ObjectProphecy $output
+     * @return Application&ObjectProphecy
+     */
+    private function mockApplicationWithRegisterCommand(
+        int $return,
+        string $name,
+        string $module,
+        string $composer,
+        string $modulesPath,
+        $output
+    ) {
         $register = $this->prophesize(Command::class);
         $register
             ->run(
@@ -158,10 +159,11 @@ class CreateCommandTest extends TestCase
      */
     public function testCommandEmitsExpectedSuccessMessages(bool $configAsArrayObject)
     {
-        $creation = Mockery::mock('overload:' . Create::class);
+        $projectRoot = getcwd();
+        $creation    = Mockery::mock('overload:' . Create::class);
         $creation->shouldReceive('process')
             ->once()
-            ->with('Foo', 'library/modules', getcwd())
+            ->with('Foo', 'library/modules', $projectRoot)
             ->andReturn('SUCCESSFULLY RAN CREATE');
 
         $this->input->getArgument('module')->willReturn('Foo');
@@ -169,24 +171,23 @@ class CreateCommandTest extends TestCase
         $this->input->getOption('modules-path')->willReturn('./library/modules');
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
-        $this->injectConfigInContainer($configAsArrayObject);
-        $this->injectContainerInCommand();
+        $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
 
         $this->output->writeln(Argument::containingString('SUCCESSFULLY RAN CREATE'))->shouldBeCalled();
 
         $app = $this->mockApplicationWithRegisterCommand(
             0,
-            'module:register',
+            'mezzio:module:register',
             'Foo',
             'composer.phar',
             'library/modules',
             $this->output->reveal()
         );
-        $this->command->setApplication($app->reveal());
+        $command->setApplication($app->reveal());
 
-        $method = $this->reflectExecuteMethod();
+        $method = $this->reflectExecuteMethod($command);
         self::assertSame(0, $method->invoke(
-            $this->command,
+            $command,
             $this->input->reveal(),
             $this->output->reveal()
         ));
@@ -197,10 +198,11 @@ class CreateCommandTest extends TestCase
      */
     public function testCommandWillFailIfRegisterFails(bool $configAsArrayObject)
     {
-        $creation = Mockery::mock('overload:' . Create::class);
+        $projectRoot = getcwd();
+        $creation    = Mockery::mock('overload:' . Create::class);
         $creation->shouldReceive('process')
             ->once()
-            ->with('Foo', 'library/modules', getcwd())
+            ->with('Foo', 'library/modules', $projectRoot)
             ->andReturn('SUCCESSFULLY RAN CREATE');
 
         $this->input->getArgument('module')->willReturn('Foo');
@@ -208,24 +210,24 @@ class CreateCommandTest extends TestCase
         $this->input->getOption('modules-path')->willReturn('./library/modules');
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
-        $this->injectConfigInContainer($configAsArrayObject);
-        $this->injectContainerInCommand();
+
+        $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
 
         $this->output->writeln(Argument::containingString('SUCCESSFULLY RAN CREATE'))->shouldBeCalled();
 
         $app = $this->mockApplicationWithRegisterCommand(
             1,
-            'module:register',
+            'mezzio:module:register',
             'Foo',
             'composer.phar',
             'library/modules',
             $this->output->reveal()
         );
-        $this->command->setApplication($app->reveal());
+        $command->setApplication($app->reveal());
 
-        $method = $this->reflectExecuteMethod();
+        $method = $this->reflectExecuteMethod($command);
         self::assertSame(1, $method->invoke(
-            $this->command,
+            $command,
             $this->input->reveal(),
             $this->output->reveal()
         ));
@@ -236,9 +238,10 @@ class CreateCommandTest extends TestCase
      */
     public function testCommandAllowsExceptionsToBubbleUp(bool $configAsArrayObject)
     {
-        $creation = Mockery::mock('overload:' . Create::class);
+        $projectRoot = getcwd();
+        $creation    = Mockery::mock('overload:' . Create::class);
         $creation->shouldReceive('process')
-            ->with('Foo', 'library/modules', getcwd())
+            ->with('Foo', 'library/modules', $projectRoot)
             ->once()
             ->andThrow(RuntimeException::class, 'ERROR THROWN');
 
@@ -247,15 +250,15 @@ class CreateCommandTest extends TestCase
         $this->input->getOption('modules-path')->willReturn('./library/modules');
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
-        $this->injectConfigInContainer($configAsArrayObject);
-        $this->injectContainerInCommand();
 
-        $method = $this->reflectExecuteMethod();
+        $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
+
+        $method = $this->reflectExecuteMethod($command);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('ERROR THROWN');
         $method->invoke(
-            $this->command,
+            $command,
             $this->input->reveal(),
             $this->output->reveal()
         );
