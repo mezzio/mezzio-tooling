@@ -8,7 +8,7 @@ use RuntimeException;
 
 use function sprintf;
 
-class TemplatePathResolutionException extends RuntimeException
+final class TemplatePathResolutionException extends RuntimeException
 {
     public static function forNamespace(string $namespace): self
     {

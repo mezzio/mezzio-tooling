@@ -8,7 +8,7 @@ use RuntimeException;
 
 use function sprintf;
 
-class FactoryAlreadyExistsException extends RuntimeException
+final class FactoryAlreadyExistsException extends RuntimeException
 {
     public static function forClassUsingFile(string $className, string $fileName): self
     {

@@ -9,7 +9,7 @@ use RuntimeException;
 
 use function sprintf;
 
-class UnresolvableRendererException extends RuntimeException
+final class UnresolvableRendererException extends RuntimeException
 {
     public static function dueToMissingAlias(): self
     {

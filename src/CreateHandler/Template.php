@@ -7,7 +7,7 @@ namespace Mezzio\Tooling\CreateHandler;
 /**
  * Value object representing details of a generated template.
  */
-class Template
+final class Template
 {
     /** @var string */
     private $name;

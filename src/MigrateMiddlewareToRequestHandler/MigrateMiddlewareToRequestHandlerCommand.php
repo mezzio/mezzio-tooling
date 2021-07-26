@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use function is_dir;
 use function sprintf;
 
-class MigrateMiddlewareToRequestHandlerCommand extends Command
+final class MigrateMiddlewareToRequestHandlerCommand extends Command
 {
     private const DEFAULT_SRC = '/src';
 

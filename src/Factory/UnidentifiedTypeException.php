@@ -8,7 +8,7 @@ use RuntimeException;
 
 use function sprintf;
 
-class UnidentifiedTypeException extends RuntimeException
+final class UnidentifiedTypeException extends RuntimeException
 {
     public static function forArgument(string $argument): self
     {

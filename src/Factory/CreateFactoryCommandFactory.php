@@ -9,7 +9,7 @@ use Psr\Container\ContainerInterface;
 use function getcwd;
 use function realpath;
 
-class CreateFactoryCommandFactory
+final class CreateFactoryCommandFactory
 {
     public function __invoke(ContainerInterface $container): CreateFactoryCommand
     {

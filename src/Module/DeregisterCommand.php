@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use function sprintf;
 
-class DeregisterCommand extends Command
+final class DeregisterCommand extends Command
 {
     public const HELP = <<<'EOT'
         Deregister an existing middleware module from the application, by:

@@ -15,6 +15,7 @@ use function sprintf;
 use function strrpos;
 use function substr;
 
+/** @internal */
 class Create
 {
     /** @var FactoryClassGenerator */

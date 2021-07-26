@@ -6,6 +6,6 @@ namespace Mezzio\Tooling\MigrateMiddlewareToRequestHandler;
 
 use RuntimeException;
 
-class ArgvException extends RuntimeException
+final class ArgvException extends RuntimeException
 {
 }

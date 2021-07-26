@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use function sprintf;
 
-class CreateMiddlewareCommand extends Command
+final class CreateMiddlewareCommand extends Command
 {
     public const DEFAULT_SRC = '/src';
 

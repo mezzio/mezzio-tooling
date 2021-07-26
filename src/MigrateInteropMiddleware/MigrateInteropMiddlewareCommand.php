@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use function is_dir;
 use function sprintf;
 
-class MigrateInteropMiddlewareCommand extends Command
+final class MigrateInteropMiddlewareCommand extends Command
 {
     private const DEFAULT_SRC = '/src';
 

@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use function sprintf;
 
-class CreateCommand extends Command
+final class CreateCommand extends Command
 {
     public const HELP = <<<'EOT'
         Create a new middleware module for the application.

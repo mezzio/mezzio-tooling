@@ -16,7 +16,7 @@ use function preg_quote;
 use function preg_replace;
 use function sprintf;
 
-class ConvertMiddleware
+final class ConvertMiddleware
 {
     /** @var OutputInterface */
     private $output;

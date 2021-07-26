@@ -8,7 +8,7 @@ use RuntimeException;
 
 use function sprintf;
 
-class UnknownTemplateSuffixException extends RuntimeException
+final class UnknownTemplateSuffixException extends RuntimeException
 {
     public static function forRendererType(string $type): self
     {

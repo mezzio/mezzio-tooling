@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-class ClassNotFoundException extends InvalidArgumentException
+final class ClassNotFoundException extends InvalidArgumentException
 {
     public static function forClassName(string $className): self
     {

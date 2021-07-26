@@ -32,7 +32,7 @@ use const JSON_THROW_ON_ERROR;
  *
  * Creates a middleware class file for a given class in a given project root.
  */
-class CreateMiddleware
+final class CreateMiddleware
 {
     // phpcs:disable Generic.Files.LineLength.TooLong
 

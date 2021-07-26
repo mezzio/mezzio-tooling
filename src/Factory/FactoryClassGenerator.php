@@ -20,6 +20,7 @@ use function str_repeat;
 use function strrpos;
 use function substr;
 
+/** @internal */
 class FactoryClassGenerator
 {
     public const FACTORY_TEMPLATE = <<<'EOT'

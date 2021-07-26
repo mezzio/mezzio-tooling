@@ -8,7 +8,7 @@ use RuntimeException;
 
 use function sprintf;
 
-class FactoryWriteException extends RuntimeException
+final class FactoryWriteException extends RuntimeException
 {
     public static function whenCreatingFile(string $filename): self
     {

@@ -24,7 +24,7 @@ use const SORT_NATURAL;
  * an entry for the given class, pointing it to the given factory, rewriting
  * the configuration file on completion.
  */
-class ConfigInjector
+final class ConfigInjector
 {
     public const CONFIG_FILE = 'config/autoload/mezzio-tooling-factories.global.php';
 

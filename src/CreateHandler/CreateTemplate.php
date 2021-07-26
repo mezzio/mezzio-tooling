@@ -24,7 +24,7 @@ use function preg_replace;
 use function rtrim;
 use function sprintf;
 
-class CreateTemplate
+final class CreateTemplate
 {
     use TemplateResolutionTrait;
 

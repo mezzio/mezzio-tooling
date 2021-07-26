@@ -35,7 +35,7 @@ use const JSON_THROW_ON_ERROR;
  *
  * Creates a request handler class file for a given class in a given project root.
  */
-class CreateHandler extends ClassSkeletons
+final class CreateHandler extends ClassSkeletons
 {
     /**
      * Path to root of project.

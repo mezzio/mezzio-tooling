@@ -10,7 +10,7 @@ use function file_exists;
 use function file_put_contents;
 use function sprintf;
 
-class Create
+final class Create
 {
     use TemplateResolutionTrait;
 

@@ -8,7 +8,7 @@ use RuntimeException;
 
 use function sprintf;
 
-class CreateMiddlewareException extends RuntimeException
+final class CreateMiddlewareException extends RuntimeException
 {
     public static function missingComposerJson(): self
     {

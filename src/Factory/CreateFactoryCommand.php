@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use function sprintf;
 
-class CreateFactoryCommand extends Command
+final class CreateFactoryCommand extends Command
 {
     public const DEFAULT_SRC = '/src';
 

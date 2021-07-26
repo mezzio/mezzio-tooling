@@ -7,7 +7,7 @@ namespace Mezzio\Tooling\CreateHandler;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class CreateActionCommand extends CreateHandlerCommand
+final class CreateActionCommand extends CreateHandlerCommand
 {
     public const HELP_DESCRIPTION = 'Create an action class file.';
 

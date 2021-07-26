@@ -26,7 +26,7 @@ use Mezzio\Tooling\Module\DeregisterCommandFactory;
 use Mezzio\Tooling\Module\RegisterCommand;
 use Mezzio\Tooling\Module\RegisterCommandFactory;
 
-class ConfigProvider
+final class ConfigProvider
 {
     public function __invoke(): array
     {

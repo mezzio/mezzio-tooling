@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use function sprintf;
 
-class RegisterCommand extends Command
+final class RegisterCommand extends Command
 {
     public const HELP = <<<'EOT'
         Register an existing middleware module with the application, by:

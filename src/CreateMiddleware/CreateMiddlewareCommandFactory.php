@@ -7,7 +7,7 @@ namespace Mezzio\Tooling\CreateMiddleware;
 use function getcwd;
 use function realpath;
 
-class CreateMiddlewareCommandFactory
+final class CreateMiddlewareCommandFactory
 {
     public function __invoke(): CreateMiddlewareCommand
     {

@@ -7,7 +7,7 @@ namespace Mezzio\Tooling\Module;
 use function getcwd;
 use function realpath;
 
-class RegisterCommandFactory
+final class RegisterCommandFactory
 {
     public function __invoke(): RegisterCommand
     {

@@ -18,7 +18,7 @@ use function preg_replace;
 use function sprintf;
 use function str_replace;
 
-class ConvertInteropMiddleware
+final class ConvertInteropMiddleware
 {
     /** @var OutputInterface */
     private $output;

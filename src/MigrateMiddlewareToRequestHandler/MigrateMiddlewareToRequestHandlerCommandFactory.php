@@ -7,7 +7,7 @@ namespace Mezzio\Tooling\MigrateMiddlewareToRequestHandler;
 use function getcwd;
 use function realpath;
 
-class MigrateMiddlewareToRequestHandlerCommandFactory
+final class MigrateMiddlewareToRequestHandlerCommandFactory
 {
     public function __invoke(): MigrateMiddlewareToRequestHandlerCommand
     {

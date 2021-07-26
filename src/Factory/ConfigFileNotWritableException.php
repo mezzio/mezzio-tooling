@@ -8,7 +8,7 @@ use RuntimeException;
 
 use function sprintf;
 
-class ConfigFileNotWritableException extends RuntimeException
+final class ConfigFileNotWritableException extends RuntimeException
 {
     public static function forFile(string $file): self
     {
