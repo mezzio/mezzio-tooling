@@ -14,7 +14,50 @@ final class Create
 {
     use TemplateResolutionTrait;
 
-    public const TEMPLATE_CONFIG_PROVIDER = <<<'EOT'
+    public const TEMPLATE_CONFIG_PROVIDER_FLAT = <<<'EOT'
+        <?php
+        
+        declare(strict_types=1);
+        
+        namespace %1$s;
+        
+        /**
+         * The configuration provider for the %1$s module
+         *
+         * @see https://docs.laminas.dev/laminas-component-installer/
+         */
+        class ConfigProvider
+        {
+            /**
+             * Returns the configuration array
+             *
+             * To add a bit of a structure, each section is defined in a separate
+             * method which returns an array with its configuration.
+             */
+            public function __invoke() : array
+            {
+                return [
+                    'dependencies' => $this->getDependencies(),
+                ];
+            }
+        
+            /**
+             * Returns the container dependencies
+             */
+            public function getDependencies() : array
+            {
+                return [
+                    'invokables' => [
+                    ],
+                    'factories'  => [
+                    ],
+                ];
+            }
+        }
+        
+        EOT;
+
+    public const TEMPLATE_CONFIG_PROVIDER_RECOMMENDED = <<<'EOT'
         <?php
         
         declare(strict_types=1);
@@ -70,17 +113,28 @@ final class Create
         
         EOT;
 
+    /** @var bool */
+    private $useFlatStructure;
+
+    public function __construct(bool $useFlatStructure = false)
+    {
+        $this->useFlatStructure = $useFlatStructure;
+    }
+
     /**
      * Create source tree for the mezzio module.
      */
-    public function process(string $moduleName, string $modulesPath, string $projectDir): string
+    public function process(string $moduleName, string $modulesPath, string $projectDir): ModuleMetadata
     {
-        $modulePath = sprintf('%s/%s/%s', $projectDir, $modulesPath, $moduleName);
+        $moduleRootPath   = sprintf('%s/%s/%s', $projectDir, $modulesPath, $moduleName);
+        $moduleSourcePath = $this->createDirectoryStructure($moduleRootPath, $moduleName);
+        $this->createConfigProvider($moduleSourcePath, $moduleName);
 
-        $this->createDirectoryStructure($modulePath, $moduleName);
-        $this->createConfigProvider($modulePath, $moduleName);
-
-        return sprintf('Created module %s in %s', $moduleName, $modulePath);
+        return new ModuleMetadata(
+            $moduleName,
+            $moduleRootPath,
+            $moduleSourcePath
+        );
     }
 
     /**
@@ -88,7 +142,7 @@ final class Create
      *
      * @throws RuntimeException
      */
-    private function createDirectoryStructure(string $modulePath, string $moduleName): void
+    private function createDirectoryStructure(string $modulePath, string $moduleName): string
     {
         if (file_exists($modulePath)) {
             throw new RuntimeException(sprintf(
@@ -104,6 +158,11 @@ final class Create
                 'Module directory "%s" cannot be created',
                 $modulePath
             ));
+        }
+
+        if ($this->useFlatStructure) {
+            // Flat structure requested
+            return $modulePath;
         }
 
         // Not importing mkdir to allow testing of this path
@@ -125,17 +184,31 @@ final class Create
                 $templatePath
             ));
         }
+
+        return sprintf('%s/src', $modulePath);
     }
 
     /**
      * Creates ConfigProvider for new mezzio module.
      */
-    private function createConfigProvider(string $modulePath, string $moduleName): void
+    private function createConfigProvider(string $sourcePath, string $moduleName): void
     {
+        if ($this->useFlatStructure) {
+            file_put_contents(
+                sprintf('%s/ConfigProvider.php', $sourcePath),
+                sprintf(
+                    self::TEMPLATE_CONFIG_PROVIDER_FLAT,
+                    $moduleName
+                )
+            );
+
+            return;
+        }
+
         file_put_contents(
-            sprintf('%s/src/ConfigProvider.php', $modulePath),
+            sprintf('%s/ConfigProvider.php', $sourcePath),
             sprintf(
-                self::TEMPLATE_CONFIG_PROVIDER,
+                self::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED,
                 $moduleName,
                 $this->normalizeTemplateIdentifier($moduleName)
             )

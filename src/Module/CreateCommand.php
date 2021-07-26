@@ -7,6 +7,7 @@ namespace Mezzio\Tooling\Module;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use function sprintf;
@@ -51,6 +52,12 @@ final class CreateCommand extends Command
     {
         $this->setDescription('Create and register a middleware module with the application');
         $this->setHelp(self::HELP);
+        $this->addOption(
+            'flat',
+            'f',
+            InputOption::VALUE_NONE,
+            'Use the flat structure (no nested src or templates directories)'
+        );
         CommandCommonOptions::addDefaultOptionsAndArguments($this);
     }
 
@@ -68,15 +75,20 @@ final class CreateCommand extends Command
         $composer    = $input->getOption('composer') ?: 'composer';
         $modulesPath = CommandCommonOptions::getModulesPath($input, $this->config);
 
-        $creation = new Create();
-        $message  = $creation->process($module, $modulesPath, $this->projectRoot);
-        $output->writeln(sprintf('<info>%s</info>', $message));
+        $creation = new Create((bool) $input->getOption('flat'));
+        $module   = $creation->process($module, $modulesPath, $this->projectRoot);
+
+        $output->writeln(sprintf(
+            '<info>Created module "%s" in directory "%s"</info>',
+            $module->name(),
+            $module->rootPath()
+        ));
 
         $registerCommand = 'mezzio:module:register';
         $register        = $this->getApplication()->find($registerCommand);
         return $register->run(new ArrayInput([
             'command'        => $registerCommand,
-            'module'         => $module,
+            'module'         => $module->name(),
             '--composer'     => $composer,
             '--modules-path' => $modulesPath,
         ]), $output);

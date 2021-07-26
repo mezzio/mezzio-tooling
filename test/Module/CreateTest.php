@@ -109,16 +109,15 @@ class CreateTest extends TestCase
     public function testCreatesConfigProvider()
     {
         $configProvider = vfsStream::url('project/my-modules/MyApp/src/ConfigProvider.php');
-        self::assertEquals(
-            sprintf('Created module MyApp in %s/MyApp', $this->modulesDir->url()),
-            $this->command->process('MyApp', $this->modulesPath, $this->projectDir)
-        );
+        $metadata       = $this->command->process('MyApp', $this->modulesPath, $this->projectDir);
+
+        self::assertEquals(sprintf('%s/MyApp', $this->modulesDir->url()), $metadata->rootPath());
         self::assertFileExists($configProvider);
         $configProviderContent = file_get_contents($configProvider);
         self::assertSame(1, preg_match('/\bnamespace MyApp\b/', $configProviderContent));
         self::assertSame(1, preg_match('/\bclass ConfigProvider\b/', $configProviderContent));
         $command         = $this->command;
-        $expectedContent = sprintf($command::TEMPLATE_CONFIG_PROVIDER, 'MyApp', 'my-app');
+        $expectedContent = sprintf($command::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED, 'MyApp', 'my-app');
         self::assertSame($expectedContent, $configProviderContent);
     }
 
@@ -128,7 +127,7 @@ class CreateTest extends TestCase
         $configProvider        = vfsStream::url('project/my-modules/My2App/src/ConfigProvider.php');
         $configProviderContent = file_get_contents($configProvider);
         $command               = $this->command;
-        $expectedContent       = sprintf($command::TEMPLATE_CONFIG_PROVIDER, 'My2App', 'my2-app');
+        $expectedContent       = sprintf($command::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED, 'My2App', 'my2-app');
         self::assertSame($expectedContent, $configProviderContent);
     }
 
@@ -138,7 +137,22 @@ class CreateTest extends TestCase
         $configProvider        = vfsStream::url('project/my-modules/THEApp/src/ConfigProvider.php');
         $configProviderContent = file_get_contents($configProvider);
         $command               = $this->command;
-        $expectedContent       = sprintf($command::TEMPLATE_CONFIG_PROVIDER, 'THEApp', 'the-app');
+        $expectedContent       = sprintf($command::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED, 'THEApp', 'the-app');
+        self::assertSame($expectedContent, $configProviderContent);
+    }
+
+    public function testCanCreateFlatStructureWhenRequested(): void
+    {
+        $command  = new Create(true);
+        $metadata = $command->process('MyApp', $this->modulesPath, $this->projectDir);
+
+        $expectedPaths = sprintf('%s/MyApp', $this->modulesDir->url());
+        self::assertEquals($expectedPaths, $metadata->rootPath());
+        self::assertEquals($expectedPaths, $metadata->sourcePath());
+
+        $configProvider        = vfsStream::url('project/my-modules/MyApp/ConfigProvider.php');
+        $configProviderContent = file_get_contents($configProvider);
+        $expectedContent       = sprintf($command::TEMPLATE_CONFIG_PROVIDER_FLAT, 'MyApp');
         self::assertSame($expectedContent, $configProviderContent);
     }
 }

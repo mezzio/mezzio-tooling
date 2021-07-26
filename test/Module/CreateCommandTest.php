@@ -8,6 +8,7 @@ use ArrayObject;
 use Generator;
 use Mezzio\Tooling\Module\Create;
 use Mezzio\Tooling\Module\CreateCommand;
+use Mezzio\Tooling\Module\ModuleMetadata;
 use Mezzio\Tooling\Module\RuntimeException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -39,10 +40,10 @@ class CreateCommandTest extends TestCase
     use MockeryPHPUnitIntegration;
     use ProphecyTrait;
 
-    /** @var InputInterface|ObjectProphecy */
+    /** @var InputInterface&ObjectProphecy */
     private $input;
 
-    /** @var ConsoleOutputInterface|ObjectProphecy */
+    /** @var ConsoleOutputInterface&ObjectProphecy */
     private $output;
 
     /** @var CreateCommand */
@@ -159,21 +160,29 @@ class CreateCommandTest extends TestCase
      */
     public function testCommandEmitsExpectedSuccessMessages(bool $configAsArrayObject)
     {
+        $metadata = new ModuleMetadata(
+            'Foo',
+            './library/modules',
+            './library/modules/Foo/src'
+        );
         $projectRoot = getcwd();
         $creation    = Mockery::mock('overload:' . Create::class);
         $creation->shouldReceive('process')
             ->once()
             ->with('Foo', 'library/modules', $projectRoot)
-            ->andReturn('SUCCESSFULLY RAN CREATE');
+            ->andReturn($metadata);
 
         $this->input->getArgument('module')->willReturn('Foo');
         $this->input->getOption('composer')->willReturn('composer.phar');
         $this->input->getOption('modules-path')->willReturn('./library/modules');
+        $this->input->getOption('flat')->willReturn(false);
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
         $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
 
-        $this->output->writeln(Argument::containingString('SUCCESSFULLY RAN CREATE'))->shouldBeCalled();
+        $this->output
+             ->writeln(Argument::containingString('Created module "Foo" in directory "./library/modules"'))
+             ->shouldBeCalled();
 
         $app = $this->mockApplicationWithRegisterCommand(
             0,
@@ -198,22 +207,30 @@ class CreateCommandTest extends TestCase
      */
     public function testCommandWillFailIfRegisterFails(bool $configAsArrayObject)
     {
+        $metadata = new ModuleMetadata(
+            'Foo',
+            './library/modules',
+            './library/modules/Foo/src'
+        );
         $projectRoot = getcwd();
         $creation    = Mockery::mock('overload:' . Create::class);
         $creation->shouldReceive('process')
             ->once()
             ->with('Foo', 'library/modules', $projectRoot)
-            ->andReturn('SUCCESSFULLY RAN CREATE');
+            ->andReturn($metadata);
 
         $this->input->getArgument('module')->willReturn('Foo');
         $this->input->getOption('composer')->willReturn('composer.phar');
         $this->input->getOption('modules-path')->willReturn('./library/modules');
+        $this->input->getOption('flat')->willReturn(false);
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
 
         $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
 
-        $this->output->writeln(Argument::containingString('SUCCESSFULLY RAN CREATE'))->shouldBeCalled();
+        $this->output
+             ->writeln(Argument::containingString('Created module "Foo" in directory "./library/modules"'))
+             ->shouldBeCalled();
 
         $app = $this->mockApplicationWithRegisterCommand(
             1,
@@ -248,6 +265,7 @@ class CreateCommandTest extends TestCase
         $this->input->getArgument('module')->willReturn('Foo');
         $this->input->getOption('composer')->willReturn('composer.phar');
         $this->input->getOption('modules-path')->willReturn('./library/modules');
+        $this->input->getOption('flat')->willReturn(false);
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
 
@@ -262,5 +280,52 @@ class CreateCommandTest extends TestCase
             $this->input->reveal(),
             $this->output->reveal()
         );
+    }
+
+    /**
+     * @dataProvider configType
+     */
+    public function testCommandPassesFlatOptionDuringCreation(bool $configAsArrayObject): void
+    {
+        $metadata = new ModuleMetadata(
+            'Foo',
+            './library/modules',
+            './library/modules/Foo'
+        );
+        $projectRoot = getcwd();
+        $creation    = Mockery::mock('overload:' . Create::class);
+        $creation->shouldReceive('process')
+            ->once()
+            ->with('Foo', 'library/modules', $projectRoot)
+            ->andReturn($metadata);
+
+        $this->input->getArgument('module')->willReturn('Foo');
+        $this->input->getOption('composer')->willReturn('composer.phar');
+        $this->input->getOption('modules-path')->willReturn('./library/modules');
+        $this->input->getOption('flat')->willReturn(true);
+
+        vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
+        $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
+
+        $this->output
+             ->writeln(Argument::containingString('Created module "Foo" in directory "./library/modules"'))
+             ->shouldBeCalled();
+
+        $app = $this->mockApplicationWithRegisterCommand(
+            0,
+            'mezzio:module:register',
+            'Foo',
+            'composer.phar',
+            'library/modules',
+            $this->output->reveal()
+        );
+        $command->setApplication($app->reveal());
+
+        $method = $this->reflectExecuteMethod($command);
+        self::assertSame(0, $method->invoke(
+            $command,
+            $this->input->reveal(),
+            $this->output->reveal()
+        ));
     }
 }
