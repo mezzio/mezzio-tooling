@@ -4,6 +4,23 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Composer;
 
+use function dirname;
+use function file_exists;
+use function file_get_contents;
+use function file_put_contents;
+use function is_dir;
+use function is_readable;
+use function is_writable;
+use function json_decode;
+use function json_encode;
+use function rtrim;
+use function sprintf;
+
+use const JSON_PRETTY_PRINT;
+use const JSON_THROW_ON_ERROR;
+use const JSON_UNESCAPED_SLASHES;
+use const JSON_UNESCAPED_UNICODE;
+
 final class FileSystemBasedComposerPackage implements ComposerPackageInterface
 {
     /** @var string */

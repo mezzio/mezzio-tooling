@@ -160,7 +160,7 @@ class CreateCommandTest extends TestCase
      */
     public function testCommandEmitsExpectedSuccessMessages(bool $configAsArrayObject)
     {
-        $metadata = new ModuleMetadata(
+        $metadata    = new ModuleMetadata(
             'Foo',
             './library/modules',
             './library/modules/Foo/src'
@@ -207,7 +207,7 @@ class CreateCommandTest extends TestCase
      */
     public function testCommandWillFailIfRegisterFails(bool $configAsArrayObject)
     {
-        $metadata = new ModuleMetadata(
+        $metadata    = new ModuleMetadata(
             'Foo',
             './library/modules',
             './library/modules/Foo/src'
@@ -287,7 +287,7 @@ class CreateCommandTest extends TestCase
      */
     public function testCommandPassesFlatOptionDuringCreation(bool $configAsArrayObject): void
     {
-        $metadata = new ModuleMetadata(
+        $metadata    = new ModuleMetadata(
             'Foo',
             './library/modules',
             './library/modules/Foo'

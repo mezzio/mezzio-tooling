@@ -26,6 +26,10 @@ use ReflectionMethod;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
+use function mkdir;
+use function preg_replace;
+use function sprintf;
+
 class RegisterCommandTest extends TestCase
 {
     use CommonOptionsAndAttributesTrait;
@@ -64,9 +68,9 @@ class RegisterCommandTest extends TestCase
         $packageFactory = $this->createMock(ComposerPackageFactoryInterface::class);
         $packageFactory->method('loadPackage')->with($this->dir->url())->willReturn($this->package);
 
-        $this->input   = $this->prophesize(InputInterface::class);
-        $this->output  = $this->prophesize(ConsoleOutputInterface::class);
-        $this->command = new RegisterCommand(
+        $this->input                             = $this->prophesize(InputInterface::class);
+        $this->output                            = $this->prophesize(ConsoleOutputInterface::class);
+        $this->command                           = new RegisterCommand(
             $this->dir->url(),
             $packageFactory,
             $this->processFactory

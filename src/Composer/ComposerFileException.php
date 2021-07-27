@@ -6,6 +6,8 @@ namespace Mezzio\Tooling\Composer;
 
 use RuntimeException;
 
+use function sprintf;
+
 class ComposerFileException extends RuntimeException
 {
     public static function dueToMissingFile(string $filename): self

@@ -68,8 +68,8 @@ final class DeregisterCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $module      = $input->getArgument('module');
-        $composer    = $input->getOption('composer') ?: 'composer';
+        $module   = $input->getArgument('module');
+        $composer = $input->getOption('composer') ?: 'composer';
 
         $injector       = new ConfigAggregatorInjector($this->projectRoot);
         $configProvider = sprintf('%s\ConfigProvider', $module);
@@ -80,7 +80,7 @@ final class DeregisterCommand extends Command
         // If no updates are made to autoloading, no need to update the autoloader.
         // Additionally, since this command deregisters the module with the
         // application, it can NEVER be a dev autoloading rule.
-        if (!  $this->package->removePsr4AutoloadRule($module, false)) {
+        if (! $this->package->removePsr4AutoloadRule($module, false)) {
             $output->writeln(sprintf('Removed config provider for module %s', $module));
             return 0;
         }

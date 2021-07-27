@@ -63,9 +63,9 @@ class DeregisterCommandTest extends TestCase
         $packageFactory = $this->createMock(ComposerPackageFactoryInterface::class);
         $packageFactory->method('loadPackage')->with($this->dir->url())->willReturn($this->package);
 
-        $this->input   = $this->prophesize(InputInterface::class);
-        $this->output  = $this->prophesize(ConsoleOutputInterface::class);
-        $this->command = new DeregisterCommand(
+        $this->input                             = $this->prophesize(InputInterface::class);
+        $this->output                            = $this->prophesize(ConsoleOutputInterface::class);
+        $this->command                           = new DeregisterCommand(
             $this->dir->url(),
             $packageFactory,
             $this->processFactory
@@ -108,9 +108,9 @@ class DeregisterCommandTest extends TestCase
         bool $removed,
         bool $disabled
     ): void {
-        $module                = 'MyApp';
-        $composer              = 'composer.phar';
-        $configProvider        = $module . '\ConfigProvider';
+        $module         = 'MyApp';
+        $composer       = 'composer.phar';
+        $configProvider = $module . '\ConfigProvider';
 
         $this->input->getArgument('module')->willReturn('MyApp');
         $this->input->getOption('composer')->willReturn('composer.phar');
@@ -180,7 +180,6 @@ class DeregisterCommandTest extends TestCase
                 ))
                 ->shouldBeCalled();
         }
-
 
         $method = $this->reflectExecuteMethod();
 

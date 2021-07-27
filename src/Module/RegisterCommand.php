@@ -12,6 +12,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function is_dir;
 use function sprintf;
 
 final class RegisterCommand extends Command
@@ -43,8 +44,7 @@ final class RegisterCommand extends Command
         string $projectRoot,
         ComposerPackageFactoryInterface $packageFactory,
         ComposerProcessFactoryInterface $processFactory
-    )
-    {
+    ) {
         $this->projectRoot    = $projectRoot;
         $this->package        = $packageFactory->loadPackage($projectRoot);
         $this->processFactory = $processFactory;
@@ -82,7 +82,7 @@ final class RegisterCommand extends Command
         // If no updates are made to autoloading, no need to update the autoloader.
         // Additionally, since this command registers the module with the
         // application, it can NEVER be a dev autoloading rule.
-        if (!  $this->package->addPsr4AutoloadRule($module, $modulePath, false)) {
+        if (! $this->package->addPsr4AutoloadRule($module, $modulePath, false)) {
             $output->writeln(sprintf('Registered config provider for module %s', $module));
             return 0;
         }
