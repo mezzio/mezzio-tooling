@@ -33,12 +33,12 @@
         "laminas/laminas-cli": "^1.1",
         "laminas/laminas-code": "^2.6.3 || ^3.3",
         "laminas/laminas-component-installer": "^2.0",
-        "laminas/laminas-composer-autoloading": "^2.0",
         "laminas/laminas-stdlib": "^3.1",
         "laminas/laminas-stratigility": "^3.0",
         "laminas/laminas-zendframework-bridge": "^1.0",
         "mezzio/mezzio": "^3.0",
-        "mezzio/mezzio-router": "^3.0"
+        "mezzio/mezzio-router": "^3.0",
+        "symfony/process": "^4.3 || ^5.1.2"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.3.0",
