@@ -1,0 +1,10 @@
+{
+    "autoload": {
+        "psr-4": {
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+        }
+    }
+}

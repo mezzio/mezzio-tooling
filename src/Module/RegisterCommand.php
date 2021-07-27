@@ -6,11 +6,13 @@ namespace Mezzio\Tooling\Module;
 
 use Laminas\ComponentInstaller\Injector\ConfigAggregatorInjector;
 use Laminas\ComponentInstaller\Injector\InjectorInterface;
-use Laminas\ComposerAutoloading\Command\Enable;
+use Mezzio\Tooling\Composer\ComposerPackageFactoryInterface;
+use Mezzio\Tooling\Composer\ComposerProcessFactoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function is_dir;
 use function sprintf;
 
 final class RegisterCommand extends Command
@@ -29,12 +31,23 @@ final class RegisterCommand extends Command
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:module:register';
 
+    /** @var ComposerPackageInterface */
+    private $package;
+
     /** @var string */
     private $projectRoot;
 
-    public function __construct(string $projectRoot)
-    {
-        $this->projectRoot = $projectRoot;
+    /** @var ComposerProcessFactoryInterface */
+    private $processFactory;
+
+    public function __construct(
+        string $projectRoot,
+        ComposerPackageFactoryInterface $packageFactory,
+        ComposerProcessFactoryInterface $processFactory
+    ) {
+        $this->projectRoot    = $projectRoot;
+        $this->package        = $packageFactory->loadPackage($projectRoot);
+        $this->processFactory = $processFactory;
 
         parent::__construct();
     }
@@ -64,11 +77,39 @@ final class RegisterCommand extends Command
             );
         }
 
-        $enable = new Enable($this->projectRoot, $modulesPath, $composer);
-        $enable->setMoveModuleClass(false);
-        $enable->process($module);
+        $modulePath = $this->detectModuleSourcePath($modulesPath, $module);
 
-        $output->writeln(sprintf('Registered autoloading rules and added configuration entry for module %s', $module));
+        // If no updates are made to autoloading, no need to update the autoloader.
+        // Additionally, since this command registers the module with the
+        // application, it can NEVER be a dev autoloading rule.
+        if (! $this->package->addPsr4AutoloadRule($module, $modulePath, false)) {
+            $output->writeln(sprintf('Registered config provider for module %s', $module));
+            return 0;
+        }
+
+        $result = $this->processFactory->createProcess([$composer, 'dump-autoload'])->run();
+        if (! $result->isSuccessful()) {
+            $output->writeln('<error>Unable to dump autoloader rules</error>');
+            $output->writeln(sprintf('Command "%s dump-autoload": %s', $composer, $result->getErrorOutput()));
+            return 1;
+        }
+
+        $output->writeln(sprintf('Registered config provider and autoloading rules for module %s', $module));
         return 0;
+    }
+
+    private function detectModuleSourcePath(string $sourcePath, string $module): string
+    {
+        $modulePath    = sprintf('%s/%s', $sourcePath, $module);
+        $canonicalPath = sprintf('%s/%s', $this->projectRoot, $modulePath);
+
+        if (! is_dir($canonicalPath)) {
+            throw new RuntimeException(sprintf('Cannot register module; directory "%s" does not exist', $modulePath));
+        }
+
+        $nestedSourcePath = $modulePath . '/src';
+        $canonicalPath    = sprintf('%s/%s', $this->projectRoot, $nestedSourcePath);
+
+        return is_dir($canonicalPath) ? $nestedSourcePath : $modulePath;
     }
 }
