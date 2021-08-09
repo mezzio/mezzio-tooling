@@ -115,11 +115,11 @@ final class Create
 
     public const TEMPLATE_ROUTE_DELEGATOR_CONFIG = <<<'EOT'
         
-                'delegators' => [
-                    \Mezzio\Application::class => [
-                        RoutesDelegator::class,
+                    'delegators' => [
+                        \Mezzio\Application::class => [
+                            RoutesDelegator::class,
+                        ],
                     ],
-                ],
         EOT;
 
     public const TEMPLATE_ROUTE_DELEGATOR = <<<'EOT'
