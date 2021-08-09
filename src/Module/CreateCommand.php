@@ -58,6 +58,12 @@ final class CreateCommand extends Command
             InputOption::VALUE_NONE,
             'Use the flat structure (no nested src or templates directories)'
         );
+        $this->addOption(
+            'with-route-delegator',
+            'r',
+            InputOption::VALUE_NONE,
+            'Whether or not to create a route delegator when creating the module'
+        );
         CommandCommonOptions::addDefaultOptionsAndArguments($this);
     }
 
@@ -76,7 +82,12 @@ final class CreateCommand extends Command
         $modulesPath = CommandCommonOptions::getModulesPath($input, $this->config);
 
         $creation = new Create((bool) $input->getOption('flat'));
-        $module   = $creation->process($module, $modulesPath, $this->projectRoot);
+        $module   = $creation->process(
+            $module,
+            $modulesPath,
+            $this->projectRoot,
+            (bool) $input->getOption('with-route-delegator')
+        );
 
         $output->writeln(sprintf(
             '<info>Created module "%s" in directory "%s"</info>',

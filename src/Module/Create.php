@@ -50,7 +50,7 @@ final class Create
                     'invokables' => [
                     ],
                     'factories'  => [
-                    ],
+                    ],%2$s
                 ];
             }
         }
@@ -94,7 +94,7 @@ final class Create
                     'invokables' => [
                     ],
                     'factories'  => [
-                    ],
+                    ],%3$s
                 ];
             }
         
@@ -113,6 +113,46 @@ final class Create
         
         EOT;
 
+    public const TEMPLATE_ROUTE_DELEGATOR_CONFIG = <<<'EOT'
+        
+                'delegators' => [
+                    \Mezzio\Application::class => [
+                        RoutesDelegator::class,
+                    ],
+                ],
+        EOT;
+
+    public const TEMPLATE_ROUTE_DELEGATOR = <<<'EOT'
+        <?php
+        
+        declare(strict_types=1);
+        
+        namespace %1$s;
+
+        use Psr\Container\ContainerInterface;
+        use Mezzio\Application;
+        
+        /**
+         * Routes specific to the %1$s module
+         */
+        class RoutesDelegator
+        {
+            public function __invoke(ContainerInterface $container, $serviceName, callable $callback): Application
+            {
+                /** @var Application $app */
+                $app = $callback();
+
+                // Setup routes here:
+                //   $app->get('/some/path', Handler\SomeHandler::class, 'path');
+                //   $app->post('/some/form', Handler\FormHandler::class, 'form');
+                // etc.
+
+                return $app;
+            }
+        }
+
+        EOT;
+
     /** @var bool */
     private $useFlatStructure;
 
@@ -124,11 +164,19 @@ final class Create
     /**
      * Create source tree for the mezzio module.
      */
-    public function process(string $moduleName, string $modulesPath, string $projectDir): ModuleMetadata
-    {
+    public function process(
+        string $moduleName,
+        string $modulesPath,
+        string $projectDir,
+        bool $withRouteDelegator = false
+    ): ModuleMetadata {
         $moduleRootPath   = sprintf('%s/%s/%s', $projectDir, $modulesPath, $moduleName);
         $moduleSourcePath = $this->createDirectoryStructure($moduleRootPath, $moduleName);
-        $this->createConfigProvider($moduleSourcePath, $moduleName);
+        $this->createConfigProvider($moduleSourcePath, $moduleName, $withRouteDelegator);
+
+        if ($withRouteDelegator) {
+            $this->createRouteDelegator($moduleSourcePath, $moduleName);
+        }
 
         return new ModuleMetadata(
             $moduleName,
@@ -191,14 +239,15 @@ final class Create
     /**
      * Creates ConfigProvider for new mezzio module.
      */
-    private function createConfigProvider(string $sourcePath, string $moduleName): void
+    private function createConfigProvider(string $sourcePath, string $moduleName, bool $withRouteDelegator): void
     {
         if ($this->useFlatStructure) {
             file_put_contents(
                 sprintf('%s/ConfigProvider.php', $sourcePath),
                 sprintf(
                     self::TEMPLATE_CONFIG_PROVIDER_FLAT,
-                    $moduleName
+                    $moduleName,
+                    $withRouteDelegator ? self::TEMPLATE_ROUTE_DELEGATOR_CONFIG : ''
                 )
             );
 
@@ -210,8 +259,21 @@ final class Create
             sprintf(
                 self::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED,
                 $moduleName,
-                $this->normalizeTemplateIdentifier($moduleName)
+                $this->normalizeTemplateIdentifier($moduleName),
+                $withRouteDelegator ? self::TEMPLATE_ROUTE_DELEGATOR_CONFIG : ''
             )
         );
+    }
+
+    private function createRouteDelegator(string $sourcePath, string $moduleName): void
+    {
+        $classFileContents = sprintf(
+            self::TEMPLATE_ROUTE_DELEGATOR,
+            $moduleName
+        );
+
+        $filename = sprintf('%s/RoutesDelegator.php', $sourcePath);
+
+        file_put_contents($filename, $classFileContents);
     }
 }

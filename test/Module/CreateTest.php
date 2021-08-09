@@ -117,7 +117,7 @@ class CreateTest extends TestCase
         self::assertSame(1, preg_match('/\bnamespace MyApp\b/', $configProviderContent));
         self::assertSame(1, preg_match('/\bclass ConfigProvider\b/', $configProviderContent));
         $command         = $this->command;
-        $expectedContent = sprintf($command::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED, 'MyApp', 'my-app');
+        $expectedContent = sprintf($command::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED, 'MyApp', 'my-app', '');
         self::assertSame($expectedContent, $configProviderContent);
     }
 
@@ -127,7 +127,7 @@ class CreateTest extends TestCase
         $configProvider        = vfsStream::url('project/my-modules/My2App/src/ConfigProvider.php');
         $configProviderContent = file_get_contents($configProvider);
         $command               = $this->command;
-        $expectedContent       = sprintf($command::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED, 'My2App', 'my2-app');
+        $expectedContent       = sprintf($command::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED, 'My2App', 'my2-app', '');
         self::assertSame($expectedContent, $configProviderContent);
     }
 
@@ -137,7 +137,7 @@ class CreateTest extends TestCase
         $configProvider        = vfsStream::url('project/my-modules/THEApp/src/ConfigProvider.php');
         $configProviderContent = file_get_contents($configProvider);
         $command               = $this->command;
-        $expectedContent       = sprintf($command::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED, 'THEApp', 'the-app');
+        $expectedContent       = sprintf($command::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED, 'THEApp', 'the-app', '');
         self::assertSame($expectedContent, $configProviderContent);
     }
 
@@ -152,7 +152,62 @@ class CreateTest extends TestCase
 
         $configProvider        = vfsStream::url('project/my-modules/MyApp/ConfigProvider.php');
         $configProviderContent = file_get_contents($configProvider);
-        $expectedContent       = sprintf($command::TEMPLATE_CONFIG_PROVIDER_FLAT, 'MyApp');
+        $expectedContent       = sprintf($command::TEMPLATE_CONFIG_PROVIDER_FLAT, 'MyApp', '');
         self::assertSame($expectedContent, $configProviderContent);
+    }
+
+    public function testWillCreateRouteDelegatorWhenRequested(): void
+    {
+        $command  = new Create(false);
+        $metadata = $command->process('MyApp', $this->modulesPath, $this->projectDir, true);
+
+        $expectedPath = sprintf('%s/MyApp', $this->modulesDir->url());
+        self::assertEquals($expectedPath, $metadata->rootPath());
+        self::assertEquals($expectedPath . '/src', $metadata->sourcePath());
+
+        $configProvider        = vfsStream::url('project/my-modules/MyApp/src/ConfigProvider.php');
+        $configProviderContent = file_get_contents($configProvider);
+        $expectedContent       = sprintf(
+            $command::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED,
+            'MyApp',
+            'my-app',
+            Create::TEMPLATE_ROUTE_DELEGATOR_CONFIG
+        );
+        self::assertSame($expectedContent, $configProviderContent);
+
+        $routesDelegator        = vfsStream::url('project/my-modules/MyApp/src/RoutesDelegator.php');
+        $routesDelegatorContent = file_get_contents($routesDelegator);
+        $expectedContent        = sprintf(
+            $command::TEMPLATE_ROUTE_DELEGATOR,
+            'MyApp'
+        );
+        self::assertSame($expectedContent, $routesDelegatorContent);
+    }
+
+    public function testWillCreateRouteDelegatorInFlatStructureWhenRequested(): void
+    {
+        $command  = new Create(true, true);
+        $metadata = $command->process('MyApp', $this->modulesPath, $this->projectDir, true);
+
+        $expectedPath = sprintf('%s/MyApp', $this->modulesDir->url());
+        self::assertEquals($expectedPath, $metadata->rootPath());
+        self::assertEquals($expectedPath, $metadata->sourcePath());
+
+        $configProvider        = vfsStream::url('project/my-modules/MyApp/ConfigProvider.php');
+        $configProviderContent = file_get_contents($configProvider);
+        $expectedContent       = sprintf(
+            $command::TEMPLATE_CONFIG_PROVIDER_FLAT,
+            'MyApp',
+            Create::TEMPLATE_ROUTE_DELEGATOR_CONFIG
+        );
+        self::assertSame($expectedContent, $configProviderContent);
+
+        $routesDelegator        = vfsStream::url('project/my-modules/MyApp/RoutesDelegator.php');
+        $routesDelegatorContent = file_get_contents($routesDelegator);
+        $expectedContent        = sprintf(
+            $command::TEMPLATE_ROUTE_DELEGATOR,
+            'MyApp'
+        );
+        self::assertSame($expectedContent, $routesDelegatorContent);
     }
 }
