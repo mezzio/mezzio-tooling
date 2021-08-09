@@ -8,8 +8,12 @@ use Mezzio\Tooling\TemplateResolutionTrait;
 
 use function file_exists;
 use function file_put_contents;
+use function ltrim;
 use function rtrim;
 use function sprintf;
+use function strlen;
+use function strpos;
+use function substr;
 
 final class Create
 {
@@ -187,8 +191,8 @@ final class Create
 
         return new ModuleMetadata(
             $moduleName,
-            $moduleRootPath,
-            $moduleSourcePath
+            $this->stripProjectRootFromPath($projectDir, $moduleRootPath),
+            $this->stripProjectRootFromPath($projectDir, $moduleSourcePath)
         );
     }
 
@@ -286,5 +290,15 @@ final class Create
         $filename = sprintf('%s/RoutesDelegator.php', $sourcePath);
 
         file_put_contents($filename, $classFileContents);
+    }
+
+    private function stripProjectRootFromPath(string $projectRoot, string $path): string
+    {
+        if (0 !== strpos($path, $projectRoot)) {
+            return $path;
+        }
+
+        $relativePath = substr($path, strlen($projectRoot));
+        return ltrim($relativePath, '/\\');
     }
 }

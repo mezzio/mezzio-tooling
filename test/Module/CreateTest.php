@@ -111,7 +111,7 @@ class CreateTest extends TestCase
         $configProvider = vfsStream::url('project/my-modules/MyApp/src/ConfigProvider.php');
         $metadata       = $this->command->process('MyApp', $this->modulesPath, $this->projectDir);
 
-        self::assertEquals(sprintf('%s/MyApp', $this->modulesDir->url()), $metadata->rootPath());
+        self::assertEquals('my-modules/MyApp', $metadata->rootPath());
         self::assertFileExists($configProvider);
         $configProviderContent = file_get_contents($configProvider);
         self::assertSame(1, preg_match('/\bnamespace MyApp\b/', $configProviderContent));
@@ -146,7 +146,7 @@ class CreateTest extends TestCase
         $command  = new Create(true);
         $metadata = $command->process('MyApp', $this->modulesPath, $this->projectDir);
 
-        $expectedPaths = sprintf('%s/MyApp', $this->modulesDir->url());
+        $expectedPaths = 'my-modules/MyApp';
         self::assertEquals($expectedPaths, $metadata->rootPath());
         self::assertEquals($expectedPaths, $metadata->sourcePath());
 
@@ -161,7 +161,7 @@ class CreateTest extends TestCase
         $command  = new Create(false);
         $metadata = $command->process('MyApp', $this->modulesPath, $this->projectDir, true);
 
-        $expectedPath = sprintf('%s/MyApp', $this->modulesDir->url());
+        $expectedPath = 'my-modules/MyApp';
         self::assertEquals($expectedPath, $metadata->rootPath());
         self::assertEquals($expectedPath . '/src', $metadata->sourcePath());
 
@@ -189,7 +189,7 @@ class CreateTest extends TestCase
         $command  = new Create(true, true);
         $metadata = $command->process('MyApp', $this->modulesPath, $this->projectDir, true);
 
-        $expectedPath = sprintf('%s/MyApp', $this->modulesDir->url());
+        $expectedPath = 'my-modules/MyApp';
         self::assertEquals($expectedPath, $metadata->rootPath());
         self::assertEquals($expectedPath, $metadata->sourcePath());
 
@@ -222,7 +222,7 @@ class CreateTest extends TestCase
             'ParentNamespace'
         );
 
-        self::assertEquals(sprintf('%s/MyApp', $this->modulesDir->url()), $metadata->rootPath());
+        self::assertEquals('my-modules/MyApp', $metadata->rootPath());
         self::assertFileExists($configProvider);
         $configProviderContent = file_get_contents($configProvider);
         self::assertSame(1, preg_match('/\bnamespace ParentNamespace\\\\MyApp\b/', $configProviderContent));
@@ -242,7 +242,7 @@ class CreateTest extends TestCase
         $command  = new Create(true);
         $metadata = $command->process('MyApp', $this->modulesPath, $this->projectDir, false, 'ParentNamespace');
 
-        $expectedPaths = sprintf('%s/MyApp', $this->modulesDir->url());
+        $expectedPaths = 'my-modules/MyApp';
         self::assertEquals($expectedPaths, $metadata->rootPath());
         self::assertEquals($expectedPaths, $metadata->sourcePath());
 
@@ -257,7 +257,7 @@ class CreateTest extends TestCase
         $command  = new Create(false);
         $metadata = $command->process('MyApp', $this->modulesPath, $this->projectDir, true, 'ParentNamespace');
 
-        $expectedPath = sprintf('%s/MyApp', $this->modulesDir->url());
+        $expectedPath = 'my-modules/MyApp';
         self::assertEquals($expectedPath, $metadata->rootPath());
         self::assertEquals($expectedPath . '/src', $metadata->sourcePath());
 
@@ -285,7 +285,7 @@ class CreateTest extends TestCase
         $command  = new Create(true, true);
         $metadata = $command->process('MyApp', $this->modulesPath, $this->projectDir, true, 'ParentNamespace');
 
-        $expectedPath = sprintf('%s/MyApp', $this->modulesDir->url());
+        $expectedPath = 'my-modules/MyApp';
         self::assertEquals($expectedPath, $metadata->rootPath());
         self::assertEquals($expectedPath, $metadata->sourcePath());
 
