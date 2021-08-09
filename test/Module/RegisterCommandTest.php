@@ -98,20 +98,26 @@ class RegisterCommandTest extends TestCase
     /** @psalm-return array<string, array{0: bool, 1: bool, 2: bool, 3: string}> */
     public function injectedEnabled(): array
     {
+        // phpcs:disable Generic.Files.LineLength.TooLong
         return [
-            'custom module structure, injected and enabled'              => [true,  true,  true,  './library/modules'],
-            'custom module structure, injected and NOT enabled'          => [true,  false, true,  './library/modules'],
-            'custom module structure, NOT injected but enabled'          => [false, true,  true,  './library/modules'],
-            'custom module structure, NOT injected and NOT enabled'      => [false, false, true,  './library/modules'],
-            'recommended module structure, injected and enabled'         => [true,  true,  true,  'src'],
-            'recommended module structure, injected and NOT enabled'     => [true,  false, true,  'src'],
-            'recommended module structure, NOT injected but enabled'     => [false, true,  true,  'src'],
-            'recommended module structure, NOT injected and NOT enabled' => [false, false, true,  'src'],
-            'flat module structure, injected and enabled'                => [true,  true,  false, 'src'],
-            'flat module structure, injected and NOT enabled'            => [true,  false, false, 'src'],
-            'flat module structure, NOT injected but enabled'            => [false, true,  false, 'src'],
-            'flat module structure, NOT injected and NOT enabled'        => [false, false, false, 'src'],
+            'custom module structure, injected and enabled'                             => [true,  true,  true,  './library/modules', null],
+            'custom module structure, injected and NOT enabled'                         => [true,  false, true,  './library/modules', null],
+            'custom module structure, NOT injected but enabled'                         => [false, true,  true,  './library/modules', null],
+            'custom module structure, NOT injected and NOT enabled'                     => [false, false, true,  './library/modules', null],
+            'recommended module structure, injected and enabled'                        => [true,  true,  true,  'src', null],
+            'recommended module structure, injected and NOT enabled'                    => [true,  false, true,  'src', null],
+            'recommended module structure, NOT injected but enabled'                    => [false, true,  true,  'src', null],
+            'recommended module structure, NOT injected and NOT enabled'                => [false, false, true,  'src', null],
+            'flat module structure, injected and enabled'                               => [true,  true,  false, 'src', null],
+            'flat module structure, injected and NOT enabled'                           => [true,  false, false, 'src', null],
+            'flat module structure, NOT injected but enabled'                           => [false, true,  false, 'src', null],
+            'flat module structure, NOT injected and NOT enabled'                       => [false, false, false, 'src', null],
+            'recommended module structure, no module source path, injected and enabled' => [true,  true,  true,  null, null],
+            'flat module structure, no module source path, injected and enabled'        => [true,  true,  false, null, null],
+            'exact path, recommended structure, injected and enabled'                   => [true,  true,  true, null, './library/Foo'],
+            'exact path, flat structure, injected and enabled'                          => [true,  true,  false, null, './library/Foo'],
         ];
+        // phpcs:enable
     }
 
     /**
@@ -121,30 +127,38 @@ class RegisterCommandTest extends TestCase
         bool $injected,
         bool $enabled,
         bool $isRecommendedStructure,
-        string $modulesPath
+        ?string $modulesPath,
+        ?string $exactPath
     ): void {
         $module                = 'MyApp';
         $composer              = 'composer.phar';
         $configProvider        = $module . '\ConfigProvider';
-        $normalizedModulesPath = preg_replace('#^./#', '', $modulesPath);
-        $expectedAutoloadPath  = sprintf(
+        $normalizedModulesPath = $modulesPath === null ? 'src' : preg_replace('#^./#', '', $modulesPath);
+        $expectedAutoloadPath  = $exactPath ?: sprintf(
             '%s/%s%s',
             $normalizedModulesPath,
             $module,
             $isRecommendedStructure ? '/src' : ''
         );
-        $pathToCreate          = sprintf(
-            '%s/%s/%s%s',
-            $this->dir->url(),
-            $normalizedModulesPath,
-            $module,
-            $isRecommendedStructure ? '/src' : ''
-        );
+        $pathToCreate          = $exactPath === null
+            ? sprintf(
+                '%s/%s/%s%s',
+                $this->dir->url(),
+                $normalizedModulesPath,
+                $module,
+                $isRecommendedStructure ? '/src' : ''
+            )
+            : sprintf(
+                '%s/%s',
+                $this->dir->url(),
+                $exactPath
+            );
         mkdir($pathToCreate, 0777, true);
 
         $this->input->getArgument('module')->willReturn($module);
         $this->input->getOption('composer')->willReturn($composer);
         $this->input->getOption('modules-path')->willReturn($modulesPath);
+        $this->input->getOption('exact-path')->willReturn($exactPath);
 
         $injectorMock = Mockery::mock('overload:' . ConfigAggregatorInjector::class);
         $injectorMock
@@ -231,6 +245,7 @@ class RegisterCommandTest extends TestCase
         $this->input->getArgument('module')->willReturn('MyApp');
         $this->input->getOption('composer')->willReturn('composer.phar');
         $this->input->getOption('modules-path')->willReturn('./library/modules');
+        $this->input->getOption('exact-path')->willReturn(null);
 
         $injectorMock = Mockery::mock('overload:' . ConfigAggregatorInjector::class);
         $injectorMock
