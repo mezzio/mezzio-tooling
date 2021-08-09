@@ -8,6 +8,7 @@ use Mezzio\Tooling\TemplateResolutionTrait;
 
 use function file_exists;
 use function file_put_contents;
+use function rtrim;
 use function sprintf;
 
 final class Create
@@ -168,11 +169,17 @@ final class Create
         string $moduleName,
         string $modulesPath,
         string $projectDir,
-        bool $withRouteDelegator = false
+        bool $withRouteDelegator = false,
+        string $parentNamespace = ''
     ): ModuleMetadata {
-        $moduleRootPath   = sprintf('%s/%s/%s', $projectDir, $modulesPath, $moduleName);
-        $moduleSourcePath = $this->createDirectoryStructure($moduleRootPath, $moduleName);
-        $this->createConfigProvider($moduleSourcePath, $moduleName, $withRouteDelegator);
+        $moduleRootPath    = sprintf('%s/%s/%s', $projectDir, $modulesPath, $moduleName);
+        $moduleSourcePath  = $this->createDirectoryStructure($moduleRootPath, $moduleName);
+        $templateNamespace = $this->normalizeTemplateIdentifier($moduleName);
+        $moduleName        = $parentNamespace === ''
+            ? $moduleName
+            : sprintf('%s\\%s', rtrim($parentNamespace, '\\'), $moduleName);
+
+        $this->createConfigProvider($moduleSourcePath, $moduleName, $templateNamespace, $withRouteDelegator);
 
         if ($withRouteDelegator) {
             $this->createRouteDelegator($moduleSourcePath, $moduleName);
@@ -239,8 +246,12 @@ final class Create
     /**
      * Creates ConfigProvider for new mezzio module.
      */
-    private function createConfigProvider(string $sourcePath, string $moduleName, bool $withRouteDelegator): void
-    {
+    private function createConfigProvider(
+        string $sourcePath,
+        string $moduleName,
+        string $templateNamespace,
+        bool $withRouteDelegator
+    ): void {
         if ($this->useFlatStructure) {
             file_put_contents(
                 sprintf('%s/ConfigProvider.php', $sourcePath),
@@ -259,7 +270,7 @@ final class Create
             sprintf(
                 self::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED,
                 $moduleName,
-                $this->normalizeTemplateIdentifier($moduleName),
+                $templateNamespace,
                 $withRouteDelegator ? self::TEMPLATE_ROUTE_DELEGATOR_CONFIG : ''
             )
         );
