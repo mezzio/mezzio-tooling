@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function dirname;
 use function sprintf;
 
 final class CreateCommand extends Command
@@ -64,6 +65,14 @@ final class CreateCommand extends Command
             InputOption::VALUE_NONE,
             'Whether or not to create a route delegator when creating the module'
         );
+        $this->addOption(
+            'with-namespace',
+            's',
+            InputOption::VALUE_REQUIRED,
+            'A parent namespace to place the module namespace under;'
+            . ' final namespace becomes [--with-namespace]\\<module>',
+            ''
+        );
         CommandCommonOptions::addDefaultOptionsAndArguments($this);
     }
 
@@ -77,31 +86,33 @@ final class CreateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $module      = $input->getArgument('module');
-        $composer    = $input->getOption('composer') ?: 'composer';
-        $modulesPath = CommandCommonOptions::getModulesPath($input, $this->config);
+        $module          = $input->getArgument('module');
+        $composer        = $input->getOption('composer') ?: 'composer';
+        $modulesPath     = CommandCommonOptions::getModulesPath($input, $this->config);
+        $parentNamespace = $input->getOption('with-namespace');
 
         $creation = new Create((bool) $input->getOption('flat'));
         $module   = $creation->process(
             $module,
             $modulesPath,
             $this->projectRoot,
-            (bool) $input->getOption('with-route-delegator')
+            (bool) $input->getOption('with-route-delegator'),
+            $parentNamespace
         );
 
         $output->writeln(sprintf(
             '<info>Created module "%s" in directory "%s"</info>',
             $module->name(),
-            $module->rootPath()
+            $parentNamespace === '' ? $module->rootPath() : dirname($module->sourcePath())
         ));
 
         $registerCommand = 'mezzio:module:register';
         $register        = $this->getApplication()->find($registerCommand);
         return $register->run(new ArrayInput([
-            'command'        => $registerCommand,
-            'module'         => $module->name(),
-            '--composer'     => $composer,
-            '--modules-path' => $modulesPath,
+            'command'      => $registerCommand,
+            'module'       => $module->name(),
+            '--composer'   => $composer,
+            '--exact-path' => $module->sourcePath(),
         ]), $output);
     }
 }

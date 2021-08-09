@@ -105,13 +105,13 @@ class CreateCommandTest extends TestCase
         string $name,
         string $module,
         string $composer,
-        string $modulesPath,
+        string $modulePath,
         $output
     ) {
         $register = $this->prophesize(Command::class);
         $register
             ->run(
-                Argument::that(function ($input) use ($name, $module, $composer, $modulesPath) {
+                Argument::that(function ($input) use ($name, $module, $composer, $modulePath) {
                     TestCase::assertInstanceOf(ArrayInput::class, $input);
 
                     $r = new ReflectionProperty($input, 'parameters');
@@ -127,8 +127,8 @@ class CreateCommandTest extends TestCase
                     TestCase::assertArrayHasKey('--composer', $parameters);
                     TestCase::assertEquals($composer, $parameters['--composer']);
 
-                    TestCase::assertArrayHasKey('--modules-path', $parameters);
-                    TestCase::assertEquals($modulesPath, $parameters['--modules-path']);
+                    TestCase::assertArrayHasKey('--exact-path', $parameters);
+                    TestCase::assertEquals($modulePath, $parameters['--exact-path']);
 
                     return true;
                 }),
@@ -169,7 +169,7 @@ class CreateCommandTest extends TestCase
         $creation    = Mockery::mock('overload:' . Create::class);
         $creation->shouldReceive('process')
             ->once()
-            ->with('Foo', 'library/modules', $projectRoot, false)
+            ->with('Foo', 'library/modules', $projectRoot, false, '')
             ->andReturn($metadata);
 
         $this->input->getArgument('module')->willReturn('Foo');
@@ -177,6 +177,7 @@ class CreateCommandTest extends TestCase
         $this->input->getOption('modules-path')->willReturn('./library/modules');
         $this->input->getOption('flat')->willReturn(false);
         $this->input->getOption('with-route-delegator')->willReturn(false);
+        $this->input->getOption('with-namespace')->willReturn('');
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
         $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
@@ -190,7 +191,7 @@ class CreateCommandTest extends TestCase
             'mezzio:module:register',
             'Foo',
             'composer.phar',
-            'library/modules',
+            'library/modules/Foo/src',
             $this->output->reveal()
         );
         $command->setApplication($app->reveal());
@@ -217,7 +218,7 @@ class CreateCommandTest extends TestCase
         $creation    = Mockery::mock('overload:' . Create::class);
         $creation->shouldReceive('process')
             ->once()
-            ->with('Foo', 'library/modules', $projectRoot, false)
+            ->with('Foo', 'library/modules', $projectRoot, false, '')
             ->andReturn($metadata);
 
         $this->input->getArgument('module')->willReturn('Foo');
@@ -225,6 +226,7 @@ class CreateCommandTest extends TestCase
         $this->input->getOption('modules-path')->willReturn('./library/modules');
         $this->input->getOption('flat')->willReturn(false);
         $this->input->getOption('with-route-delegator')->willReturn(false);
+        $this->input->getOption('with-namespace')->willReturn('');
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
 
@@ -239,7 +241,7 @@ class CreateCommandTest extends TestCase
             'mezzio:module:register',
             'Foo',
             'composer.phar',
-            'library/modules',
+            'library/modules/Foo/src',
             $this->output->reveal()
         );
         $command->setApplication($app->reveal());
@@ -260,7 +262,7 @@ class CreateCommandTest extends TestCase
         $projectRoot = getcwd();
         $creation    = Mockery::mock('overload:' . Create::class);
         $creation->shouldReceive('process')
-            ->with('Foo', 'library/modules', $projectRoot, false)
+            ->with('Foo', 'library/modules', $projectRoot, false, '')
             ->once()
             ->andThrow(RuntimeException::class, 'ERROR THROWN');
 
@@ -269,6 +271,7 @@ class CreateCommandTest extends TestCase
         $this->input->getOption('modules-path')->willReturn('./library/modules');
         $this->input->getOption('flat')->willReturn(false);
         $this->input->getOption('with-route-delegator')->willReturn(false);
+        $this->input->getOption('with-namespace')->willReturn('');
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
 
@@ -299,7 +302,7 @@ class CreateCommandTest extends TestCase
         $creation    = Mockery::mock('overload:' . Create::class);
         $creation->shouldReceive('process')
             ->once()
-            ->with('Foo', 'library/modules', $projectRoot, false)
+            ->with('Foo', 'library/modules', $projectRoot, false, '')
             ->andReturn($metadata);
 
         $this->input->getArgument('module')->willReturn('Foo');
@@ -307,6 +310,7 @@ class CreateCommandTest extends TestCase
         $this->input->getOption('modules-path')->willReturn('./library/modules');
         $this->input->getOption('flat')->willReturn(true);
         $this->input->getOption('with-route-delegator')->willReturn(false);
+        $this->input->getOption('with-namespace')->willReturn('');
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
         $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
@@ -320,7 +324,7 @@ class CreateCommandTest extends TestCase
             'mezzio:module:register',
             'Foo',
             'composer.phar',
-            'library/modules',
+            'library/modules/Foo',
             $this->output->reveal()
         );
         $command->setApplication($app->reveal());
@@ -347,7 +351,7 @@ class CreateCommandTest extends TestCase
         $creation    = Mockery::mock('overload:' . Create::class);
         $creation->shouldReceive('process')
             ->once()
-            ->with('Foo', 'library/modules', $projectRoot, true)
+            ->with('Foo', 'library/modules', $projectRoot, true, '')
             ->andReturn($metadata);
 
         $this->input->getArgument('module')->willReturn('Foo');
@@ -355,6 +359,7 @@ class CreateCommandTest extends TestCase
         $this->input->getOption('modules-path')->willReturn('./library/modules');
         $this->input->getOption('flat')->willReturn(false);
         $this->input->getOption('with-route-delegator')->willReturn(true);
+        $this->input->getOption('with-namespace')->willReturn('');
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
         $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
@@ -368,7 +373,58 @@ class CreateCommandTest extends TestCase
             'mezzio:module:register',
             'Foo',
             'composer.phar',
-            'library/modules',
+            'library/modules/Foo/src',
+            $this->output->reveal()
+        );
+        $command->setApplication($app->reveal());
+
+        $method = $this->reflectExecuteMethod($command);
+        self::assertSame(0, $method->invoke(
+            $command,
+            $this->input->reveal(),
+            $this->output->reveal()
+        ));
+    }
+
+    /**
+     * @dataProvider configType
+     */
+    public function testCommandPassesParentNamespaceOptionDuringCreation(bool $configAsArrayObject): void
+    {
+        $metadata    = new ModuleMetadata(
+            'ParentNamespace\\Foo',
+            './library/modules',
+            './library/modules/Foo/src'
+        );
+        $projectRoot = getcwd();
+        $creation    = Mockery::mock('overload:' . Create::class);
+        $creation->shouldReceive('process')
+            ->once()
+            ->with('Foo', 'library/modules', $projectRoot, true, 'ParentNamespace')
+            ->andReturn($metadata);
+
+        $this->input->getArgument('module')->willReturn('Foo');
+        $this->input->getOption('composer')->willReturn('composer.phar');
+        $this->input->getOption('modules-path')->willReturn('./library/modules');
+        $this->input->getOption('flat')->willReturn(false);
+        $this->input->getOption('with-route-delegator')->willReturn(true);
+        $this->input->getOption('with-namespace')->willReturn('ParentNamespace');
+
+        vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
+        $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
+
+        $this->output
+            ->writeln(Argument::containingString(
+                'Created module "ParentNamespace\\Foo" in directory "library/modules/Foo"'
+            ))
+            ->shouldBeCalled();
+
+        $app = $this->mockApplicationWithRegisterCommand(
+            0,
+            'mezzio:module:register',
+            'ParentNamespace\\Foo', // Note: passing parent namespace as module argument!
+            'composer.phar',
+            'library/modules/Foo/src',
             $this->output->reveal()
         );
         $command->setApplication($app->reveal());

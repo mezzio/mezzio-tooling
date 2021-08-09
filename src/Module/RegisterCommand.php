@@ -10,6 +10,7 @@ use Mezzio\Tooling\Composer\ComposerPackageFactoryInterface;
 use Mezzio\Tooling\Composer\ComposerProcessFactoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use function is_dir;
@@ -24,6 +25,11 @@ final class RegisterCommand extends Command
           autoloading rules have been generated.
         - Ensuring the ConfigProvider class for the module is registered with the
           application configuration.
+
+        If the --exact-path option is provided to the command, that value will
+        be treated as the fully qualified path to register for autoloading the
+        module.
+
         EOT;
 
     public const HELP_ARG_MODULE = 'The module to register with the application';
@@ -59,6 +65,13 @@ final class RegisterCommand extends Command
     {
         $this->setDescription('Register a middleware module with the application');
         $this->setHelp(self::HELP);
+        $this->addOption(
+            'exact-path',
+            'x',
+            InputOption::VALUE_REQUIRED,
+            'If provided, this will be the exact path registered for the module',
+            null
+        );
         CommandCommonOptions::addDefaultOptionsAndArguments($this);
     }
 
@@ -67,6 +80,7 @@ final class RegisterCommand extends Command
         $module      = $input->getArgument('module');
         $composer    = $input->getOption('composer') ?: 'composer';
         $modulesPath = CommandCommonOptions::getModulesPath($input);
+        $exactPath   = $input->getOption('exact-path');
 
         $injector       = new ConfigAggregatorInjector($this->projectRoot);
         $configProvider = sprintf('%s\ConfigProvider', $module);
@@ -77,7 +91,7 @@ final class RegisterCommand extends Command
             );
         }
 
-        $modulePath = $this->detectModuleSourcePath($modulesPath, $module);
+        $modulePath = $exactPath ?: $this->detectModuleSourcePath($modulesPath, $module);
 
         // If no updates are made to autoloading, no need to update the autoloader.
         // Additionally, since this command registers the module with the

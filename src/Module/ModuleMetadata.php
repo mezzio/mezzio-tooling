@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Module;
 
+use function preg_replace;
+
 final class ModuleMetadata
 {
     /** @var string */
@@ -22,7 +24,7 @@ final class ModuleMetadata
     ) {
         $this->name       = $name;
         $this->rootPath   = $rootPath;
-        $this->sourcePath = $sourcePath;
+        $this->sourcePath = preg_replace('#^\./#', '', $sourcePath);
     }
 
     public function name(): string
