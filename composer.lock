@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c8d2009d7dcfe6a896f23e149b6078be",
+    "content-hash": "46d25eab66be9d03498cc63edafb8479",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -2781,62 +2781,6 @@
             "time": "2021-05-29T15:53:59+00:00"
         },
         {
-            "name": "malukenho/docheader",
-            "version": "0.1.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/malukenho/docheader.git",
-                "reference": "a15c22ba8a44add72a2b2bca5e40af244a53497c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/malukenho/docheader/zipball/a15c22ba8a44add72a2b2bca5e40af244a53497c",
-                "reference": "a15c22ba8a44add72a2b2bca5e40af244a53497c",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1 | ^8.0",
-                "symfony/console": "^3.0 || ^4.0 || ^5.0",
-                "symfony/finder": "^3.0 || ^4.0 || ^5.0"
-            },
-            "require-dev": {
-                "doctrine/coding-standard": "^6.0",
-                "phpunit/phpunit": "^7.0 || ^8.0",
-                "vimeo/psalm": "^3.3"
-            },
-            "bin": [
-                "bin/docheader"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "DocHeader\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jefersson Nathan",
-                    "email": "malukenho.dev@gmail.com"
-                }
-            ],
-            "description": "A small library to check header docs",
-            "homepage": "https://github.com/malukenho/docheader",
-            "keywords": [
-                "Code style",
-                "code standard",
-                "license"
-            ],
-            "support": {
-                "issues": "https://github.com/malukenho/docheader/issues",
-                "source": "https://github.com/malukenho/docheader/tree/master"
-            },
-            "time": "2019-11-22T07:32:36+00:00"
-        },
-        {
             "name": "mikey179/vfsstream",
             "version": "v1.6.10",
             "source": {
@@ -5202,68 +5146,6 @@
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
             "time": "2021-04-09T00:54:41+00:00"
-        },
-        {
-            "name": "symfony/finder",
-            "version": "v5.3.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/finder.git",
-                "reference": "17f50e06018baec41551a71a15731287dbaab186"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/17f50e06018baec41551a71a15731287dbaab186",
-                "reference": "17f50e06018baec41551a71a15731287dbaab186",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5",
-                "symfony/polyfill-php80": "^1.16"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Finder\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Finds files and directories via an intuitive fluent interface",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/finder/tree/v5.3.4"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2021-07-23T15:54:19+00:00"
         },
         {
             "name": "theseer/tokenizer",
