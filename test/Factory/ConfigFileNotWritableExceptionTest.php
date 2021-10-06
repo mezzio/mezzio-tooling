@@ -11,7 +11,7 @@ use function sprintf;
 
 class ConfigFileNotWritableExceptionTest extends TestCase
 {
-    public function testForFileGeneratesExpectedException()
+    public function testForFileGeneratesExpectedException(): void
     {
         $e = ConfigFileNotWritableException::forFile(__FILE__);
         self::assertInstanceOf(ConfigFileNotWritableException::class, $e);

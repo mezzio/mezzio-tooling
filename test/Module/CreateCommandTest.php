@@ -83,6 +83,7 @@ class CreateCommandTest extends TestCase
         return $config;
     }
 
+    /** @psalm-return Generator<string, list<bool>> */
     public function configType(): Generator
     {
         yield 'array'       => [false];
@@ -97,8 +98,8 @@ class CreateCommandTest extends TestCase
     }
 
     /**
-     * @param OutputInterface&ObjectProphecy $output
-     * @return Application&ObjectProphecy
+     * @psalm-param ObjectProphecy<OutputInterface> $output
+     * @psalm-return ObjectProphecy<Application>
      */
     private function mockApplicationWithRegisterCommand(
         int $return,
@@ -145,12 +146,12 @@ class CreateCommandTest extends TestCase
         return $application;
     }
 
-    public function testConfigureSetsExpectedDescription()
+    public function testConfigureSetsExpectedDescription(): void
     {
         self::assertStringContainsString('Create and register a middleware module', $this->command->getDescription());
     }
 
-    public function testConfigureSetsExpectedHelp()
+    public function testConfigureSetsExpectedHelp(): void
     {
         self::assertEquals(CreateCommand::HELP, $this->command->getHelp());
     }
@@ -158,7 +159,7 @@ class CreateCommandTest extends TestCase
     /**
      * @dataProvider configType
      */
-    public function testCommandEmitsExpectedSuccessMessages(bool $configAsArrayObject)
+    public function testCommandEmitsExpectedSuccessMessages(bool $configAsArrayObject): void
     {
         $metadata    = new ModuleMetadata(
             'Foo',
@@ -207,7 +208,7 @@ class CreateCommandTest extends TestCase
     /**
      * @dataProvider configType
      */
-    public function testCommandWillFailIfRegisterFails(bool $configAsArrayObject)
+    public function testCommandWillFailIfRegisterFails(bool $configAsArrayObject): void
     {
         $metadata    = new ModuleMetadata(
             'Foo',
@@ -257,7 +258,7 @@ class CreateCommandTest extends TestCase
     /**
      * @dataProvider configType
      */
-    public function testCommandAllowsExceptionsToBubbleUp(bool $configAsArrayObject)
+    public function testCommandAllowsExceptionsToBubbleUp(bool $configAsArrayObject): void
     {
         $projectRoot = getcwd();
         $creation    = Mockery::mock('overload:' . Create::class);

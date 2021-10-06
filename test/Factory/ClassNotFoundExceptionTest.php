@@ -11,7 +11,7 @@ use function sprintf;
 
 class ClassNotFoundExceptionTest extends TestCase
 {
-    public function testForClassNameGeneratesExpectedException()
+    public function testForClassNameGeneratesExpectedException(): void
     {
         $e = ClassNotFoundException::forClassName(self::class);
         self::assertInstanceOf(ClassNotFoundException::class, $e);

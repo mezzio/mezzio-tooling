@@ -40,7 +40,7 @@ class CreateTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testRaisesExceptionWhenFactoryClassFileAlreadyExists()
+    public function testRaisesExceptionWhenFactoryClassFileAlreadyExists(): void
     {
         require $this->projectRoot . '/TestClass.php';
         $className = 'TestHarness\NotReal\TestClass';
@@ -53,7 +53,7 @@ class CreateTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testRaisesExceptionWhenUnableToWriteFactory()
+    public function testRaisesExceptionWhenUnableToWriteFactory(): void
     {
         require $this->projectRoot . '/TestClass.php';
         $this->dir->chmod(0544);
@@ -71,7 +71,7 @@ class CreateTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testCanCreateFactoryFile()
+    public function testCanCreateFactoryFile(): void
     {
         require $this->projectRoot . '/TestClass.php';
         $className = 'TestHarness\NotReal\TestClass';

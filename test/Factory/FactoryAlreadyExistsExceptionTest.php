@@ -11,7 +11,7 @@ use function sprintf;
 
 class FactoryAlreadyExistsExceptionTest extends TestCase
 {
-    public function testForClassUsingFileGeneratesExpectedException()
+    public function testForClassUsingFileGeneratesExpectedException(): void
     {
         $e = FactoryAlreadyExistsException::forClassUsingFile(self::class, __FILE__);
         self::assertInstanceOf(FactoryAlreadyExistsException::class, $e);

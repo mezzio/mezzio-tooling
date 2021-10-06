@@ -107,19 +107,19 @@ class CreateHandlerCommandTest extends TestCase
         return $application;
     }
 
-    public function testConfigureSetsExpectedDescriptionWhenRequestingAHandler()
+    public function testConfigureSetsExpectedDescriptionWhenRequestingAHandler(): void
     {
         $command = $this->createCommand();
         self::assertStringContainsString(CreateHandlerCommand::HELP_DESCRIPTION, $command->getDescription());
     }
 
-    public function testConfigureSetsExpectedHelpWhenRequestingAHandler()
+    public function testConfigureSetsExpectedHelpWhenRequestingAHandler(): void
     {
         $command = $this->createCommand();
         self::assertEquals(CreateHandlerCommand::HELP, $command->getHelp());
     }
 
-    public function testConfigureSetsExpectedArguments()
+    public function testConfigureSetsExpectedArguments(): void
     {
         $command    = $this->createCommand();
         $definition = $command->getDefinition();
@@ -130,7 +130,7 @@ class CreateHandlerCommandTest extends TestCase
         self::assertEquals(CreateHandlerCommand::HELP_ARG_HANDLER, $argument->getDescription());
     }
 
-    public function testConfigureSetsExpectedOptionsWhenRequestingAHandler()
+    public function testConfigureSetsExpectedOptionsWhenRequestingAHandler(): void
     {
         $command    = $this->createCommand();
         $definition = $command->getDefinition();
@@ -151,7 +151,7 @@ class CreateHandlerCommandTest extends TestCase
         self::assertFalse($definition->hasOption('with-template-extension'));
     }
 
-    public function testConfigureSetsExpectedTemplateOptionsWhenRequestingAHandlerAndRendererIsPresent()
+    public function testConfigureSetsExpectedTemplateOptionsWhenRequestingAHandlerAndRendererIsPresent(): void
     {
         $this->container->has(TemplateRendererInterface::class)->willReturn(true);
         $command    = new CreateHandlerCommand($this->container->reveal(), '');
@@ -178,7 +178,7 @@ class CreateHandlerCommandTest extends TestCase
         self::assertEquals(CreateHandlerCommand::HELP_OPTION_WITH_TEMPLATE_EXTENSION, $option->getDescription());
     }
 
-    public function testSuccessfulExecutionEmitsExpectedMessages()
+    public function testSuccessfulExecutionEmitsExpectedMessages(): void
     {
         $command = $this->createCommand();
         $this->disableRequireHandlerDirective($command);
@@ -369,7 +369,7 @@ class CreateHandlerCommandTest extends TestCase
         ));
     }
 
-    public function testAllowsExceptionsRaisedFromCreateHandlerToBubbleUp()
+    public function testAllowsExceptionsRaisedFromCreateHandlerToBubbleUp(): void
     {
         $command = $this->createCommand();
         $command->setApplication($this->mockApplication()->reveal());
@@ -401,7 +401,7 @@ class CreateHandlerCommandTest extends TestCase
         );
     }
 
-    public function testAllowsExceptionsRaisedFromCreateHandlerToBubbleUpWhenRendererIsRegistered()
+    public function testAllowsExceptionsRaisedFromCreateHandlerToBubbleUpWhenRendererIsRegistered(): void
     {
         $this->container->has(TemplateRendererInterface::class)->willReturn(true);
         $command = $this->createCommand();

@@ -33,13 +33,13 @@ class CreateActionCommandTest extends TestCase
     use MockeryPHPUnitIntegration;
     use ProphecyTrait;
 
-    /** @var ContainerInterface&ObjectProphecy */
+    /** @psalm-var ObjectProphecy<ContainerInterface> */
     private $container;
 
-    /** @var InputInterface&ObjectProphecy */
+    /** @psalm-var ObjectProphecy<InputInterface> */
     private $input;
 
-    /** @var ConsoleOutputInterface&ObjectProphecy */
+    /** @psalm-var ObjectProphecy<ConsoleOutputInterface> */
     private $output;
 
     protected function setUp(): void
@@ -102,19 +102,19 @@ class CreateActionCommandTest extends TestCase
         return $application;
     }
 
-    public function testConfigureSetsExpectedDescriptionWhenRequestingAnAction()
+    public function testConfigureSetsExpectedDescriptionWhenRequestingAnAction(): void
     {
         $command = $this->createCommand();
         self::assertStringContainsString(CreateActionCommand::HELP_DESCRIPTION, $command->getDescription());
     }
 
-    public function testConfigureSetsExpectedHelpWhenRequestingAnAction()
+    public function testConfigureSetsExpectedHelpWhenRequestingAnAction(): void
     {
         $command = $this->createCommand();
         self::assertEquals(CreateActionCommand::HELP, $command->getHelp());
     }
 
-    public function testConfigureSetsExpectedArgumentsWhenRequestingAnAction()
+    public function testConfigureSetsExpectedArgumentsWhenRequestingAnAction(): void
     {
         $command    = $this->createCommand();
         $definition = $command->getDefinition();
@@ -124,7 +124,7 @@ class CreateActionCommandTest extends TestCase
         self::assertEquals(CreateActionCommand::HELP_ARG_ACTION, $argument->getDescription());
     }
 
-    public function testConfigureSetsExpectedOptionsWhenRequestingAnAction()
+    public function testConfigureSetsExpectedOptionsWhenRequestingAnAction(): void
     {
         $command    = $this->createCommand();
         $definition = $command->getDefinition();
@@ -145,7 +145,7 @@ class CreateActionCommandTest extends TestCase
         self::assertFalse($definition->hasOption('with-template-extension'));
     }
 
-    public function testConfigureSetsExpectedTemplateOptionsWhenRequestingAnActionAndRendererIsPresent()
+    public function testConfigureSetsExpectedTemplateOptionsWhenRequestingAnActionAndRendererIsPresent(): void
     {
         $this->container->has(TemplateRendererInterface::class)->willReturn(true);
         $command    = $this->createCommand();
@@ -172,7 +172,7 @@ class CreateActionCommandTest extends TestCase
         self::assertEquals(CreateActionCommand::HELP_OPTION_WITH_TEMPLATE_EXTENSION, $option->getDescription());
     }
 
-    public function testSuccessfulExecutionEmitsExpectedMessagesWhenRequestingAnAction()
+    public function testSuccessfulExecutionEmitsExpectedMessagesWhenRequestingAnAction(): void
     {
         $command = $this->createCommand();
         $this->disableRequireHandlerDirective($command);

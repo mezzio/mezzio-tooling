@@ -80,12 +80,12 @@ class DeregisterCommandTest extends TestCase
         return $r;
     }
 
-    public function testConfigureSetsExpectedDescription()
+    public function testConfigureSetsExpectedDescription(): void
     {
         self::assertStringContainsString('Deregister a middleware module', $this->command->getDescription());
     }
 
-    public function testConfigureSetsExpectedHelp()
+    public function testConfigureSetsExpectedHelp(): void
     {
         self::assertEquals(DeregisterCommand::HELP, $this->command->getHelp());
     }
@@ -190,7 +190,7 @@ class DeregisterCommandTest extends TestCase
         ));
     }
 
-    public function testAllowsExceptionsThrownFromDisableToBubbleUp()
+    public function testAllowsExceptionsThrownFromDisableToBubbleUp(): void
     {
         $this->input->getArgument('module')->willReturn('MyApp');
         $this->input->getOption('composer')->willReturn('composer.phar');

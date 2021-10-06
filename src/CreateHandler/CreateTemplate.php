@@ -101,7 +101,7 @@ final class CreateTemplate
         );
     }
 
-    private function resolveRendererType(?string $templateSuffix): string
+    private function resolveRendererType(?string $templateSuffix): ?string
     {
         if (! $this->containerDefinesRendererService($this->container)) {
             throw UnresolvableRendererException::dueToMissingAlias();
