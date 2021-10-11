@@ -53,7 +53,7 @@ final class CreateFactoryCommand extends Command
     /**
      * Configure the console command.
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Create a factory class file for the named class.');
         $this->setHelp(self::HELP);
@@ -66,7 +66,7 @@ final class CreateFactoryCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $className       = $input->getArgument('class');
+        $className       = (string) $input->getArgument('class');
         $factoryName     = $className . 'Factory';
         $registerFactory = ! $input->getOption('no-register');
         $configFile      = null;

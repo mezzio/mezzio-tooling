@@ -6,7 +6,7 @@ namespace MezzioTest\Tooling\Module;
 
 trait CommonOptionsAndAttributesTrait
 {
-    public function testConfigureSetsExpectedArgument()
+    public function testConfigureSetsExpectedArgument(): void
     {
         $definition = $this->command->getDefinition();
         self::assertTrue($definition->hasArgument('module'));
@@ -15,7 +15,7 @@ trait CommonOptionsAndAttributesTrait
         self::assertEquals($this->expectedModuleArgumentDescription, $argument->getDescription());
     }
 
-    public function testConfigureSetsExpectedComposerOption()
+    public function testConfigureSetsExpectedComposerOption(): void
     {
         $definition = $this->command->getDefinition();
         self::assertTrue($definition->hasOption('composer'));
@@ -24,7 +24,7 @@ trait CommonOptionsAndAttributesTrait
         self::assertStringContainsString('path to the composer binary', $option->getDescription());
     }
 
-    public function testConfigureSetsExpectedPathOption()
+    public function testConfigureSetsExpectedPathOption(): void
     {
         $definition = $this->command->getDefinition();
         self::assertTrue($definition->hasOption('modules-path'));

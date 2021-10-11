@@ -28,7 +28,7 @@ class CreateHandlerTest extends TestCase
         $this->projectRoot = vfsStream::url('project');
     }
 
-    public function testProcessRaisesExceptionWhenComposerJsonNotPresentInProjectRoot()
+    public function testProcessRaisesExceptionWhenComposerJsonNotPresentInProjectRoot(): void
     {
         $generator = new CreateHandler(CreateHandler::CLASS_SKELETON, $this->projectRoot);
 
@@ -38,7 +38,7 @@ class CreateHandlerTest extends TestCase
         $generator->process('Foo\Bar\BazHandler');
     }
 
-    public function testProcessRaisesExceptionForMalformedComposerJson()
+    public function testProcessRaisesExceptionForMalformedComposerJson(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', 'not-a-value');
         $generator = new CreateHandler(CreateHandler::CLASS_SKELETON, $this->projectRoot);
@@ -49,7 +49,7 @@ class CreateHandlerTest extends TestCase
         $generator->process('Foo\Bar\BazHandler');
     }
 
-    public function testProcessRaisesExceptionIfComposerJsonDoesNotDefinePsr4Autoloaders()
+    public function testProcessRaisesExceptionIfComposerJsonDoesNotDefinePsr4Autoloaders(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode(['name' => 'some/project']));
         $generator = new CreateHandler(CreateHandler::CLASS_SKELETON, $this->projectRoot);
@@ -60,7 +60,7 @@ class CreateHandlerTest extends TestCase
         $generator->process('Foo\Bar\BazHandler');
     }
 
-    public function testProcessRaisesExceptionIfComposerJsonDefinesMalformedPsr4Autoloaders()
+    public function testProcessRaisesExceptionIfComposerJsonDefinesMalformedPsr4Autoloaders(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -75,7 +75,7 @@ class CreateHandlerTest extends TestCase
         $generator->process('Foo\Bar\BazHandler');
     }
 
-    public function testProcessRaisesExceptionIfClassDoesNotMatchAnyAutoloadableNamespaces()
+    public function testProcessRaisesExceptionIfClassDoesNotMatchAnyAutoloadableNamespaces(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -92,7 +92,7 @@ class CreateHandlerTest extends TestCase
         $generator->process('Foo\Bar\BazHandler');
     }
 
-    public function testProcessRaisesExceptionIfUnableToCreateSubPath()
+    public function testProcessRaisesExceptionIfUnableToCreateSubPath(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -112,7 +112,7 @@ class CreateHandlerTest extends TestCase
         $generator->process('Foo\Bar\BazHandler');
     }
 
-    public function testProcessCanCreateHandlerInNamespaceRoot()
+    public function testProcessCanCreateHandlerInNamespaceRoot(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -145,7 +145,7 @@ class CreateHandlerTest extends TestCase
         );
     }
 
-    public function testProcessCanCreateHandlerInSubNamespacePath()
+    public function testProcessCanCreateHandlerInSubNamespacePath(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -178,7 +178,7 @@ class CreateHandlerTest extends TestCase
         );
     }
 
-    public function testProcessCanCreateHandlerInModuleNamespaceRoot()
+    public function testProcessCanCreateHandlerInModuleNamespaceRoot(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -211,7 +211,7 @@ class CreateHandlerTest extends TestCase
         );
     }
 
-    public function testProcessCanCreateHandlerInModuleSubNamespacePath()
+    public function testProcessCanCreateHandlerInModuleSubNamespacePath(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -244,7 +244,7 @@ class CreateHandlerTest extends TestCase
         );
     }
 
-    public function testProcessThrowsExceptionIfClassAlreadyExists()
+    public function testProcessThrowsExceptionIfClassAlreadyExists(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -265,7 +265,7 @@ class CreateHandlerTest extends TestCase
         $generator->process('App\Foo\BarHandler');
     }
 
-    public function testTheClassSkeletonParameterOverridesTheConstant()
+    public function testTheClassSkeletonParameterOverridesTheConstant(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [

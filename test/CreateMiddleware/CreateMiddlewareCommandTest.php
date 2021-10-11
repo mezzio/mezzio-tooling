@@ -88,17 +88,17 @@ class CreateMiddlewareCommandTest extends TestCase
         return $application;
     }
 
-    public function testConfigureSetsExpectedDescription()
+    public function testConfigureSetsExpectedDescription(): void
     {
         self::assertStringContainsString('Create a PSR-15 middleware', $this->command->getDescription());
     }
 
-    public function testConfigureSetsExpectedHelp()
+    public function testConfigureSetsExpectedHelp(): void
     {
         self::assertEquals(CreateMiddlewareCommand::HELP, $this->command->getHelp());
     }
 
-    public function testConfigureSetsExpectedArguments()
+    public function testConfigureSetsExpectedArguments(): void
     {
         $definition = $this->command->getDefinition();
         self::assertTrue($definition->hasArgument('middleware'));
@@ -107,7 +107,7 @@ class CreateMiddlewareCommandTest extends TestCase
         self::assertEquals(CreateMiddlewareCommand::HELP_ARG_MIDDLEWARE, $argument->getDescription());
     }
 
-    public function testConfigureSetsExpectedOptions()
+    public function testConfigureSetsExpectedOptions(): void
     {
         $definition = $this->command->getDefinition();
 
@@ -122,7 +122,7 @@ class CreateMiddlewareCommandTest extends TestCase
         self::assertEquals(CreateMiddlewareCommand::HELP_OPT_NO_REGISTER, $option->getDescription());
     }
 
-    public function testSuccessfulExecutionEmitsExpectedMessages()
+    public function testSuccessfulExecutionEmitsExpectedMessages(): void
     {
         $this->command->setApplication($this->mockApplication()->reveal());
 
@@ -154,7 +154,7 @@ class CreateMiddlewareCommandTest extends TestCase
         ));
     }
 
-    public function testAllowsExceptionsRaisedFromCreateMiddlewareToBubbleUp()
+    public function testAllowsExceptionsRaisedFromCreateMiddlewareToBubbleUp(): void
     {
         $this->command->setApplication($this->mockApplication()->reveal());
 

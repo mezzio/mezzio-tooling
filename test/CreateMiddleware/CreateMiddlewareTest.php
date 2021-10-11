@@ -28,7 +28,7 @@ class CreateMiddlewareTest extends TestCase
         $this->projectRoot = vfsStream::url('project');
     }
 
-    public function testProcessRaisesExceptionWhenComposerJsonNotPresentInProjectRoot()
+    public function testProcessRaisesExceptionWhenComposerJsonNotPresentInProjectRoot(): void
     {
         $generator = new CreateMiddleware();
 
@@ -38,7 +38,7 @@ class CreateMiddlewareTest extends TestCase
         $generator->process('Foo\Bar\BazMiddleware', $this->projectRoot);
     }
 
-    public function testProcessRaisesExceptionForMalformedComposerJson()
+    public function testProcessRaisesExceptionForMalformedComposerJson(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', 'not-a-value');
         $generator = new CreateMiddleware();
@@ -49,7 +49,7 @@ class CreateMiddlewareTest extends TestCase
         $generator->process('Foo\Bar\BazMiddleware', $this->projectRoot);
     }
 
-    public function testProcessRaisesExceptionIfComposerJsonDoesNotDefinePsr4Autoloaders()
+    public function testProcessRaisesExceptionIfComposerJsonDoesNotDefinePsr4Autoloaders(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode(['name' => 'some/project']));
         $generator = new CreateMiddleware();
@@ -60,7 +60,7 @@ class CreateMiddlewareTest extends TestCase
         $generator->process('Foo\Bar\BazMiddleware', $this->projectRoot);
     }
 
-    public function testProcessRaisesExceptionIfComposerJsonDefinesMalformedPsr4Autoloaders()
+    public function testProcessRaisesExceptionIfComposerJsonDefinesMalformedPsr4Autoloaders(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -75,7 +75,7 @@ class CreateMiddlewareTest extends TestCase
         $generator->process('Foo\Bar\BazMiddleware', $this->projectRoot);
     }
 
-    public function testProcessRaisesExceptionIfClassDoesNotMatchAnyAutoloadableNamespaces()
+    public function testProcessRaisesExceptionIfClassDoesNotMatchAnyAutoloadableNamespaces(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -92,7 +92,7 @@ class CreateMiddlewareTest extends TestCase
         $generator->process('Foo\Bar\BazMiddleware', $this->projectRoot);
     }
 
-    public function testProcessRaisesExceptionIfUnableToCreateSubPath()
+    public function testProcessRaisesExceptionIfUnableToCreateSubPath(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -112,7 +112,7 @@ class CreateMiddlewareTest extends TestCase
         $generator->process('Foo\Bar\BazMiddleware', $this->projectRoot);
     }
 
-    public function testProcessCanCreateMiddlewareInNamespaceRoot()
+    public function testProcessCanCreateMiddlewareInNamespaceRoot(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -146,7 +146,7 @@ class CreateMiddlewareTest extends TestCase
         );
     }
 
-    public function testProcessCanCreateMiddlewareInSubNamespacePath()
+    public function testProcessCanCreateMiddlewareInSubNamespacePath(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -180,7 +180,7 @@ class CreateMiddlewareTest extends TestCase
         );
     }
 
-    public function testProcessCanCreateMiddlewareInModuleNamespaceRoot()
+    public function testProcessCanCreateMiddlewareInModuleNamespaceRoot(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -214,7 +214,7 @@ class CreateMiddlewareTest extends TestCase
         );
     }
 
-    public function testProcessCanCreateMiddlewareInModuleSubNamespacePath()
+    public function testProcessCanCreateMiddlewareInModuleSubNamespacePath(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -248,7 +248,7 @@ class CreateMiddlewareTest extends TestCase
         );
     }
 
-    public function testProcessThrowsExceptionIfClassAlreadyExists()
+    public function testProcessThrowsExceptionIfClassAlreadyExists(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [
@@ -269,7 +269,7 @@ class CreateMiddlewareTest extends TestCase
         $generator->process('App\Foo\BarMiddleware', $this->projectRoot);
     }
 
-    public function testTheClassSkeletonParameterOverridesTheConstant()
+    public function testTheClassSkeletonParameterOverridesTheConstant(): void
     {
         file_put_contents($this->projectRoot . '/composer.json', json_encode([
             'autoload' => [

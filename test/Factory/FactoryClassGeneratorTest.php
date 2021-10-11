@@ -22,7 +22,7 @@ class FactoryClassGeneratorTest extends TestCase
         $this->generator = new FactoryClassGenerator();
     }
 
-    public function testCreateFactoryCreatesForInvokable()
+    public function testCreateFactoryCreatesForInvokable(): void
     {
         $className = InvokableObject::class;
         $factory   = file_get_contents(__DIR__ . '/TestAsset/factories/InvokableObject.php');
@@ -30,7 +30,7 @@ class FactoryClassGeneratorTest extends TestCase
         self::assertEquals($factory, $this->generator->createFactory($className));
     }
 
-    public function testCreateFactoryCreatesForSimpleDependencies()
+    public function testCreateFactoryCreatesForSimpleDependencies(): void
     {
         $className = SimpleDependencyObject::class;
         $factory   = file_get_contents(__DIR__ . '/TestAsset/factories/SimpleDependencyObject.php');
@@ -38,7 +38,7 @@ class FactoryClassGeneratorTest extends TestCase
         self::assertEquals($factory, $this->generator->createFactory($className));
     }
 
-    public function testCreateFactoryCreatesForComplexDependencies()
+    public function testCreateFactoryCreatesForComplexDependencies(): void
     {
         $className = ComplexDependencyObject::class;
         $factory   = file_get_contents(__DIR__ . '/TestAsset/factories/ComplexDependencyObject.php');
@@ -49,7 +49,7 @@ class FactoryClassGeneratorTest extends TestCase
     /**
      * @runTestInSeparateProcess
      */
-    public function testCreateFactoryCreatesAppropriatelyNamedFactoryWhenClassNameAppearsWithinNamespace()
+    public function testCreateFactoryCreatesAppropriatelyNamedFactoryWhenClassNameAppearsWithinNamespace(): void
     {
         require __DIR__ . '/TestAsset/classes/ClassDuplicatingNamespaceName.php';
         $className = 'This\Duplicates\ClassDuplicatingNamespaceNameCase\ClassDuplicatingNamespaceName';

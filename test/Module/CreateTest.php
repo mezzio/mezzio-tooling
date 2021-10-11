@@ -44,7 +44,7 @@ class CreateTest extends TestCase
         $this->command    = new Create();
     }
 
-    public function testErrorsWhenModuleDirectoryAlreadyExists()
+    public function testErrorsWhenModuleDirectoryAlreadyExists(): void
     {
         vfsStream::newDirectory('MyApp')->at($this->modulesDir);
 
@@ -53,7 +53,7 @@ class CreateTest extends TestCase
         $this->command->process('MyApp', $this->modulesPath, $this->projectDir);
     }
 
-    public function testErrorsWhenCannotCreateModuleDirectory()
+    public function testErrorsWhenCannotCreateModuleDirectory(): void
     {
         $baseModulePath = sprintf('%s/my-modules/MyApp', $this->dir->url());
 
@@ -70,7 +70,7 @@ class CreateTest extends TestCase
         $this->command->process('MyApp', $this->modulesPath, $this->projectDir);
     }
 
-    public function testErrorsWhenCannotCreateModuleSrcDirectory()
+    public function testErrorsWhenCannotCreateModuleSrcDirectory(): void
     {
         $baseModulePath = sprintf('%s/my-modules/MyApp', $this->dir->url());
 
@@ -88,7 +88,7 @@ class CreateTest extends TestCase
         $this->command->process('MyApp', $this->modulesPath, $this->projectDir);
     }
 
-    public function testErrorsWhenCannotCreateModuleTemplatesDirectory()
+    public function testErrorsWhenCannotCreateModuleTemplatesDirectory(): void
     {
         $baseModulePath = sprintf('%s/my-modules/MyApp', $this->dir->url());
 
@@ -106,7 +106,7 @@ class CreateTest extends TestCase
         $this->command->process('MyApp', $this->modulesPath, $this->projectDir);
     }
 
-    public function testCreatesConfigProvider()
+    public function testCreatesConfigProvider(): void
     {
         $configProvider = vfsStream::url('project/my-modules/MyApp/src/ConfigProvider.php');
         $metadata       = $this->command->process('MyApp', $this->modulesPath, $this->projectDir);
@@ -121,7 +121,7 @@ class CreateTest extends TestCase
         self::assertSame($expectedContent, $configProviderContent);
     }
 
-    public function testModuleTemplatePathNameWithNumber()
+    public function testModuleTemplatePathNameWithNumber(): void
     {
         $this->command->process('My2App', $this->modulesPath, $this->projectDir);
         $configProvider        = vfsStream::url('project/my-modules/My2App/src/ConfigProvider.php');
@@ -131,7 +131,7 @@ class CreateTest extends TestCase
         self::assertSame($expectedContent, $configProviderContent);
     }
 
-    public function testModuleTemplatePathNameWithSequentialUppercase()
+    public function testModuleTemplatePathNameWithSequentialUppercase(): void
     {
         $this->command->process('THEApp', $this->modulesPath, $this->projectDir);
         $configProvider        = vfsStream::url('project/my-modules/THEApp/src/ConfigProvider.php');

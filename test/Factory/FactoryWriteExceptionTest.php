@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class FactoryWriteExceptionTest extends TestCase
 {
-    public function testWhenCreatingFileGeneratesExpectedException()
+    public function testWhenCreatingFileGeneratesExpectedException(): void
     {
         $e = FactoryWriteException::whenCreatingFile(__FILE__);
         self::assertInstanceOf(FactoryWriteException::class, $e);

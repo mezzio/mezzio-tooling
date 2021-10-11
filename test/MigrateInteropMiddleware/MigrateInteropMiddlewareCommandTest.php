@@ -54,7 +54,7 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
         return $r;
     }
 
-    public function testConfigureSetsExpectedDescription()
+    public function testConfigureSetsExpectedDescription(): void
     {
         self::assertStringContainsString(
             'Migrate http-interop middleware and delegators',
@@ -70,12 +70,12 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
         return $r->getConstant($const);
     }
 
-    public function testConfigureSetsExpectedHelp()
+    public function testConfigureSetsExpectedHelp(): void
     {
         self::assertEquals($this->getConstantValue('HELP'), $this->command->getHelp());
     }
 
-    public function testConfigureSetsExpectedArguments()
+    public function testConfigureSetsExpectedArguments(): void
     {
         $definition = $this->command->getDefinition();
         self::assertTrue($definition->hasOption('src'));
@@ -84,7 +84,7 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
         self::assertEquals($this->getConstantValue('HELP_OPT_SRC'), $option->getDescription());
     }
 
-    public function testSuccessfulExecutionEmitsExpectedMessages()
+    public function testSuccessfulExecutionEmitsExpectedMessages(): void
     {
         vfsStream::setup('migrate');
         $path = vfsStream::url('migrate');
@@ -115,7 +115,7 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
         ));
     }
 
-    public function testAllowsExceptionsFromInvalidSrcDirectoryArgumentToBubbleUp()
+    public function testAllowsExceptionsFromInvalidSrcDirectoryArgumentToBubbleUp(): void
     {
         vfsStream::setup('migrate');
         $path = vfsStream::url('migrate');

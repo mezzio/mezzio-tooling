@@ -1,0 +1,1010 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.10.0@916b098b008f6de4543892b1e0651c1c3b92cbfa">
+  <file src="src/Composer/FileSystemBasedComposerPackage.php">
+    <MixedArrayAssignment occurrences="1">
+      <code>$package[$key]['psr-4']</code>
+    </MixedArrayAssignment>
+    <MixedInferredReturnType occurrences="1">
+      <code>array</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>json_decode($contents, true, 512, JSON_THROW_ON_ERROR)</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="src/CreateHandler/CreateHandler.php">
+    <MixedArgument occurrences="4">
+      <code>$class</code>
+      <code>$namespace</code>
+      <code>$path</code>
+      <code>$value</code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion occurrences="1">
+      <code>$key</code>
+    </MixedArgumentTypeCoercion>
+    <MixedArrayAccess occurrences="2">
+      <code>$composer['autoload']</code>
+      <code>$composer['autoload']</code>
+    </MixedArrayAccess>
+    <MixedAssignment occurrences="3">
+      <code>$composer</code>
+      <code>$path</code>
+      <code>$value</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="1">
+      <code>array</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>$composer['autoload']['psr-4']</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="src/CreateHandler/CreateHandlerCommand.php">
+    <MixedArgument occurrences="8">
+      <code>$handler</code>
+      <code>$handler</code>
+      <code>$handler</code>
+      <code>$handler</code>
+      <code>$templateExtension</code>
+      <code>$templateName</code>
+      <code>$templateNamespace</code>
+      <code>static::STATUS_TEMPLATE</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="6">
+      <code>$handler</code>
+      <code>$substitutions['%template-name%']</code>
+      <code>$substitutions['%template-namespace%']</code>
+      <code>$templateExtension</code>
+      <code>$templateName</code>
+      <code>$templateNamespace</code>
+    </MixedAssignment>
+    <PossiblyNullArgument occurrences="2">
+      <code>$templateName</code>
+      <code>$templateNamespace</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference occurrences="1">
+      <code>find</code>
+    </PossiblyNullReference>
+    <UnresolvableInclude occurrences="2">
+      <code>require_once $path</code>
+      <code>require_once $path</code>
+    </UnresolvableInclude>
+  </file>
+  <file src="src/CreateHandler/CreateTemplate.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$handler</code>
+    </ArgumentTypeCoercion>
+    <MixedArgument occurrences="2">
+      <code>$config</code>
+      <code>$config</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$config</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="2">
+      <code>null|string</code>
+      <code>string</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>$config['templates']['extension']</code>
+    </MixedReturnStatement>
+    <PossiblyNullArgument occurrences="2">
+      <code>$rendererType</code>
+      <code>$type</code>
+    </PossiblyNullArgument>
+    <UndefinedClass occurrences="6">
+      <code>LaminasViewRenderer</code>
+      <code>LaminasViewRenderer</code>
+      <code>PlatesRenderer</code>
+      <code>PlatesRenderer</code>
+      <code>TwigRenderer</code>
+      <code>TwigRenderer</code>
+    </UndefinedClass>
+    <UndefinedDocblockClass occurrences="1">
+      <code>array|ArrayAccess</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/CreateMiddleware/CreateMiddleware.php">
+    <MixedArgument occurrences="3">
+      <code>$class</code>
+      <code>$namespace</code>
+      <code>$path</code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion occurrences="1">
+      <code>[$namespace, $class]</code>
+    </MixedArgumentTypeCoercion>
+    <MixedArrayAccess occurrences="2">
+      <code>$composer['autoload']</code>
+      <code>$composer['autoload']</code>
+    </MixedArrayAccess>
+    <MixedAssignment occurrences="2">
+      <code>$composer</code>
+      <code>$path</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="1">
+      <code>array</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>$composer['autoload']['psr-4']</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="src/CreateMiddleware/CreateMiddlewareCommand.php">
+    <MixedArgument occurrences="2">
+      <code>$middleware</code>
+      <code>$middleware</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$middleware</code>
+    </MixedAssignment>
+    <PossiblyNullReference occurrences="1">
+      <code>find</code>
+    </PossiblyNullReference>
+    <UnresolvableInclude occurrences="1">
+      <code>require $path</code>
+    </UnresolvableInclude>
+  </file>
+  <file src="src/Factory/ConfigInjector.php">
+    <MixedArgument occurrences="1">
+      <code>$config</code>
+    </MixedArgument>
+    <MixedArrayAccess occurrences="1">
+      <code>$config['dependencies']</code>
+    </MixedArrayAccess>
+    <MixedArrayAssignment occurrences="1">
+      <code>$config[$class]</code>
+    </MixedArrayAssignment>
+    <MixedAssignment occurrences="3">
+      <code>$config</code>
+      <code>$config</code>
+      <code>$factory</code>
+    </MixedAssignment>
+    <MixedOperand occurrences="1">
+      <code>$factory</code>
+    </MixedOperand>
+  </file>
+  <file src="src/Factory/Create.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$className</code>
+    </ArgumentTypeCoercion>
+    <PossiblyFalseOperand occurrences="1">
+      <code>strrpos($class, '\\')</code>
+    </PossiblyFalseOperand>
+  </file>
+  <file src="src/Factory/CreateFactoryCommand.php">
+    <PossiblyNullArgument occurrences="1">
+      <code>$configFile</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Factory/CreateFactoryCommandFactory.php">
+    <MixedArgument occurrences="1">
+      <code>$container-&gt;get(Create::class)</code>
+    </MixedArgument>
+  </file>
+  <file src="src/Factory/FactoryClassGenerator.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$className</code>
+    </ArgumentTypeCoercion>
+    <MixedArgument occurrences="3">
+      <code>$argument</code>
+      <code>$fqcn</code>
+      <code>$import</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$fqcn</code>
+    </MixedAssignment>
+    <PossiblyFalseArgument occurrences="1">
+      <code>strrpos($className, '\\')</code>
+    </PossiblyFalseArgument>
+    <PossiblyFalseOperand occurrences="1">
+      <code>strrpos($className, '\\')</code>
+    </PossiblyFalseOperand>
+    <PossiblyNullReference occurrences="1">
+      <code>getParameters</code>
+    </PossiblyNullReference>
+    <UndefinedMethod occurrences="1">
+      <code>getName</code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/MigrateInteropMiddleware/ConvertInteropMiddleware.php">
+    <MixedArgument occurrences="1">
+      <code>$file</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$file</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/MigrateInteropMiddleware/MigrateInteropMiddlewareCommand.php">
+    <MixedAssignment occurrences="1">
+      <code>$path</code>
+    </MixedAssignment>
+    <MixedOperand occurrences="1">
+      <code>$path</code>
+    </MixedOperand>
+    <PossiblyNullOperand occurrences="1">
+      <code>$this-&gt;projectRoot</code>
+    </PossiblyNullOperand>
+  </file>
+  <file src="src/MigrateMiddlewareToRequestHandler/ConvertMiddleware.php">
+    <MixedArgument occurrences="1">
+      <code>$file</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$file</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/MigrateMiddlewareToRequestHandler/MigrateMiddlewareToRequestHandlerCommand.php">
+    <MixedAssignment occurrences="1">
+      <code>$path</code>
+    </MixedAssignment>
+    <MixedOperand occurrences="1">
+      <code>$path</code>
+    </MixedOperand>
+    <PossiblyInvalidDocblockTag occurrences="1">
+      <code>@var null|string Project root against which to scan.</code>
+    </PossiblyInvalidDocblockTag>
+  </file>
+  <file src="src/Module/CommandCommonOptions.php">
+    <MixedArgument occurrences="1">
+      <code>$command::HELP_ARG_MODULE</code>
+    </MixedArgument>
+    <MixedInferredReturnType occurrences="1">
+      <code>string</code>
+    </MixedInferredReturnType>
+    <UndefinedConstant occurrences="1">
+      <code>$command::HELP_ARG_MODULE</code>
+    </UndefinedConstant>
+    <UndefinedDocblockClass occurrences="1">
+      <code>array|ArrayAccess</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/Module/CreateCommand.php">
+    <MixedArgument occurrences="2">
+      <code>$module</code>
+      <code>$parentNamespace</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="3">
+      <code>$composer</code>
+      <code>$module</code>
+      <code>$parentNamespace</code>
+    </MixedAssignment>
+    <PossiblyNullReference occurrences="1">
+      <code>find</code>
+    </PossiblyNullReference>
+    <PropertyNotSetInConstructor occurrences="2">
+      <code>$config</code>
+      <code>$projectRoot</code>
+    </PropertyNotSetInConstructor>
+    <UndefinedDocblockClass occurrences="2">
+      <code>array|ArrayAccess</code>
+      <code>array|ArrayAccess</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/Module/CreateCommandFactory.php">
+    <MixedArgument occurrences="1">
+      <code>$container-&gt;get('config')</code>
+    </MixedArgument>
+  </file>
+  <file src="src/Module/DeregisterCommand.php">
+    <MixedArgument occurrences="3">
+      <code>$composer</code>
+      <code>$module</code>
+      <code>$module</code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion occurrences="1">
+      <code>[$composer, 'dump-autoload']</code>
+    </MixedArgumentTypeCoercion>
+    <MixedAssignment occurrences="2">
+      <code>$composer</code>
+      <code>$module</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Module/RegisterCommand.php">
+    <InvalidPropertyAssignmentValue occurrences="1">
+      <code>$packageFactory-&gt;loadPackage($projectRoot)</code>
+    </InvalidPropertyAssignmentValue>
+    <MixedArgument occurrences="5">
+      <code>$composer</code>
+      <code>$module</code>
+      <code>$module</code>
+      <code>$module</code>
+      <code>$module</code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion occurrences="1">
+      <code>[$composer, 'dump-autoload']</code>
+    </MixedArgumentTypeCoercion>
+    <MixedAssignment occurrences="4">
+      <code>$composer</code>
+      <code>$exactPath</code>
+      <code>$module</code>
+      <code>$modulePath</code>
+    </MixedAssignment>
+    <UndefinedDocblockClass occurrences="2">
+      <code>$this-&gt;package</code>
+      <code>ComposerPackageInterface</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/TemplateResolutionTrait.php">
+    <MixedArgument occurrences="1">
+      <code>$renderer</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$renderer</code>
+    </MixedAssignment>
+    <PossiblyFalseOperand occurrences="1">
+      <code>strrpos($class, '\\')</code>
+    </PossiblyFalseOperand>
+    <RedundantCastGivenDocblockType occurrences="1">
+      <code>(bool) $container-&gt;has(TemplateRendererInterface::class)</code>
+    </RedundantCastGivenDocblockType>
+  </file>
+  <file src="test/Composer/FileSystemBasedComposerPackageTest.php">
+    <MixedArgument occurrences="1">
+      <code>$package[$key]['psr-4']</code>
+    </MixedArgument>
+    <MixedInferredReturnType occurrences="3">
+      <code>array</code>
+      <code>array</code>
+      <code>array</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>json_decode($json, true, 512, JSON_THROW_ON_ERROR)</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="test/CreateHandler/CreateActionCommandTest.php">
+    <InvalidArgument occurrences="1"/>
+    <MissingClosureParamType occurrences="1">
+      <code>$input</code>
+    </MissingClosureParamType>
+    <MixedArgument occurrences="1">
+      <code>$this-&gt;mockApplication('Foo\TestAction')-&gt;reveal()</code>
+    </MixedArgument>
+    <MixedMethodCall occurrences="2">
+      <code>andReturn</code>
+      <code>with</code>
+    </MixedMethodCall>
+    <PossiblyUndefinedMethod occurrences="2">
+      <code>once</code>
+      <code>reveal</code>
+    </PossiblyUndefinedMethod>
+    <UndefinedMagicMethod occurrences="1">
+      <code>once</code>
+    </UndefinedMagicMethod>
+  </file>
+  <file src="test/CreateHandler/CreateHandlerCommandTest.php">
+    <ImplicitToStringCast occurrences="19">
+      <code>Argument::containingString('Created class Foo\TestHandler, in file ' . __DIR__)</code>
+      <code>Argument::containingString('Created class Foo\TestHandler, in file ' . __DIR__)</code>
+      <code>Argument::containingString('Created class Foo\TestHandler, in file ' . __DIR__)</code>
+      <code>Argument::containingString('Created class Foo\TestHandler, in file ' . __DIR__)</code>
+      <code>Argument::containingString('Created template ' . $generatedTemplate . ' in file ' . __FILE__)</code>
+      <code>Argument::containingString('Created template ' . $generatedTemplate . ' in file ' . __FILE__)</code>
+      <code>Argument::containingString('Created template')</code>
+      <code>Argument::containingString('Creating request handler Foo\TestHandler')</code>
+      <code>Argument::containingString('Creating request handler Foo\TestHandler')</code>
+      <code>Argument::containingString('Creating request handler Foo\TestHandler')</code>
+      <code>Argument::containingString('Creating request handler Foo\TestHandler')</code>
+      <code>Argument::containingString('Creating request handler Foo\TestHandler')</code>
+      <code>Argument::containingString('Creating request handler InvalidTestHandler')</code>
+      <code>Argument::containingString('Success')</code>
+      <code>Argument::containingString('Success')</code>
+      <code>Argument::containingString('Success')</code>
+      <code>Argument::containingString('Success')</code>
+      <code>Argument::containingString('Success')</code>
+      <code>Argument::containingString('Success')</code>
+    </ImplicitToStringCast>
+    <InvalidArgument occurrences="1"/>
+    <InvalidPropertyAssignmentValue occurrences="3">
+      <code>$this-&gt;prophesize(ConsoleOutputInterface::class)</code>
+      <code>$this-&gt;prophesize(ContainerInterface::class)</code>
+      <code>$this-&gt;prophesize(InputInterface::class)</code>
+    </InvalidPropertyAssignmentValue>
+    <MissingClosureParamType occurrences="1">
+      <code>$input</code>
+    </MissingClosureParamType>
+    <MixedArgument occurrences="8">
+      <code>$this-&gt;container-&gt;reveal()</code>
+      <code>$this-&gt;container-&gt;reveal()</code>
+      <code>$this-&gt;mockApplication()-&gt;reveal()</code>
+      <code>$this-&gt;mockApplication()-&gt;reveal()</code>
+      <code>$this-&gt;mockApplication()-&gt;reveal()</code>
+      <code>$this-&gt;mockApplication()-&gt;reveal()</code>
+      <code>$this-&gt;mockApplication()-&gt;reveal()</code>
+      <code>$this-&gt;mockApplication()-&gt;reveal()</code>
+    </MixedArgument>
+    <MixedMethodCall occurrences="21">
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andThrow</code>
+      <code>andThrow</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+    </MixedMethodCall>
+    <PossiblyUndefinedMethod occurrences="14">
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+    </PossiblyUndefinedMethod>
+    <UndefinedMagicMethod occurrences="8">
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+    </UndefinedMagicMethod>
+  </file>
+  <file src="test/CreateHandler/CreateTemplateTest.php">
+    <InvalidPropertyAssignmentValue occurrences="1">
+      <code>$this-&gt;prophesize(ContainerInterface::class)</code>
+    </InvalidPropertyAssignmentValue>
+    <InvalidStringClass occurrences="1">
+      <code>new $renderer()</code>
+    </InvalidStringClass>
+    <MixedArgument occurrences="15">
+      <code>$arguments</code>
+      <code>$config</code>
+      <code>$this-&gt;container-&gt;reveal()</code>
+      <code>$this-&gt;container-&gt;reveal()</code>
+      <code>$this-&gt;container-&gt;reveal()</code>
+      <code>$this-&gt;container-&gt;reveal()</code>
+      <code>$this-&gt;container-&gt;reveal()</code>
+      <code>$this-&gt;container-&gt;reveal()</code>
+      <code>$this-&gt;container-&gt;reveal()</code>
+      <code>$this-&gt;container-&gt;reveal()</code>
+      <code>$this-&gt;container-&gt;reveal()</code>
+      <code>$this-&gt;container-&gt;reveal()</code>
+      <code>$this-&gt;container-&gt;reveal()</code>
+      <code>$this-&gt;container-&gt;reveal()</code>
+      <code>$this-&gt;container-&gt;reveal()</code>
+    </MixedArgument>
+    <MixedArrayAssignment occurrences="1">
+      <code>sprintf('config.php.%s', $config)</code>
+    </MixedArrayAssignment>
+    <MixedArrayOffset occurrences="1"/>
+    <MixedAssignment occurrences="2">
+      <code>$arguments</code>
+      <code>$config</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="3">
+      <code>Generator</code>
+      <code>array</code>
+      <code>iterable</code>
+    </MixedInferredReturnType>
+    <MixedMethodCall occurrences="4">
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+    </MixedMethodCall>
+    <PossiblyFalseOperand occurrences="1">
+      <code>strrpos($renderer, '\\')</code>
+    </PossiblyFalseOperand>
+    <PropertyTypeCoercion occurrences="1">
+      <code>new $renderer()</code>
+    </PropertyTypeCoercion>
+    <UndefinedClass occurrences="6">
+      <code>LaminasViewRenderer</code>
+      <code>LaminasViewRenderer</code>
+      <code>PlatesRenderer</code>
+      <code>PlatesRenderer</code>
+      <code>TwigRenderer</code>
+      <code>TwigRenderer</code>
+    </UndefinedClass>
+    <UndefinedDocblockClass occurrences="1">
+      <code>PlatesRenderer|TwigRenderer|LaminasViewRenderer</code>
+    </UndefinedDocblockClass>
+    <UnresolvableInclude occurrences="15">
+      <code>include $configFile</code>
+      <code>require $sourceFile</code>
+      <code>require $this-&gt;projectRoot . '/src/Test/TestHandler.php'</code>
+      <code>require $this-&gt;projectRoot . '/src/Test/TestHandler.php'</code>
+      <code>require $this-&gt;projectRoot . '/src/Test/TestHandler.php'</code>
+      <code>require $this-&gt;projectRoot . '/src/Test/TestHandler.php'</code>
+      <code>require $this-&gt;projectRoot . '/src/Test/TestHandler.php'</code>
+      <code>require $this-&gt;projectRoot . '/src/Test/TestHandler.php'</code>
+      <code>require $this-&gt;projectRoot . '/src/Test/TestHandler.php'</code>
+      <code>require $this-&gt;projectRoot . '/src/Test/src/TestHandler.php'</code>
+      <code>require $this-&gt;projectRoot . '/src/Test/src/TestHandler.php'</code>
+      <code>require $this-&gt;projectRoot . '/src/Test/src/TestHandler.php'</code>
+      <code>require $this-&gt;projectRoot . '/src/Test/src/TestHandler.php'</code>
+      <code>require $this-&gt;projectRoot . '/src/Test/src/TestHandler.php'</code>
+      <code>require $this-&gt;projectRoot . '/src/Test/src/TestHandler.php'</code>
+    </UnresolvableInclude>
+  </file>
+  <file src="test/CreateMiddleware/CreateMiddlewareCommandTest.php">
+    <ImplicitToStringCast occurrences="5">
+      <code>Argument::containingString('Created class Foo\TestMiddleware, in file ' . __DIR__)</code>
+      <code>Argument::containingString('Creating middleware Foo\TestMiddleware')</code>
+      <code>Argument::containingString('Creating middleware Foo\TestMiddleware')</code>
+      <code>Argument::containingString('Success')</code>
+      <code>Argument::containingString('Success')</code>
+    </ImplicitToStringCast>
+    <InvalidArgument occurrences="1"/>
+    <MissingClosureParamType occurrences="1">
+      <code>$input</code>
+    </MissingClosureParamType>
+    <MixedArgument occurrences="2">
+      <code>$this-&gt;mockApplication()-&gt;reveal()</code>
+      <code>$this-&gt;mockApplication()-&gt;reveal()</code>
+    </MixedArgument>
+    <MixedMethodCall occurrences="13">
+      <code>andReturn</code>
+      <code>andThrow</code>
+      <code>shouldBeCalled</code>
+      <code>shouldBeCalled</code>
+      <code>shouldBeCalled</code>
+      <code>shouldBeCalled</code>
+      <code>shouldNotBeCalled</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>with</code>
+      <code>with</code>
+    </MixedMethodCall>
+    <PossiblyUndefinedMethod occurrences="9">
+      <code>once</code>
+      <code>once</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+    </PossiblyUndefinedMethod>
+    <UndefinedMagicMethod occurrences="2">
+      <code>once</code>
+      <code>once</code>
+    </UndefinedMagicMethod>
+  </file>
+  <file src="test/Factory/ConfigInjectorTest.php">
+    <MixedArgument occurrences="2">
+      <code>$config['dependencies']['factories']</code>
+      <code>$factories</code>
+    </MixedArgument>
+    <MixedArrayAccess occurrences="2">
+      <code>$factories['App\Handler\HelloWorldHandler']</code>
+      <code>$factories[self::class]</code>
+    </MixedArrayAccess>
+    <MixedAssignment occurrences="1">
+      <code>$factories</code>
+    </MixedAssignment>
+    <UnresolvableInclude occurrences="2">
+      <code>include $this-&gt;projectRoot . '/' . ConfigInjector::CONFIG_FILE</code>
+      <code>include $this-&gt;projectRoot . '/' . ConfigInjector::CONFIG_FILE</code>
+    </UnresolvableInclude>
+  </file>
+  <file src="test/Factory/CreateFactoryCommandTest.php">
+    <ImplicitToStringCast occurrences="7">
+      <code>Argument::containingString('Created factory class Foo\TestHandlerFactory, in file ' . __DIR__)</code>
+      <code>Argument::containingString('Creating factory for class Foo\TestHandler')</code>
+      <code>Argument::containingString('Creating factory for class Foo\TestHandler')</code>
+      <code>Argument::containingString('Registered factory to container')</code>
+      <code>Argument::containingString('Registering factory with container')</code>
+      <code>Argument::containingString('Success')</code>
+      <code>Argument::containingString('Success')</code>
+    </ImplicitToStringCast>
+    <InternalClass occurrences="2">
+      <code>new Create(new FactoryClassGenerator())</code>
+      <code>new FactoryClassGenerator()</code>
+    </InternalClass>
+    <InternalMethod occurrences="1">
+      <code>new Create(new FactoryClassGenerator())</code>
+    </InternalMethod>
+    <MixedMethodCall occurrences="13">
+      <code>andReturn</code>
+      <code>shouldBeCalled</code>
+      <code>shouldBeCalled</code>
+      <code>shouldBeCalled</code>
+      <code>shouldBeCalled</code>
+      <code>shouldBeCalled</code>
+      <code>shouldBeCalled</code>
+      <code>shouldNotBeCalled</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>with</code>
+    </MixedMethodCall>
+    <PossiblyUndefinedMethod occurrences="5">
+      <code>once</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+    </PossiblyUndefinedMethod>
+    <UndefinedMagicMethod occurrences="1">
+      <code>once</code>
+    </UndefinedMagicMethod>
+  </file>
+  <file src="test/Factory/CreateTest.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$className</code>
+    </ArgumentTypeCoercion>
+    <InternalClass occurrences="5">
+      <code>new Create($generator)</code>
+      <code>new Create($generator-&gt;reveal())</code>
+      <code>new Create(new FactoryClassGenerator())</code>
+      <code>new FactoryClassGenerator()</code>
+      <code>new FactoryClassGenerator()</code>
+    </InternalClass>
+    <InternalMethod occurrences="6">
+      <code>createForClass</code>
+      <code>createForClass</code>
+      <code>createForClass</code>
+      <code>new Create($generator)</code>
+      <code>new Create($generator-&gt;reveal())</code>
+      <code>new Create(new FactoryClassGenerator())</code>
+    </InternalMethod>
+    <InvalidStringClass occurrences="1">
+      <code>new $factoryName()</code>
+    </InvalidStringClass>
+    <MixedAssignment occurrences="2">
+      <code>$factory</code>
+      <code>$instance</code>
+    </MixedAssignment>
+    <MixedFunctionCall occurrences="1">
+      <code>$factory($container-&gt;reveal())</code>
+    </MixedFunctionCall>
+    <UndefinedClass occurrences="1">
+      <code>$factoryName</code>
+    </UndefinedClass>
+    <UnresolvableInclude occurrences="4">
+      <code>require $fileName</code>
+      <code>require $this-&gt;projectRoot . '/TestClass.php'</code>
+      <code>require $this-&gt;projectRoot . '/TestClass.php'</code>
+      <code>require $this-&gt;projectRoot . '/TestClass.php'</code>
+    </UnresolvableInclude>
+  </file>
+  <file src="test/Factory/FactoryClassGeneratorTest.php">
+    <InternalClass occurrences="1">
+      <code>new FactoryClassGenerator()</code>
+    </InternalClass>
+    <InternalMethod occurrences="4">
+      <code>createFactory</code>
+      <code>createFactory</code>
+      <code>createFactory</code>
+      <code>createFactory</code>
+    </InternalMethod>
+  </file>
+  <file src="test/MigrateInteropMiddleware/ConvertInteropMiddlewareTest.php">
+    <MixedArgument occurrences="1">
+      <code>$console-&gt;reveal()</code>
+    </MixedArgument>
+    <PossiblyUndefinedMethod occurrences="1">
+      <code>reveal</code>
+    </PossiblyUndefinedMethod>
+  </file>
+  <file src="test/MigrateInteropMiddleware/MigrateInteropMiddlewareCommandTest.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$class</code>
+    </ArgumentTypeCoercion>
+    <ImplicitToStringCast occurrences="2">
+      <code>Argument::containingString('Done!')</code>
+      <code>Argument::containingString('Scanning for usage of http-interop middleware...')</code>
+    </ImplicitToStringCast>
+    <MixedInferredReturnType occurrences="1">
+      <code>scalar</code>
+    </MixedInferredReturnType>
+    <MixedMethodCall occurrences="6">
+      <code>andReturnNull</code>
+      <code>shouldBeCalled</code>
+      <code>shouldBeCalled</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>with</code>
+    </MixedMethodCall>
+    <MixedReturnStatement occurrences="1">
+      <code>$r-&gt;getConstant($const)</code>
+    </MixedReturnStatement>
+    <PossiblyUndefinedMethod occurrences="5">
+      <code>once</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+    </PossiblyUndefinedMethod>
+    <UndefinedMagicMethod occurrences="1">
+      <code>once</code>
+    </UndefinedMagicMethod>
+  </file>
+  <file src="test/MigrateInteropMiddleware/ProjectSetupTrait.php">
+    <MixedArgument occurrences="1">
+      <code>$file</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$file</code>
+    </MixedAssignment>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$dir</code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="test/MigrateMiddlewareToRequestHandler/ConvertMiddlewareTest.php">
+    <MixedArgument occurrences="1">
+      <code>$console-&gt;reveal()</code>
+    </MixedArgument>
+    <PossiblyUndefinedMethod occurrences="1">
+      <code>reveal</code>
+    </PossiblyUndefinedMethod>
+  </file>
+  <file src="test/MigrateMiddlewareToRequestHandler/MigrateMiddlewareToRequestHandlerCommandTest.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$class</code>
+    </ArgumentTypeCoercion>
+    <ImplicitToStringCast occurrences="2">
+      <code>Argument::containingString('Done!')</code>
+    </ImplicitToStringCast>
+    <InvalidScalarArgument occurrences="1"/>
+    <MissingClosureParamType occurrences="1">
+      <code>$arg</code>
+    </MissingClosureParamType>
+    <MixedArgument occurrences="1">
+      <code>$arg</code>
+    </MixedArgument>
+    <MixedMethodCall occurrences="6">
+      <code>andReturnNull</code>
+      <code>shouldBeCalledTimes</code>
+      <code>shouldBeCalledTimes</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>with</code>
+    </MixedMethodCall>
+    <PossiblyUndefinedMethod occurrences="5">
+      <code>once</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+    </PossiblyUndefinedMethod>
+    <UndefinedMagicMethod occurrences="1">
+      <code>once</code>
+    </UndefinedMagicMethod>
+  </file>
+  <file src="test/MigrateMiddlewareToRequestHandler/ProjectSetupTrait.php">
+    <MissingClosureParamType occurrences="5">
+      <code>$arg</code>
+      <code>$arg</code>
+      <code>$arg</code>
+      <code>$arg</code>
+      <code>$arg</code>
+    </MissingClosureParamType>
+    <MixedArgument occurrences="6">
+      <code>$arg</code>
+      <code>$arg</code>
+      <code>$arg</code>
+      <code>$arg</code>
+      <code>$arg</code>
+      <code>$file</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$file</code>
+    </MixedAssignment>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$dir</code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="test/Module/CommandCommonOptionsTest.php">
+    <InternalClass occurrences="3">
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal())</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal(), $config)</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal(), $config)</code>
+    </InternalClass>
+    <InternalMethod occurrences="3">
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal())</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal(), $config)</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal(), $config)</code>
+    </InternalMethod>
+    <MixedArgument occurrences="3">
+      <code>$this-&gt;input-&gt;reveal()</code>
+      <code>$this-&gt;input-&gt;reveal()</code>
+      <code>$this-&gt;input-&gt;reveal()</code>
+    </MixedArgument>
+    <MixedArrayAssignment occurrences="2">
+      <code>$config[CommandCommonOptions::class]['--modules-path']</code>
+      <code>$config[CommandCommonOptions::class]['--modules-path']</code>
+    </MixedArrayAssignment>
+    <MixedMethodCall occurrences="3">
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+    </MixedMethodCall>
+    <PossiblyUndefinedMethod occurrences="3">
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+    </PossiblyUndefinedMethod>
+    <PossiblyUndefinedVariable occurrences="2">
+      <code>$config</code>
+      <code>$config</code>
+    </PossiblyUndefinedVariable>
+  </file>
+  <file src="test/Module/CreateCommandTest.php">
+    <ImplicitToStringCast occurrences="5">
+      <code>Argument::containingString('Created module "Foo" in directory "./library/modules"')</code>
+      <code>Argument::containingString('Created module "Foo" in directory "./library/modules"')</code>
+      <code>Argument::containingString('Created module "Foo" in directory "./library/modules"')</code>
+      <code>Argument::containingString('Created module "Foo" in directory "./library/modules"')</code>
+    </ImplicitToStringCast>
+    <InvalidPropertyAssignmentValue occurrences="2">
+      <code>$this-&gt;prophesize(ConsoleOutputInterface::class)</code>
+      <code>$this-&gt;prophesize(InputInterface::class)</code>
+    </InvalidPropertyAssignmentValue>
+    <MissingClosureParamType occurrences="1">
+      <code>$input</code>
+    </MissingClosureParamType>
+    <MixedArgument occurrences="10">
+      <code>$config</code>
+      <code>$parameters</code>
+      <code>$parameters</code>
+      <code>$parameters</code>
+      <code>$parameters</code>
+      <code>$this-&gt;output-&gt;reveal()</code>
+      <code>$this-&gt;output-&gt;reveal()</code>
+      <code>$this-&gt;output-&gt;reveal()</code>
+      <code>$this-&gt;output-&gt;reveal()</code>
+      <code>$this-&gt;output-&gt;reveal()</code>
+    </MixedArgument>
+    <MixedArrayAccess occurrences="4">
+      <code>$parameters['--composer']</code>
+      <code>$parameters['--exact-path']</code>
+      <code>$parameters['command']</code>
+      <code>$parameters['module']</code>
+    </MixedArrayAccess>
+    <MixedAssignment occurrences="2">
+      <code>$config</code>
+      <code>$parameters</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="1">
+      <code>array|ArrayObject</code>
+    </MixedInferredReturnType>
+    <MixedMethodCall occurrences="12">
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>andThrow</code>
+      <code>once</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+    </MixedMethodCall>
+    <MixedReturnStatement occurrences="1">
+      <code>$config</code>
+    </MixedReturnStatement>
+    <PossiblyInvalidArgument occurrences="6">
+      <code>$this-&gt;createConfig($configAsArrayObject)</code>
+      <code>$this-&gt;createConfig($configAsArrayObject)</code>
+      <code>$this-&gt;createConfig($configAsArrayObject)</code>
+      <code>$this-&gt;createConfig($configAsArrayObject)</code>
+      <code>$this-&gt;createConfig($configAsArrayObject)</code>
+      <code>$this-&gt;createConfig($configAsArrayObject)</code>
+    </PossiblyInvalidArgument>
+    <PossiblyUndefinedMethod occurrences="6">
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>with</code>
+    </PossiblyUndefinedMethod>
+    <UndefinedMagicMethod occurrences="6">
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>with</code>
+    </UndefinedMagicMethod>
+    <UnresolvableInclude occurrences="1">
+      <code>include $configFile</code>
+    </UnresolvableInclude>
+  </file>
+  <file src="test/Module/CreateTest.php">
+    <TooManyArguments occurrences="2">
+      <code>new Create(true, true)</code>
+      <code>new Create(true, true)</code>
+    </TooManyArguments>
+  </file>
+  <file src="test/Module/DeregisterCommandTest.php">
+    <ImplicitToStringCast occurrences="2"/>
+    <MixedMethodCall occurrences="12">
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>shouldBeCalled</code>
+      <code>shouldBeCalled</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+    </MixedMethodCall>
+    <PossiblyUndefinedMethod occurrences="7">
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+    </PossiblyUndefinedMethod>
+    <UndefinedMagicMethod occurrences="3">
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+    </UndefinedMagicMethod>
+  </file>
+  <file src="test/Module/RegisterCommandTest.php">
+    <ImplicitToStringCast occurrences="2"/>
+    <LessSpecificReturnStatement occurrences="1"/>
+    <MixedMethodCall occurrences="15">
+      <code>andReturn</code>
+      <code>andReturn</code>
+      <code>once</code>
+      <code>once</code>
+      <code>once</code>
+      <code>shouldBeCalled</code>
+      <code>shouldBeCalled</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+    </MixedMethodCall>
+    <MoreSpecificReturnType occurrences="1">
+      <code>array&lt;string, array{0: bool, 1: bool, 2: bool, 3: string}&gt;</code>
+    </MoreSpecificReturnType>
+    <PossiblyUndefinedMethod occurrences="7">
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>reveal</code>
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+    </PossiblyUndefinedMethod>
+    <TooFewArguments occurrences="1">
+      <code>testCommandEmitsExpectedMessagesWhenItInjectsConfigurationAndEnablesModule</code>
+    </TooFewArguments>
+    <UndefinedMagicMethod occurrences="3">
+      <code>with</code>
+      <code>with</code>
+      <code>with</code>
+    </UndefinedMagicMethod>
+  </file>
+</files>

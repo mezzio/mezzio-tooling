@@ -55,17 +55,17 @@ class CreateFactoryCommandTest extends TestCase
         return $r;
     }
 
-    public function testConfigureSetsExpectedDescription()
+    public function testConfigureSetsExpectedDescription(): void
     {
         self::assertStringContainsString('Create a factory', $this->command->getDescription());
     }
 
-    public function testConfigureSetsExpectedHelp()
+    public function testConfigureSetsExpectedHelp(): void
     {
         self::assertEquals(CreateFactoryCommand::HELP, $this->command->getHelp());
     }
 
-    public function testConfigureSetsExpectedArguments()
+    public function testConfigureSetsExpectedArguments(): void
     {
         $definition = $this->command->getDefinition();
         self::assertTrue($definition->hasArgument('class'));
@@ -74,7 +74,7 @@ class CreateFactoryCommandTest extends TestCase
         self::assertEquals(CreateFactoryCommand::HELP_ARG_CLASS, $argument->getDescription());
     }
 
-    public function testConfigureSetsExpectedOptions()
+    public function testConfigureSetsExpectedOptions(): void
     {
         $definition = $this->command->getDefinition();
         self::assertTrue($definition->hasOption('no-register'));
@@ -82,7 +82,7 @@ class CreateFactoryCommandTest extends TestCase
         self::assertEquals(CreateFactoryCommand::HELP_OPT_NO_REGISTER, $option->getDescription());
     }
 
-    public function testSuccessfulExecutionEmitsExpectedMessages()
+    public function testSuccessfulExecutionEmitsExpectedMessages(): void
     {
         $generator = $this->prophesize(Create::class);
         $generator->createForClass('Foo\TestHandler')->willReturn(__DIR__)->shouldBeCalled();
@@ -122,7 +122,7 @@ class CreateFactoryCommandTest extends TestCase
         ));
     }
 
-    public function testAllowsExceptionsRaisedFromCreateToBubbleUp()
+    public function testAllowsExceptionsRaisedFromCreateToBubbleUp(): void
     {
         $generator = $this->prophesize(Create::class);
         $generator->createForClass('Foo\TestHandler')->willThrow(ClassNotFoundException::class)->shouldBeCalled();

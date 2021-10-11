@@ -9,21 +9,21 @@ use PHPUnit\Framework\TestCase;
 
 class CreateHandlerExceptionTest extends TestCase
 {
-    public function testMissingComposerJsonReturnsInstance()
+    public function testMissingComposerJsonReturnsInstance(): void
     {
         $e = CreateHandlerException::missingComposerJson();
         self::assertInstanceOf(CreateHandlerException::class, $e);
         self::assertStringContainsString('Could not find a composer.json', $e->getMessage());
     }
 
-    public function testMissingComposerAutoloadersReturnsInstance()
+    public function testMissingComposerAutoloadersReturnsInstance(): void
     {
         $e = CreateHandlerException::missingComposerAutoloaders();
         self::assertInstanceOf(CreateHandlerException::class, $e);
         self::assertStringContainsString('PSR-4 autoloaders', $e->getMessage());
     }
 
-    public function testInvalidComposerJsonReturnsInstanceWithErrorMessage()
+    public function testInvalidComposerJsonReturnsInstanceWithErrorMessage(): void
     {
         $error = 'Invalid or malformed JSON';
         $e     = CreateHandlerException::invalidComposerJson($error);
@@ -32,7 +32,7 @@ class CreateHandlerExceptionTest extends TestCase
         self::assertStringContainsString($error, $e->getMessage());
     }
 
-    public function testAutoloaderNotFoundReturnsInstanceUsingClassNameProvided()
+    public function testAutoloaderNotFoundReturnsInstanceUsingClassNameProvided(): void
     {
         $expected = self::class;
         $e        = CreateHandlerException::autoloaderNotFound($expected);
@@ -40,7 +40,7 @@ class CreateHandlerExceptionTest extends TestCase
         self::assertStringContainsString('match ' . $expected, $e->getMessage());
     }
 
-    public function testUnableToCreatePathReturnsInstanceUsingPathAndClassProvided()
+    public function testUnableToCreatePathReturnsInstanceUsingPathAndClassProvided(): void
     {
         $path  = __FILE__;
         $class = self::class;
@@ -50,7 +50,7 @@ class CreateHandlerExceptionTest extends TestCase
         self::assertStringContainsString('class ' . $class, $e->getMessage());
     }
 
-    public function testClassExistsReturnsInstanceUsingPathAndClassProvided()
+    public function testClassExistsReturnsInstanceUsingPathAndClassProvided(): void
     {
         $path  = __FILE__;
         $class = self::class;

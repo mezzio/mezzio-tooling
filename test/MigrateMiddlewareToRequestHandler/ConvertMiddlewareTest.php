@@ -12,7 +12,7 @@ class ConvertMiddlewareTest extends TestCase
 {
     use ProjectSetupTrait;
 
-    public function testConvertsFilesAndEmitsInfoMessagesAsExpected()
+    public function testConvertsFilesAndEmitsInfoMessagesAsExpected(): void
     {
         $dir = vfsStream::setup('migrate');
         $this->setupSrcDir($dir);

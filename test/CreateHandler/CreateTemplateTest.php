@@ -61,14 +61,14 @@ class CreateTemplateTest extends TestCase
         $this->container   = $this->prophesize(ContainerInterface::class);
     }
 
-    public function prepareCommonAssets()
+    public function prepareCommonAssets(): void
     {
         foreach (self::COMMON_FILES as $source => $target) {
             copy(__DIR__ . $source, $this->projectRoot . $target);
         }
     }
 
-    public function injectConfigInContainer(bool $configAsArrayObject = false)
+    public function injectConfigInContainer(bool $configAsArrayObject = false): void
     {
         $configFile = $this->projectRoot . '/config/config.php';
         $config     = include $configFile;
@@ -86,7 +86,7 @@ class CreateTemplateTest extends TestCase
         yield 'ArrayObject' => [true];
     }
 
-    public function injectRendererInContainer(string $renderer)
+    public function injectRendererInContainer(string $renderer): void
     {
         $className  = substr($renderer, strrpos($renderer, '\\') + 1);
         $sourceFile = sprintf('%s/src/%s.php', $this->projectRoot, $className);
@@ -96,7 +96,7 @@ class CreateTemplateTest extends TestCase
         $this->container->get(TemplateRendererInterface::class)->willReturn($this->renderer);
     }
 
-    public function updateConfigContents(string ...$replacements)
+    public function updateConfigContents(string ...$replacements): void
     {
         $configFile = $this->projectRoot . '/config/config.php';
         $contents   = file_get_contents($configFile);
@@ -119,7 +119,7 @@ class CreateTemplateTest extends TestCase
     public function testGeneratesTemplateFileInExpectedLocationAndWithExpectedSuffixForFlatHierarchy(
         string $rendererType,
         string $extension
-    ) {
+    ): void {
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/flat', $this->dir);
         $this->prepareCommonAssets();
         require $this->projectRoot . '/src/Test/TestHandler.php';
@@ -140,7 +140,7 @@ class CreateTemplateTest extends TestCase
     public function testGeneratesTemplateFileInExpectedLocationAndWithExpectedSuffixForModuleHierarchy(
         string $rendererType,
         string $extension
-    ) {
+    ): void {
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/module', $this->dir);
         $this->prepareCommonAssets();
         require $this->projectRoot . '/src/Test/src/TestHandler.php';
@@ -164,7 +164,7 @@ class CreateTemplateTest extends TestCase
     public function testGeneratesTemplateFileInDefaultLocationWhenNoTemplatesConfigPresentForFlatHierarchy(
         string $rendererType,
         string $extension
-    ) {
+    ): void {
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/flat', $this->dir);
         $this->prepareCommonAssets();
         require $this->projectRoot . '/src/Test/TestHandler.php';
@@ -185,7 +185,7 @@ class CreateTemplateTest extends TestCase
     public function testGeneratesTemplateFileInDefaultLocationWhenNoTemplatesConfigPresentForModuleHierarchy(
         string $rendererType,
         string $extension
-    ) {
+    ): void {
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/module', $this->dir);
         $this->prepareCommonAssets();
         require $this->projectRoot . '/src/Test/src/TestHandler.php';
@@ -205,7 +205,7 @@ class CreateTemplateTest extends TestCase
      */
     public function testGeneratesTemplateFileUsingConfiguredValuesForFlatHierarchy(
         string $rendererType
-    ) {
+    ): void {
         $extension = 'custom';
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/flat', $this->dir);
         $this->prepareCommonAssets();
@@ -227,7 +227,7 @@ class CreateTemplateTest extends TestCase
      */
     public function testGeneratesTemplateFileUsingConfiguredValuesForModuleHierarchy(
         string $rendererType
-    ) {
+    ): void {
         $extension = 'custom';
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/module', $this->dir);
         $this->prepareCommonAssets();
@@ -247,7 +247,7 @@ class CreateTemplateTest extends TestCase
     /**
      * @dataProvider configType
      */
-    public function testGeneratingTemplateWhenRendererServiceNotFoundResultsInException(bool $configAsArrayObject)
+    public function testGeneratingTemplateWhenRendererServiceNotFoundResultsInException(bool $configAsArrayObject): void
     {
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/flat', $this->dir);
         $this->prepareCommonAssets();
@@ -269,7 +269,7 @@ class CreateTemplateTest extends TestCase
      */
     public function testGeneratingTemplateWhenRendererServiceIsNotInWhitelistResultsInException(
         bool $configAsArrayObject
-    ) {
+    ): void {
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/flat', $this->dir);
         $this->prepareCommonAssets();
         require $this->projectRoot . '/src/Test/TestHandler.php';
@@ -306,7 +306,7 @@ class CreateTemplateTest extends TestCase
         string $rendererType,
         string $extension,
         string $configFile
-    ) {
+    ): void {
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/flat', $this->dir);
         $this->prepareCommonAssets();
         require $this->projectRoot . '/src/Test/TestHandler.php';
@@ -328,7 +328,7 @@ class CreateTemplateTest extends TestCase
         string $rendererType,
         string $extension,
         string $configFile
-    ) {
+    ): void {
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/module', $this->dir);
         $this->prepareCommonAssets();
         require $this->projectRoot . '/src/Test/src/TestHandler.php';
@@ -349,7 +349,7 @@ class CreateTemplateTest extends TestCase
     public function testCanGenerateTemplateUsingProvidedNamespaceAndNameWhenConfigurationMatchesForFlatHierarchy(
         string $rendererType,
         string $extension
-    ) {
+    ): void {
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/flat', $this->dir);
         $this->prepareCommonAssets();
         require $this->projectRoot . '/src/Test/TestHandler.php';
@@ -374,7 +374,7 @@ class CreateTemplateTest extends TestCase
     public function testCanGenerateTemplateUsingProvidedNamespaceAndNameWhenConfigurationMatchesForModuleHierarchy(
         string $rendererType,
         string $extension
-    ) {
+    ): void {
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/module', $this->dir);
         $this->prepareCommonAssets();
         require $this->projectRoot . '/src/Test/src/TestHandler.php';
@@ -398,7 +398,7 @@ class CreateTemplateTest extends TestCase
      */
     public function testCanGenerateTemplateWithUnrecognizedRendererTypeIfTemplatSuffixIsProvided(
         bool $configAsArrayObject
-    ) {
+    ): void {
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/module', $this->dir);
         $this->prepareCommonAssets();
         require $this->projectRoot . '/src/Test/src/TestHandler.php';

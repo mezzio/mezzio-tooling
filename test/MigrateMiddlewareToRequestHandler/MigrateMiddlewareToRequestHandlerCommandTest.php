@@ -55,7 +55,7 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
         return $r;
     }
 
-    public function testConfigureSetsExpectedDescription()
+    public function testConfigureSetsExpectedDescription(): void
     {
         self::assertStringContainsString(
             'Migrate PSR-15 middleware to request handlers',
@@ -73,12 +73,12 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
         return $r->getConstant($const);
     }
 
-    public function testConfigureSetsExpectedHelp()
+    public function testConfigureSetsExpectedHelp(): void
     {
         self::assertEquals($this->getConstantValue('HELP'), $this->command->getHelp());
     }
 
-    public function testConfigureSetsExpectedArguments()
+    public function testConfigureSetsExpectedArguments(): void
     {
         $definition = $this->command->getDefinition();
         self::assertTrue($definition->hasOption('src'));
@@ -87,7 +87,7 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
         self::assertEquals($this->getConstantValue('HELP_OPT_SRC'), $option->getDescription());
     }
 
-    public function testSuccessfulExecutionEmitsExpectedMessages()
+    public function testSuccessfulExecutionEmitsExpectedMessages(): void
     {
         vfsStream::setup('migrate');
         $path = vfsStream::url('migrate');
@@ -120,7 +120,7 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
         ));
     }
 
-    public function testAllowsExceptionsFromInvalidSrcDirectoryArgumentToBubbleUp()
+    public function testAllowsExceptionsFromInvalidSrcDirectoryArgumentToBubbleUp(): void
     {
         vfsStream::setup('migrate');
         $path = vfsStream::url('migrate');

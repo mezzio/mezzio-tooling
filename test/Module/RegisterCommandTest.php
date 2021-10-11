@@ -85,12 +85,12 @@ class RegisterCommandTest extends TestCase
         return $r;
     }
 
-    public function testConfigureSetsExpectedDescription()
+    public function testConfigureSetsExpectedDescription(): void
     {
         self::assertStringContainsString('Register a middleware module', $this->command->getDescription());
     }
 
-    public function testConfigureSetsExpectedHelp()
+    public function testConfigureSetsExpectedHelp(): void
     {
         self::assertEquals(RegisterCommand::HELP, $this->command->getHelp());
     }
@@ -240,7 +240,7 @@ class RegisterCommandTest extends TestCase
         ));
     }
 
-    public function testAllowsRuntimeExceptionsThrownFromEnableToBubbleUp()
+    public function testAllowsRuntimeExceptionsThrownFromEnableToBubbleUp(): void
     {
         $this->input->getArgument('module')->willReturn('MyApp');
         $this->input->getOption('composer')->willReturn('composer.phar');

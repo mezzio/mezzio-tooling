@@ -33,7 +33,7 @@ class ConfigInjectorTest extends TestCase
         $this->injector = new ConfigInjector($this->projectRoot);
     }
 
-    public function testRaisesExceptionIfConfigNotPresentAndDirectoryIsNotWritable()
+    public function testRaisesExceptionIfConfigNotPresentAndDirectoryIsNotWritable(): void
     {
         $dir = $this->dir->getChild('config/autoload');
         $dir->chmod(0544);
@@ -42,7 +42,7 @@ class ConfigInjectorTest extends TestCase
         $this->injector->injectFactoryForClass(self::class . 'Factory', self::class);
     }
 
-    public function testRaisesExceptionIfConfigPresentButIsNotWritable()
+    public function testRaisesExceptionIfConfigPresentButIsNotWritable(): void
     {
         touch($this->projectRoot . '/' . ConfigInjector::CONFIG_FILE);
         $file = $this->dir->getChild(ConfigInjector::CONFIG_FILE);
@@ -52,7 +52,7 @@ class ConfigInjectorTest extends TestCase
         $this->injector->injectFactoryForClass(self::class . 'Factory', self::class);
     }
 
-    public function testCreatesConfigFileIfItDidNotPreviouslyExist()
+    public function testCreatesConfigFileIfItDidNotPreviouslyExist(): void
     {
         $this->injector->injectFactoryForClass(self::class . 'Factory', self::class);
         $config = include $this->projectRoot . '/' . ConfigInjector::CONFIG_FILE;
@@ -63,7 +63,7 @@ class ConfigInjectorTest extends TestCase
         self::assertEquals(self::class . 'Factory', $config['dependencies']['factories'][self::class]);
     }
 
-    public function testAddsNewEntryToConfigFile()
+    public function testAddsNewEntryToConfigFile(): void
     {
         $configFile = $this->projectRoot . '/' . ConfigInjector::CONFIG_FILE;
         $contents   = <<<'EOT'
