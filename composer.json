@@ -35,7 +35,6 @@
         "laminas/laminas-component-installer": "^2.0",
         "laminas/laminas-stdlib": "^3.1",
         "laminas/laminas-stratigility": "^3.0",
-        "laminas/laminas-zendframework-bridge": "^1.0",
         "mezzio/mezzio": "^3.0",
         "mezzio/mezzio-router": "^3.0",
         "symfony/process": "^4.3 || ^5.1.2"
@@ -74,7 +73,7 @@
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
         "license-check": "docheader check src/"
     },
-    "replace": {
-        "zendframework/zend-expressive-tooling": "^1.3.0"
+    "conflict": {
+        "zendframework/zend-expressive-tooling": "*"
     }
 }
