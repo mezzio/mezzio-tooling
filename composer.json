@@ -37,7 +37,7 @@
         "laminas/laminas-stratigility": "^3.0",
         "mezzio/mezzio": "^3.0",
         "mezzio/mezzio-router": "^3.0",
-        "symfony/process": "^4.3 || ^5.1.2"
+        "symfony/process": "^4.3 || ^5.1.2 || ^6.0"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.3.0",
