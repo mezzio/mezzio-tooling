@@ -38,8 +38,7 @@ class CreateMiddlewareCommandTest extends TestCase
     /** @var ObjectProphecy<ConsoleOutputInterface> */
     private $output;
 
-    /** @var CreateMiddlewareCommand */
-    private $command;
+    private CreateMiddlewareCommand $command;
 
     protected function setUp(): void
     {

@@ -36,8 +36,7 @@ class RegisterCommandTest extends TestCase
     use MockeryPHPUnitIntegration;
     use ProphecyTrait;
 
-    /** @var vfsStreamDirectory */
-    private $dir;
+    private vfsStreamDirectory $dir;
 
     /** @var ObjectProphecy<InputInterface> */
     private $input;

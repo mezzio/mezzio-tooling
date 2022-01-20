@@ -45,11 +45,9 @@ class CreateTemplateTest extends TestCase
     /** @var ObjectProphecy<ContainerInterface> */
     private $container;
 
-    /** @var vfsStreamDirectory */
-    private $dir;
+    private vfsStreamDirectory $dir;
 
-    /** @var string */
-    private $projectRoot;
+    private string $projectRoot;
 
     /** @var PlatesRenderer|TwigRenderer|LaminasViewRenderer */
     private $renderer;
@@ -83,7 +81,7 @@ class CreateTemplateTest extends TestCase
     public function configType(): Generator
     {
         yield 'array'       => [false];
-        yield 'ArrayObject' => [true];
+        yield ArrayObject::class => [true];
     }
 
     public function injectRendererInContainer(string $renderer): void

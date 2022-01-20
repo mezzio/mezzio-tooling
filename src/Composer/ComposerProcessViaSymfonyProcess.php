@@ -9,8 +9,7 @@ use Symfony\Component\Process\Process;
 /** @internal */
 class ComposerProcessViaSymfonyProcess implements ComposerProcessInterface
 {
-    /** @var Process */
-    private $process;
+    private Process $process;
 
     public function __construct(Process $process)
     {

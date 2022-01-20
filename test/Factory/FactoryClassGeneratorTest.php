@@ -14,8 +14,7 @@ use function file_get_contents;
 
 class FactoryClassGeneratorTest extends TestCase
 {
-    /** @var FactoryClassGenerator */
-    private $generator;
+    private FactoryClassGenerator $generator;
 
     protected function setUp(): void
     {

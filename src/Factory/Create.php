@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Factory;
 
+use Mezzio\Tooling\Factory\FactoryClassGenerator;
 use ReflectionClass;
 
 use function class_exists;
@@ -18,8 +19,7 @@ use function substr;
 /** @internal */
 class Create
 {
-    /** @var FactoryClassGenerator */
-    private $generator;
+    private FactoryClassGenerator $generator;
 
     public function __construct(FactoryClassGenerator $generator)
     {

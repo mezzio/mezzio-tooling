@@ -20,14 +20,11 @@ class CreateTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @var vfsStreamDirectory */
-    private $dir;
+    private vfsStreamDirectory $dir;
 
-    /** @var Create */
-    private $factory;
+    private Create $factory;
 
-    /** @var string */
-    private $projectRoot;
+    private string $projectRoot;
 
     protected function setUp(): void
     {

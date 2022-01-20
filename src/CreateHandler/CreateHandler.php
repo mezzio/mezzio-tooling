@@ -39,17 +39,13 @@ final class CreateHandler extends ClassSkeletons
 {
     /**
      * Path to root of project.
-     *
-     * @var string
      */
-    private $projectRoot;
+    private string $projectRoot;
 
     /**
      * Class skeleton template to use.
-     *
-     * @var string
      */
-    private $skeleton;
+    private string $skeleton;
 
     public function __construct(string $classSkeleton = self::CLASS_SKELETON, ?string $projectRoot = null)
     {

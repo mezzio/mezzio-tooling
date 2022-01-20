@@ -25,13 +25,13 @@ class FactoryClassGenerator
 {
     public const FACTORY_TEMPLATE = <<<'EOT'
         <?php
-        
+
         declare(strict_types=1);
-        
+
         namespace %2$s;
-        
+
         %3$s
-        
+
         class %1$sFactory
         {
             public function __invoke(ContainerInterface $container) : %1$s
@@ -39,7 +39,7 @@ class FactoryClassGenerator
                 return new %1$s(%4$s);
             }
         }
-        
+
         EOT;
 
     public function createFactory(string $className): string
@@ -121,17 +121,13 @@ class FactoryClassGenerator
     private function formatImportStatements(array $imports): string
     {
         natsort($imports);
-        $imports = array_map(function ($import) {
-            return sprintf('use %s;', $import);
-        }, $imports);
+        $imports = array_map(static fn($import) => sprintf('use %s;', $import), $imports);
         return implode("\n", $imports);
     }
 
     private function createArgumentString(array $arguments): string
     {
-        $arguments = array_map(function ($argument) {
-            return sprintf('$container->get(%s::class)', $argument);
-        }, $arguments);
+        $arguments = array_map(static fn($argument) => sprintf('$container->get(%s::class)', $argument), $arguments);
         switch (count($arguments)) {
             case 0:
                 return '';

@@ -158,8 +158,7 @@ final class Create
 
         EOT;
 
-    /** @var bool */
-    private $useFlatStructure;
+    private bool $useFlatStructure;
 
     public function __construct(bool $useFlatStructure = false)
     {

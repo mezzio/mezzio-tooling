@@ -16,11 +16,9 @@ use function json_encode;
 
 class CreateMiddlewareTest extends TestCase
 {
-    /** @var vfsStreamDirectory */
-    private $dir;
+    private vfsStreamDirectory $dir;
 
-    /** @var string */
-    private $projectRoot;
+    private string $projectRoot;
 
     protected function setUp(): void
     {

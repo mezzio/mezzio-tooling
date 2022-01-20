@@ -8,14 +8,11 @@ use function preg_replace;
 
 final class ModuleMetadata
 {
-    /** @var string */
-    private $name;
+    private string $name;
 
-    /** @var string */
-    private $rootPath;
+    private string $rootPath;
 
-    /** @var string */
-    private $sourcePath;
+    private string $sourcePath;
 
     public function __construct(
         string $name,

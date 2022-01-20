@@ -20,8 +20,7 @@ use function str_replace;
 
 final class ConvertInteropMiddleware
 {
-    /** @var OutputInterface */
-    private $output;
+    private OutputInterface $output;
 
     public function __construct(OutputInterface $output)
     {

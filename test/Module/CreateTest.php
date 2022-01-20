@@ -19,20 +19,15 @@ class CreateTest extends TestCase
 {
     use PHPMock;
 
-    /** @var Create */
-    private $command;
+    private Create $command;
 
-    /** @var vfsStreamDirectory */
-    private $dir;
+    private vfsStreamDirectory $dir;
 
-    /** @var vfsStreamDirectory */
-    private $modulesDir;
+    private vfsStreamDirectory $modulesDir;
 
-    /** @var string */
-    private $modulesPath = 'my-modules';
+    private string $modulesPath = 'my-modules';
 
-    /** @var string */
-    private $projectDir;
+    private string $projectDir;
 
     protected function setUp(): void
     {
