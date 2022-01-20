@@ -31,10 +31,10 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
     use MockeryPHPUnitIntegration;
     use ProphecyTrait;
 
-    /** @var InputInterface|ObjectProphecy */
+    /** @var ObjectProphecy<InputInterface> */
     private $input;
 
-    /** @var ConsoleOutputInterface|ObjectProphecy */
+    /** @var ObjectProphecy<ConsoleOutputInterface> */
     private $output;
 
     /** @var MigrateMiddlewareToRequestHandlerCommand */

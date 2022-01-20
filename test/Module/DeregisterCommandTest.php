@@ -34,10 +34,10 @@ class DeregisterCommandTest extends TestCase
     /** @var vfsStreamDirectory */
     private $dir;
 
-    /** @var InputInterface|ObjectProphecy */
+    /** @var ObjectProphecy<InputInterface> */
     private $input;
 
-    /** @var ConsoleOutputInterface|ObjectProphecy */
+    /** @var ObjectProphecy<ConsoleOutputInterface> */
     private $output;
 
     /** @var DeregisterCommand */

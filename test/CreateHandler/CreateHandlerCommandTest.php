@@ -81,7 +81,7 @@ class CreateHandlerCommandTest extends TestCase
     }
 
     /**
-     * @return ObjectProphecy|Application
+     * @return ObjectProphecy<Application>
      */
     private function mockApplication(string $forService = 'Foo\TestHandler')
     {
