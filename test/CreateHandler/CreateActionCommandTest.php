@@ -104,18 +104,21 @@ class CreateActionCommandTest extends TestCase
 
     public function testConfigureSetsExpectedDescriptionWhenRequestingAnAction(): void
     {
+        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
         $command = $this->createCommand();
         self::assertStringContainsString(CreateActionCommand::HELP_DESCRIPTION, $command->getDescription());
     }
 
     public function testConfigureSetsExpectedHelpWhenRequestingAnAction(): void
     {
+        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
         $command = $this->createCommand();
         self::assertEquals(CreateActionCommand::HELP, $command->getHelp());
     }
 
     public function testConfigureSetsExpectedArgumentsWhenRequestingAnAction(): void
     {
+        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
         $command    = $this->createCommand();
         $definition = $command->getDefinition();
         self::assertTrue($definition->hasArgument('action'));
@@ -126,6 +129,7 @@ class CreateActionCommandTest extends TestCase
 
     public function testConfigureSetsExpectedOptionsWhenRequestingAnAction(): void
     {
+        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
         $command    = $this->createCommand();
         $definition = $command->getDefinition();
 
@@ -174,6 +178,7 @@ class CreateActionCommandTest extends TestCase
 
     public function testSuccessfulExecutionEmitsExpectedMessagesWhenRequestingAnAction(): void
     {
+        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
         $command = $this->createCommand();
         $this->disableRequireHandlerDirective($command);
         $command->setApplication($this->mockApplication('Foo\TestAction')->reveal());

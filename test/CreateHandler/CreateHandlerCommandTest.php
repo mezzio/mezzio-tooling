@@ -109,18 +109,21 @@ class CreateHandlerCommandTest extends TestCase
 
     public function testConfigureSetsExpectedDescriptionWhenRequestingAHandler(): void
     {
+        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
         $command = $this->createCommand();
         self::assertStringContainsString(CreateHandlerCommand::HELP_DESCRIPTION, $command->getDescription());
     }
 
     public function testConfigureSetsExpectedHelpWhenRequestingAHandler(): void
     {
+        $this->container->has(TemplateRendererInterface::class)->willReturn(true);
         $command = $this->createCommand();
         self::assertEquals(CreateHandlerCommand::HELP, $command->getHelp());
     }
 
     public function testConfigureSetsExpectedArguments(): void
     {
+        $this->container->has(TemplateRendererInterface::class)->willReturn(true);
         $command    = $this->createCommand();
         $definition = $command->getDefinition();
 
@@ -132,6 +135,7 @@ class CreateHandlerCommandTest extends TestCase
 
     public function testConfigureSetsExpectedOptionsWhenRequestingAHandler(): void
     {
+        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
         $command    = $this->createCommand();
         $definition = $command->getDefinition();
 
@@ -180,6 +184,7 @@ class CreateHandlerCommandTest extends TestCase
 
     public function testSuccessfulExecutionEmitsExpectedMessages(): void
     {
+        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
         $command = $this->createCommand();
         $this->disableRequireHandlerDirective($command);
         $command->setApplication($this->mockApplication()->reveal());
@@ -371,6 +376,7 @@ class CreateHandlerCommandTest extends TestCase
 
     public function testAllowsExceptionsRaisedFromCreateHandlerToBubbleUp(): void
     {
+        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
         $command = $this->createCommand();
         $command->setApplication($this->mockApplication()->reveal());
 
