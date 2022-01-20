@@ -40,10 +40,10 @@ class CreateCommandTest extends TestCase
     use MockeryPHPUnitIntegration;
     use ProphecyTrait;
 
-    /** @var InputInterface&ObjectProphecy */
+    /** @var ObjectProphecy<InputInterface> */
     private $input;
 
-    /** @var ConsoleOutputInterface&ObjectProphecy */
+    /** @var ObjectProphecy<ConsoleOutputInterface> */
     private $output;
 
     /** @var CreateCommand */
@@ -98,7 +98,6 @@ class CreateCommandTest extends TestCase
     }
 
     /**
-     * @psalm-param ObjectProphecy<OutputInterface> $output
      * @psalm-return ObjectProphecy<Application>
      */
     private function mockApplicationWithRegisterCommand(
@@ -107,7 +106,7 @@ class CreateCommandTest extends TestCase
         string $module,
         string $composer,
         string $modulePath,
-        $output
+        OutputInterface $output
     ) {
         $register = $this->prophesize(Command::class);
         $register

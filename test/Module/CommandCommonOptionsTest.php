@@ -14,7 +14,7 @@ class CommandCommonOptionsTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @var InputInterface|ObjectProphecy */
+    /** @var ObjectProphecy<InputInterface> */
     private $input;
 
     protected function setUp(): void

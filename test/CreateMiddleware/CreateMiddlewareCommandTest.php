@@ -32,10 +32,10 @@ class CreateMiddlewareCommandTest extends TestCase
     use MockeryPHPUnitIntegration;
     use ProphecyTrait;
 
-    /** @var InputInterface|ObjectProphecy */
+    /** @var ObjectProphecy<InputInterface> */
     private $input;
 
-    /** @var ConsoleOutputInterface|ObjectProphecy */
+    /** @var ObjectProphecy<ConsoleOutputInterface> */
     private $output;
 
     /** @var CreateMiddlewareCommand */
@@ -62,7 +62,7 @@ class CreateMiddlewareCommandTest extends TestCase
     }
 
     /**
-     * @return ObjectProphecy|Application
+     * @return ObjectProphecy<Application>
      */
     private function mockApplication()
     {

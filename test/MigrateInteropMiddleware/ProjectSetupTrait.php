@@ -55,7 +55,7 @@ trait ProjectSetupTrait
     }
 
     /**
-     * @return OutputInterface|ObjectProphecy
+     * @return ObjectProphecy<OutputInterface>
      */
     private function setupConsoleHelper()
     {

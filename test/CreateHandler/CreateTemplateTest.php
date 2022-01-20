@@ -42,7 +42,7 @@ class CreateTemplateTest extends TestCase
         '/TestAsset/common/LaminasViewRenderer.php' => '/src/LaminasViewRenderer.php',
     ];
 
-    /** @var ContainerInterface&ObjectProphecy */
+    /** @var ObjectProphecy<ContainerInterface> */
     private $container;
 
     /** @var vfsStreamDirectory */

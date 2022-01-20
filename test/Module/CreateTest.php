@@ -186,7 +186,7 @@ class CreateTest extends TestCase
 
     public function testWillCreateRouteDelegatorInFlatStructureWhenRequested(): void
     {
-        $command  = new Create(true, true);
+        $command  = new Create(true);
         $metadata = $command->process('MyApp', $this->modulesPath, $this->projectDir, true);
 
         $expectedPath = 'my-modules/MyApp';
@@ -282,7 +282,7 @@ class CreateTest extends TestCase
 
     public function testWillCreateRouteDelegatorInFlatStructureUsingParentNamespace(): void
     {
-        $command  = new Create(true, true);
+        $command  = new Create(true);
         $metadata = $command->process('MyApp', $this->modulesPath, $this->projectDir, true, 'ParentNamespace');
 
         $expectedPath = 'my-modules/MyApp';

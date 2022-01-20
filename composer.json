@@ -52,6 +52,7 @@
         "php-mock/php-mock-phpunit": "^2.6",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.5.11",
+        "psalm/plugin-mockery": "^0.9.1",
         "psalm/plugin-phpunit": "^0.16.1",
         "vimeo/psalm": "^4.10"
     },
