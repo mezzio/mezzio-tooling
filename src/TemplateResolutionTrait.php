@@ -79,9 +79,7 @@ trait TemplateResolutionTrait
      */
     private function containerDefinesRendererService(ContainerInterface $container): bool
     {
-        // Casting to bool so that test prophecies work without needing to define
-        // explicit expectations in every situation.
-        return (bool) $container->has(TemplateRendererInterface::class);
+        return $container->has(TemplateRendererInterface::class);
     }
 
     private function getRendererServiceTypeFromContainer(ContainerInterface $container): ?string
