@@ -34,8 +34,7 @@ final class CreateCommand extends Command
     /** @var array|ArrayAccess */
     private $config;
 
-    /** @var string */
-    private $projectRoot;
+    private string $projectRoot;
 
     /** @param array|ArrayAccess $config */
     public function __construct($config, string $projectRoot)

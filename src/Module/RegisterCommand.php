@@ -40,11 +40,9 @@ final class RegisterCommand extends Command
     /** @var ComposerPackageInterface */
     private $package;
 
-    /** @var string */
-    private $projectRoot;
+    private string $projectRoot;
 
-    /** @var ComposerProcessFactoryInterface */
-    private $processFactory;
+    private ComposerProcessFactoryInterface $processFactory;
 
     public function __construct(
         string $projectRoot,

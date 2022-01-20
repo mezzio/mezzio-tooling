@@ -18,7 +18,7 @@ final class DeregisterCommand extends Command
 {
     public const HELP = <<<'EOT'
         Deregister an existing middleware module from the application, by:
-        
+
         - Removing the associated PSR-4 autoloader entry from composer.json, and
           regenerating autoloading rules.
         - Removing the associated ConfigProvider class for the module from the
@@ -30,14 +30,11 @@ final class DeregisterCommand extends Command
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:module:deregister';
 
-    /** @var ComposerPackageInterface */
-    private $package;
+    private ComposerPackageInterface $package;
 
-    /** @var string */
-    private $projectRoot;
+    private string $projectRoot;
 
-    /** @var ComposerProcessFactoryInterface */
-    private $processFactory;
+    private ComposerProcessFactoryInterface $processFactory;
 
     public function __construct(
         string $projectRoot,

@@ -15,14 +15,11 @@ use function touch;
 
 class ConfigInjectorTest extends TestCase
 {
-    /** @var vfsStreamDirectory */
-    private $dir;
+    private vfsStreamDirectory $dir;
 
-    /** @var ConfigInjector */
-    private $injector;
+    private ConfigInjector $injector;
 
-    /** @var string */
-    private $projectRoot;
+    private string $projectRoot;
 
     protected function setUp(): void
     {

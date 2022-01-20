@@ -101,30 +101,23 @@ class CreateHandlerCommand extends Command
      */
     protected $requireHandlerBeforeGeneratingFactory = true;
 
-    /** @var ContainerInterface */
-    private $container;
+    private ContainerInterface $container;
 
     /**
      * Root path of the project. Defaults to getcwd(). Mainly exists for
      * testing purposes, to allow injecting a virtual filesystem location.
-     *
-     * @var string
      */
-    private $projectRoot;
+    private string $projectRoot;
 
     /**
      * Whether or not the template renderer is registered in the container.
-     *
-     * @var bool
      */
-    private $rendererIsRegistered = false;
+    private bool $rendererIsRegistered = false;
 
     /**
      * Whether or not a template renderer is registered in configuration.
-     *
-     * @var bool
      */
-    private $templateRendererIsRegistered = false;
+    private bool $templateRendererIsRegistered = false;
 
     public function __construct(ContainerInterface $container, string $projectRoot)
     {

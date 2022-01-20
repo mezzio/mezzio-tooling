@@ -34,7 +34,7 @@ final class MigrateMiddlewareToRequestHandlerCommand extends Command
     public static $defaultName = 'mezzio:middleware:to-request-handler';
 
     /** @var string Path from which to resolve default src directory */
-    private $projectRoot;
+    private string $projectRoot;
 
     /**
      * @var null|string Project root against which to scan.

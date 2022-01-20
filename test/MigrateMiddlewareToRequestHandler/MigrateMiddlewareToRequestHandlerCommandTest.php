@@ -37,8 +37,7 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
     /** @var ConsoleOutputInterface|ObjectProphecy */
     private $output;
 
-    /** @var MigrateMiddlewareToRequestHandlerCommand */
-    private $command;
+    private MigrateMiddlewareToRequestHandlerCommand $command;
 
     protected function setUp(): void
     {
@@ -102,9 +101,9 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
         $this->input->getOption('src')->willReturn('src');
 
         $this->output
-            ->writeln(Argument::that(function ($arg) {
-                return preg_match('#Scanning "[^"]+" for PSR-15 middleware to convert#', $arg);
-            }))
+            ->writeln(Argument::that(
+                static fn($arg) => preg_match('#Scanning "[^"]+" for PSR-15 middleware to convert#', $arg)
+            ))
             ->shouldBeCalledTimes(1);
         $this->output
             ->writeln(Argument::containingString('Done!'))

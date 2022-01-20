@@ -39,16 +39,13 @@ final class CreateTemplate
         LaminasViewRenderer::class,
     ];
 
-    /** @var ContainerInterface */
-    private $container;
+    private ContainerInterface $container;
 
     /**
      * Root directory of project; used to determine if handler path indicates a
      * module.
-     *
-     * @var string
      */
-    private $projectPath;
+    private string $projectPath;
 
     public function __construct(string $projectPath, ContainerInterface $container)
     {

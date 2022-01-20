@@ -37,7 +37,7 @@ final class MigrateInteropMiddlewareCommand extends Command
     public static $defaultName = 'mezzio:middleware:migrate-from-interop';
 
     /** @var null|string Path from which to resolve default src directory */
-    private $projectRoot;
+    private ?string $projectRoot;
 
     public function __construct(string $projectRoot)
     {

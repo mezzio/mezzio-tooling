@@ -18,8 +18,7 @@ use function sprintf;
 
 final class ConvertMiddleware
 {
-    /** @var OutputInterface */
-    private $output;
+    private OutputInterface $output;
 
     public function __construct(OutputInterface $output)
     {

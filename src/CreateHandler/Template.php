@@ -9,11 +9,9 @@ namespace Mezzio\Tooling\CreateHandler;
  */
 final class Template
 {
-    /** @var string */
-    private $name;
+    private string $name;
 
-    /** @var string */
-    private $path;
+    private string $path;
 
     public function __construct(string $path, string $name)
     {

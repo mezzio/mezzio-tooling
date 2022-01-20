@@ -39,10 +39,10 @@ class CreateHandlerCommandTest extends TestCase
     use ProphecyTrait;
 
     /** @var ObjectProphecy<ContainerInterface> */
-    private $container;
+    private ObjectProphecy $container;
 
     /** @var ObjectProphecy<InputInterface> */
-    private $input;
+    private ObjectProphecy $input;
 
     /** @var ObjectProphecy<ConsoleOutputInterface> */
     private $output;

@@ -49,11 +49,9 @@ class CreateCommandTest extends TestCase
     /** @var CreateCommand */
     private $command;
 
-    /** @var vfsStreamDirectory */
-    private $dir;
+    private vfsStreamDirectory $dir;
 
-    /** @var string */
-    private $projectRoot;
+    private string $projectRoot;
 
     /** @var string */
     private $expectedModuleArgumentDescription;
@@ -87,7 +85,7 @@ class CreateCommandTest extends TestCase
     public function configType(): Generator
     {
         yield 'array'       => [false];
-        yield 'ArrayObject' => [true];
+        yield ArrayObject::class => [true];
     }
 
     private function reflectExecuteMethod(CreateCommand $command): ReflectionMethod

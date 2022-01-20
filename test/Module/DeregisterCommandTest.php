@@ -31,8 +31,7 @@ class DeregisterCommandTest extends TestCase
     use MockeryPHPUnitIntegration;
     use ProphecyTrait;
 
-    /** @var vfsStreamDirectory */
-    private $dir;
+    private vfsStreamDirectory $dir;
 
     /** @var InputInterface|ObjectProphecy */
     private $input;

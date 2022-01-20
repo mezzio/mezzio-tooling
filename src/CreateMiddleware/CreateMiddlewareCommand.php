@@ -43,18 +43,15 @@ final class CreateMiddlewareCommand extends Command
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:middleware:create';
 
-    /** @var string */
-    private $projectRoot;
+    private string $projectRoot;
 
     /**
      * Flag indicating whether or not to require the generated middleware before
      * generating its factory. By default, this is true, as it is necessary
      * in order for the middleware to be reflected. However, during testing, we do
      * not actually generate a middleware, so we need a way to disable it.
-     *
-     * @var bool
      */
-    private $requireMiddlewareBeforeGeneratingFactory = true;
+    private bool $requireMiddlewareBeforeGeneratingFactory = true;
 
     public function __construct(string $projectRoot)
     {

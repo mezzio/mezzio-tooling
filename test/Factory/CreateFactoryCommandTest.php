@@ -34,8 +34,7 @@ class CreateFactoryCommandTest extends TestCase
     /** @var ConsoleOutputInterface|ObjectProphecy */
     private $output;
 
-    /** @var CreateFactoryCommand */
-    private $command;
+    private CreateFactoryCommand $command;
 
     protected function setUp(): void
     {

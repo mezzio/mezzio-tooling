@@ -63,29 +63,29 @@ trait ProjectSetupTrait
         $console = $this->prophesize(OutputInterface::class);
 
         $console
-            ->writeln(Argument::that(function ($arg) {
-                return preg_match('#Updating .*src/MultilineMiddleware\.php#', $arg) !== false;
-            }))
+            ->writeln(Argument::that(
+                static fn($arg) => preg_match('#Updating .*src/MultilineMiddleware\.php#', $arg) !== false
+            ))
             ->shouldBeCalled();
         $console
-            ->writeln(Argument::that(function ($arg) {
-                return preg_match('#Updating .*src/MultipleInterfacesMiddleware\.php#', $arg) !== false;
-            }))
+            ->writeln(Argument::that(
+                static fn($arg) => preg_match('#Updating .*src/MultipleInterfacesMiddleware\.php#', $arg) !== false
+            ))
             ->shouldBeCalled();
         $console
-            ->writeln(Argument::that(function ($arg) {
-                return preg_match('#Updating .*src/MyActionWithAliases\.php#', $arg) !== false;
-            }))
+            ->writeln(Argument::that(
+                static fn($arg) => preg_match('#Updating .*src/MyActionWithAliases\.php#', $arg) !== false
+            ))
             ->shouldBeCalled();
         $console
-            ->writeln(Argument::that(function ($arg) {
-                return preg_match('#Updating .*src/MyMiddleware\.php#', $arg) !== false;
-            }))
+            ->writeln(Argument::that(
+                static fn($arg) => preg_match('#Updating .*src/MyMiddleware\.php#', $arg) !== false
+            ))
             ->shouldBeCalled();
         $console
-            ->writeln(Argument::that(function ($arg) {
-                return preg_match('#Skipping .*src/MyMiddlewareWithHandler\.php#', $arg) !== false;
-            }))
+            ->writeln(Argument::that(
+                static fn($arg) => preg_match('#Skipping .*src/MyMiddlewareWithHandler\.php#', $arg) !== false
+            ))
             ->shouldBeCalled();
 
         return $console;

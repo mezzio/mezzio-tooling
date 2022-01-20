@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Factory;
 
+use Mezzio\Tooling\Factory\Create;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,11 +37,9 @@ final class CreateFactoryCommand extends Command
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:factory:create';
 
-    /** @var Create */
-    private $generator;
+    private Create $generator;
 
-    /** @var string */
-    private $projectRoot;
+    private string $projectRoot;
 
     public function __construct(Create $generator, string $projectRoot)
     {
