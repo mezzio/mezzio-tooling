@@ -38,13 +38,13 @@ class CreateHandlerCommandTest extends TestCase
     use MockeryPHPUnitIntegration;
     use ProphecyTrait;
 
-    /** @var ContainerInterface&ObjectProphecy */
+    /** @var ObjectProphecy<ContainerInterface> */
     private $container;
 
-    /** @var InputInterface&ObjectProphecy */
+    /** @var ObjectProphecy<InputInterface> */
     private $input;
 
-    /** @var ConsoleOutputInterface&ObjectProphecy */
+    /** @var ObjectProphecy<ConsoleOutputInterface> */
     private $output;
 
     protected function setUp(): void
