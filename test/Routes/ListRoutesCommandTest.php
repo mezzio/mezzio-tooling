@@ -1,37 +1,46 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MezzioTest\Tooling\Routes;
 
 use Mezzio\Router\Route;
 use Mezzio\Router\RouteCollector;
-use Mezzio\Tooling\MigrateMiddlewareToRequestHandler\MigrateMiddlewareToRequestHandlerCommand;
+use Mezzio\Tooling\CreateMiddleware\CreateMiddleware;
 use Mezzio\Tooling\Routes\ListRoutesCommand;
 use MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware;
 use MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware;
+use Mockery;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionClass;
+use ReflectionException;
+use ReflectionMethod;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
+
+use function str_replace;
+use function strtoupper;
 
 class ListRoutesCommandTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var \Prophecy\Prophecy\ObjectProphecy|InputInterface
-     */
+    /** @var ObjectProphecy|InputInterface */
     private $input;
 
-    /**
-     * @var \Prophecy\Prophecy\ObjectProphecy|ConsoleOutputInterface
-     */
+    /** @var ObjectProphecy|ConsoleOutputInterface */
     private $output;
 
-    /**
-     * @var \Prophecy\Prophecy\ObjectProphecy|RouteCollector
-     */
-    private  $routeCollection;
+    /** @var ObjectProphecy|RouteCollector */
+    private $routeCollection;
 
     private ListRoutesCommand $command;
 
@@ -73,6 +82,7 @@ class ListRoutesCommandTest extends TestCase
 
     /**
      * @return mixed
+     * @throws ReflectionException
      */
     private function getConstantValue(string $const, string $class = ListRoutesCommand::class)
     {
@@ -103,7 +113,13 @@ class ListRoutesCommandTest extends TestCase
             self::assertTrue($definition->hasOption($arg));
             $option = $definition->getOption($arg);
             self::assertTrue($option->isValueRequired());
-            self::assertEquals($this->getConstantValue('HELP_OPT_' . strtoupper(str_replace('-', '_', $arg))), $option->getDescription());
+            self::assertTrue($option->acceptValue());
+            self::assertEquals(
+                $this->getConstantValue(
+                    'HELP_OPT_' . strtoupper(str_replace('-', '_', $arg))
+                ),
+                $option->getDescription()
+            );
         }
     }
 }

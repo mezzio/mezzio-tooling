@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Mezzio\Tooling\Routes;
@@ -85,7 +86,8 @@ class ListRoutesCommand extends Command
             'has-name',
             'n',
             InputOption::VALUE_REQUIRED,
-            self::HELP_OPT_HAS_NAME);
+            self::HELP_OPT_HAS_NAME
+        );
         $this->addOption(
             'has-path',
             'p',

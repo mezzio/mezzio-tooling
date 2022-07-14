@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MezzioTest\Tooling\Routes;
@@ -15,9 +16,7 @@ class ListRoutesCommandFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var RouteCollector|ObjectProphecy $routeCollection
-     */
+    /** @var RouteCollector|ObjectProphecy $routeCollection */
     private $routeCollection;
 
     public function testCanInstantiateListRoutesCommandObject()
@@ -36,5 +35,4 @@ class ListRoutesCommandFactoryTest extends TestCase
             $factory->__invoke($container->reveal())
         );
     }
-
 }
