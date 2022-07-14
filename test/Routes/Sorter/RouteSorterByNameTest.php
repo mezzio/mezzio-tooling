@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MezzioTest\Tooling\Routes\Sorter;
@@ -9,11 +10,13 @@ use MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware;
 use MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware;
 use PHPUnit\Framework\TestCase;
 
+use function count;
+use function sprintf;
+use function usort;
+
 class RouteSorterByNameTest extends TestCase
 {
-    /**
-     * @var Route[]
-     */
+    /** @var Route[] */
     private array $routes;
 
     public function setUp(): void

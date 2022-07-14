@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MezzioTest\Tooling\Routes;
 
+use ArrayIterator;
 use Mezzio\Router\Route;
 use Mezzio\Tooling\Routes\RoutesFilter;
 use MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware;
@@ -65,7 +67,7 @@ class RoutesFilterTest extends TestCase
     {
         $this->setUp();
 
-        $routeFilter = new RoutesFilter(new \ArrayIterator($this->routes), $filterOptions);
+        $routeFilter = new RoutesFilter(new ArrayIterator($this->routes), $filterOptions);
 
         $this->assertCount($expectedNumberOfRoutes, $routeFilter);
     }
