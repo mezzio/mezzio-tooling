@@ -12,6 +12,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function assert;
 use function sprintf;
 
 final class DeregisterCommand extends Command
@@ -68,8 +69,15 @@ final class DeregisterCommand extends Command
         $module   = $input->getArgument('module');
         $composer = $input->getOption('composer') ?: 'composer';
 
+        /**
+         * @psalm-suppress InternalClass,InternalMethod We do explicitly need the functionality of the component
+         *                                              installer here
+         */
         $injector       = new ConfigAggregatorInjector($this->projectRoot);
         $configProvider = sprintf('%s\ConfigProvider', $module);
+        assert($configProvider !== '');
+
+        /** @psalm-suppress InternalMethod We do explicitly need the functionality of the component installer here */
         if ($injector->isRegistered($configProvider)) {
             $injector->remove($configProvider);
         }
