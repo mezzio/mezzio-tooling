@@ -81,16 +81,10 @@ final class RegisterCommand extends Command
         $modulesPath = CommandCommonOptions::getModulesPath($input);
         $exactPath   = $input->getOption('exact-path');
 
-        /**
-         * @psalm-suppress InternalClass,InternalMethod We do explicitly need the functionality of the component
-         *                                              installer here
-         */
         $injector       = new ConfigAggregatorInjector($this->projectRoot);
         $configProvider = sprintf('%s\ConfigProvider', $module);
         assert($configProvider !== '');
-        /** @psalm-suppress InternalMethod We do explicitly need the functionality of the component installer here */
         if (! $injector->isRegistered($configProvider)) {
-            /** @psalm-suppress InternalClass We do explicitly need the functionality of the component installer here */
             $injector->inject(
                 $configProvider,
                 InjectorInterface::TYPE_CONFIG_PROVIDER
