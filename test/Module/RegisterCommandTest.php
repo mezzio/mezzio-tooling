@@ -120,6 +120,8 @@ class RegisterCommandTest extends TestCase
     }
 
     /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      * @dataProvider injectedEnabled
      */
     public function testCommandEmitsExpectedMessagesWhenItInjectsConfigurationAndEnablesModule(
@@ -239,6 +241,10 @@ class RegisterCommandTest extends TestCase
         ));
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testAllowsRuntimeExceptionsThrownFromEnableToBubbleUp(): void
     {
         $this->input->getArgument('module')->willReturn('MyApp');

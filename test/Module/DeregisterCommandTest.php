@@ -101,6 +101,8 @@ class DeregisterCommandTest extends TestCase
     }
 
     /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      * @dataProvider removedDisabled
      */
     public function testRemoveFromConfigurationAndDisableModuleEmitsExpectedMessages(
@@ -189,6 +191,10 @@ class DeregisterCommandTest extends TestCase
         ));
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testAllowsExceptionsThrownFromDisableToBubbleUp(): void
     {
         $this->input->getArgument('module')->willReturn('MyApp');
