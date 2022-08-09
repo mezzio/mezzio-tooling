@@ -345,6 +345,11 @@
       <code>json_decode($json, true, 512, JSON_THROW_ON_ERROR)</code>
     </MixedReturnStatement>
   </file>
+  <file src="test/ConfigInjector/AbstractInjectorTestCase.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$type</code>
+    </ArgumentTypeCoercion>
+  </file>
   <file src="test/CreateHandler/CreateTemplateTest.php">
     <InvalidStringClass occurrences="1">
       <code>new $renderer()</code>

@@ -17,13 +17,57 @@
     </projectFiles>
 
     <issueHandlers>
+        <InternalClass>
+            <errorLevel type="suppress">
+                <referencedClass name="Mezzio\Tooling\ConfigDiscovery\ConfigAggregator"/>
+            </errorLevel>
+
+            <errorLevel type="suppress">
+                <referencedClass name="Mezzio\Tooling\ConfigInjector\ConfigAggregatorInjector"/>
+            </errorLevel>
+
+            <errorLevel type="suppress">
+                <referencedClass name="Mezzio\Tooling\ConfigInjector\InjectorInterface"/>
+            </errorLevel>
+        </InternalClass>
+
         <InternalMethod>
+            <errorLevel type="suppress">
+                <referencedMethod name="Mezzio\Tooling\ConfigDiscovery\AbstractDiscovery::locate"/>
+            </errorLevel>
+
+            <errorLevel type="suppress">
+                <referencedMethod name="Mezzio\Tooling\ConfigDiscovery\ConfigAggregator::__construct"/>
+            </errorLevel>
+
+            <errorLevel type="suppress">
+                <referencedMethod name="Mezzio\Tooling\ConfigInjector\InjectorInterface::getTypesAllowed"/>
+            </errorLevel>
+
+            <errorLevel type="suppress">
+                <referencedMethod name="Mezzio\Tooling\ConfigInjector\InjectorInterface::inject"/>
+            </errorLevel>
+
+            <errorLevel type="suppress">
+                <referencedMethod name="Mezzio\Tooling\ConfigInjector\InjectorInterface::isRegistered"/>
+            </errorLevel>
+
+            <errorLevel type="suppress">
+                <referencedMethod name="Mezzio\Tooling\ConfigInjector\InjectorInterface::registersType"/>
+            </errorLevel>
+
+            <errorLevel type="suppress">
+                <referencedMethod name="Mezzio\Tooling\ConfigInjector\InjectorInterface::remove"/>
+            </errorLevel>
+
             <errorLevel type="suppress">
                 <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::method"/>
             </errorLevel>
+
             <errorLevel type="suppress">
                 <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturn"/>
             </errorLevel>
+
             <errorLevel type="suppress">
                 <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::with"/>
             </errorLevel>
