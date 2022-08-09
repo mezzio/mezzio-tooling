@@ -16,6 +16,7 @@
     <file>test</file>
 
     <!-- Exclude test assets -->
+    <exclude-pattern>test/ConfigInjector/TestAsset/</exclude-pattern>
     <exclude-pattern>test/CreateHandler/TestAsset/</exclude-pattern>
     <exclude-pattern>test/Factory/TestAsset/</exclude-pattern>
     <exclude-pattern>test/MigrateInteropMiddleware/TestAsset/</exclude-pattern>
