@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace MezzioTest\Tooling\Module;
 
-use Laminas\ComponentInstaller\Injector\ConfigAggregatorInjector;
 use Mezzio\Tooling\Composer\ComposerPackageFactoryInterface;
 use Mezzio\Tooling\Composer\ComposerPackageInterface;
 use Mezzio\Tooling\Composer\ComposerProcessFactoryInterface;
 use Mezzio\Tooling\Composer\ComposerProcessInterface;
 use Mezzio\Tooling\Composer\ComposerProcessResultInterface;
+use Mezzio\Tooling\ConfigInjector\ConfigAggregatorInjector;
 use Mezzio\Tooling\Module\DeregisterCommand;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -101,6 +101,8 @@ class DeregisterCommandTest extends TestCase
     }
 
     /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      * @dataProvider removedDisabled
      */
     public function testRemoveFromConfigurationAndDisableModuleEmitsExpectedMessages(
@@ -189,6 +191,10 @@ class DeregisterCommandTest extends TestCase
         ));
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testAllowsExceptionsThrownFromDisableToBubbleUp(): void
     {
         $this->input->getArgument('module')->willReturn('MyApp');

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Module;
 
-use Laminas\ComponentInstaller\Injector\ConfigAggregatorInjector;
 use Mezzio\Tooling\Composer\ComposerPackageFactoryInterface;
 use Mezzio\Tooling\Composer\ComposerPackageInterface;
 use Mezzio\Tooling\Composer\ComposerProcessFactoryInterface;
+use Mezzio\Tooling\ConfigInjector\ConfigAggregatorInjector;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function assert;
 use function sprintf;
 
 final class DeregisterCommand extends Command
@@ -70,6 +71,8 @@ final class DeregisterCommand extends Command
 
         $injector       = new ConfigAggregatorInjector($this->projectRoot);
         $configProvider = sprintf('%s\ConfigProvider', $module);
+        assert($configProvider !== '');
+
         if ($injector->isRegistered($configProvider)) {
             $injector->remove($configProvider);
         }

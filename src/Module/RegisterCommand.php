@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Module;
 
-use Laminas\ComponentInstaller\Injector\ConfigAggregatorInjector;
-use Laminas\ComponentInstaller\Injector\InjectorInterface;
 use Mezzio\Tooling\Composer\ComposerPackageFactoryInterface;
 use Mezzio\Tooling\Composer\ComposerProcessFactoryInterface;
+use Mezzio\Tooling\ConfigInjector\ConfigAggregatorInjector;
+use Mezzio\Tooling\ConfigInjector\InjectorInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function assert;
 use function is_dir;
 use function sprintf;
 
@@ -82,6 +83,7 @@ final class RegisterCommand extends Command
 
         $injector       = new ConfigAggregatorInjector($this->projectRoot);
         $configProvider = sprintf('%s\ConfigProvider', $module);
+        assert($configProvider !== '');
         if (! $injector->isRegistered($configProvider)) {
             $injector->inject(
                 $configProvider,
