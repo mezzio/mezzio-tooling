@@ -116,33 +116,47 @@ class ListRoutesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $result = 0;
         if (empty($this->routeCollector->getRoutes())) {
             $output->writeln("There are no routes in the application's routing table.");
-            return 0;
+            return $result;
         }
 
-        switch (strtolower((string)$input->getOption('format'))) {
+        $format = strtolower((string)$input->getOption('format'));
+
+        switch ($format) {
             case 'json':
                 $output->writeln(json_encode($this->getRows(true)));
-                $output->writeln("Listing the application's routing table in JSON format.");
+                $output->writeln(
+                    "Listing the application's routing table in JSON format."
+                );
                 break;
             case 'table':
-            default:
+            case '':
                 $table = new Table($output);
                 $table->setHeaderTitle('Routes')
                     ->setHeaders(['Name', 'Path', 'Methods', 'Middleware'])
                     ->setRows($this->getRows());
                 $table->render();
-                $output->writeln("Listing the application's routing table in table format.");
+                $output->writeln(
+                    "Listing the application's routing table in table format."
+                );
+                break;
+            default:
+                $result = -1;
+                $output->writeln(
+                    "Invalid output format supplied. Valid options are 'table' and 'json'"
+                );
         }
 
-        return 0;
+        return $result;
     }
 
     public function getRows(bool $requireNames = false): array
     {
         $rows = [];
-        foreach ($this->routeCollector->getRoutes() as $route) {
+        $routes = $this->routeCollector->getRoutes();
+        foreach ($routes as $route) {
             if ($requireNames) {
                 $rows[] = [
                     'name'       => $route->getName(),

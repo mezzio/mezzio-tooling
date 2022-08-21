@@ -170,9 +170,6 @@ class ListRoutesCommandTest extends TestCase
     {
         $outputFormatter = new OutputFormatter(false);
 
-        $this->input
-            ->getOption('format')
-            ->willReturn(false);
         $this->output
             ->writeln(Argument::containingString(
                 "Listing the application's routing table in table format."
@@ -295,5 +292,50 @@ class ListRoutesCommandTest extends TestCase
                 $this->output->reveal()
             )
         );
+    }
+
+    /**
+     * @dataProvider invalidFormatDataProvider
+     * @throws ReflectionException
+     */
+    public function testThatOnlyAllowedFormatsCanBeSupplied($format): void
+    {
+        $this->input
+            ->getOption('format')
+            ->willReturn($format);
+        $this->output
+            ->writeln(Argument::containingString(
+                "Invalid output format supplied. Valid options are 'table' and 'json'"
+            ))
+            ->shouldBeCalled();
+
+        $method = $this->reflectExecuteMethod();
+
+        self::assertSame(
+            -1,
+            $method->invoke(
+                $this->command,
+                $this->input->reveal(),
+                $this->output->reveal()
+            )
+        );
+    }
+
+    public function invalidFormatDataProvider(): array
+    {
+        return [
+            [
+                'rabbits'
+            ],
+            [
+                'tables'
+            ],
+            [
+                'toml'
+            ],
+            [
+                'yaml'
+            ],
+        ];
     }
 }
