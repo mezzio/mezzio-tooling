@@ -6,7 +6,13 @@ namespace Mezzio\Tooling\Routes;
 
 use Mezzio\Router\RouteCollector;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+
+use function get_class;
+use function implode;
 
 class ListRoutesCommand extends Command
 {
@@ -106,5 +112,33 @@ class ListRoutesCommand extends Command
             InputOption::VALUE_REQUIRED,
             self::HELP_OPT_SUPPORTS_METHOD
         );
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        if (empty($this->routeCollector->getRoutes())) {
+            $output->writeln("There are no routes in the application's routing table.");
+            return 0;
+        }
+
+        $rows = [];
+        foreach ($this->routeCollector->getRoutes() as $route) {
+            $rows[] = [
+                $route->getName(),
+                $route->getPath(),
+                implode(',', $route->getAllowedMethods()),
+                get_class($route->getMiddleware()),
+            ];
+        }
+
+        $table = new Table($output);
+        $table->setHeaderTitle('Routes')
+            ->setHeaders(['Name', 'Path', 'Methods', 'Middleware'])
+            ->setRows($rows);
+        $table->render();
+
+        $output->writeln("Listing the application's routing table in table format.");
+
+        return 0;
     }
 }

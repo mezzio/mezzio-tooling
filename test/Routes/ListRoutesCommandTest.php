@@ -6,11 +6,9 @@ namespace MezzioTest\Tooling\Routes;
 
 use Mezzio\Router\Route;
 use Mezzio\Router\RouteCollector;
-use Mezzio\Tooling\CreateMiddleware\CreateMiddleware;
 use Mezzio\Tooling\Routes\ListRoutesCommand;
 use MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware;
 use MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware;
-use Mockery;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -20,11 +18,12 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 use function str_replace;
 use function strtoupper;
@@ -36,13 +35,15 @@ class ListRoutesCommandTest extends TestCase
     /** @var ObjectProphecy|InputInterface */
     private $input;
 
-    /** @var ObjectProphecy|ConsoleOutputInterface */
+    /** @var ObjectProphecy|OutputInterface */
     private $output;
 
     /** @var ObjectProphecy|RouteCollector */
     private $routeCollection;
 
     private ListRoutesCommand $command;
+
+    private array $routes;
 
     protected function setUp(): void
     {
@@ -72,6 +73,44 @@ class ListRoutesCommandTest extends TestCase
         $this->command = new ListRoutesCommand($this->routeCollection->reveal());
     }
 
+    /**
+     * @return ObjectProphecy|Application
+     */
+    private function mockApplication(RouteCollector $routeCollector)
+    {
+        $helperSet = $this->prophesize(HelperSet::class)->reveal();
+
+        $factoryCommand = $this->prophesize(ListRoutesCommand::class);
+        $factoryCommand
+            ->run(
+                Argument::that(function ($input) {
+                    Assert::assertInstanceOf(ArrayInput::class, $input);
+                    Assert::assertStringContainsString('mezzio:routes:list', (string) $input);
+                    return $input;
+                }),
+                $this->output->reveal()
+            )
+            ->willReturn(0);
+        $factoryCommand->routeCollector = $routeCollector;
+
+        /** @var Application|ObjectProphecy $application */
+        $application = $this->prophesize(Application::class);
+        $application->getHelperSet()->willReturn($helperSet);
+        $application->find('mezzio:routes:list')->will([$factoryCommand, 'reveal']);
+
+        return $application;
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    private function reflectExecuteMethod(): ReflectionMethod
+    {
+        $r = new ReflectionMethod($this->command, 'execute');
+        $r->setAccessible(true);
+        return $r;
+    }
+
     public function testConfigureSetsExpectedDescription(): void
     {
         self::assertStringContainsString(
@@ -96,7 +135,7 @@ class ListRoutesCommandTest extends TestCase
         self::assertEquals($this->getConstantValue('HELP'), $this->command->getHelp());
     }
 
-    public function testConfigureSetsExpectedArguments(): void
+    public function testConfigureSetsExpectedOptions(): void
     {
         $definition = $this->command->getDefinition();
 
@@ -121,5 +160,105 @@ class ListRoutesCommandTest extends TestCase
                 $option->getDescription()
             );
         }
+    }
+
+    /**
+     * @phpcs:ignore
+     * @throws ReflectionException
+     */
+    public function testSuccessfulExecutionEmitsExpectedOutput(): void
+    {
+        $outputFormatter = new OutputFormatter(false);
+
+        $this->input
+            ->getOption('format')
+            ->willReturn(false);
+        $this->output
+            ->writeln(Argument::containingString(
+                "Listing the application's routing table in table format."
+            ))
+            ->shouldBeCalled();
+        $this->output
+            ->writeln(
+                Argument::containingString(
+                    "+------+------+---------+------------<fg=black;bg=white;options=bold> Routes </>------------------------------------+"
+                )
+            )
+            ->shouldBeCalled();
+        $this->output
+            ->writeln(
+                Argument::containingString(
+                    "|<info> Name </info>|<info> Path </info>|<info> Methods </info>|<info> Middleware                                             </info>|"
+                )
+            )
+            ->shouldBeCalled();
+        $this->output
+            ->writeln(
+                Argument::containingString(
+                    "| home | /    | GET     | MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware  |"
+                )
+            )
+            ->shouldBeCalled();
+        $this->output
+            ->writeln(
+                Argument::containingString(
+                    "| home | /    | GET     | MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware |"
+                )
+            )
+            ->shouldBeCalled();
+        $this->output
+            ->writeln(
+                Argument::containingString(
+                    "+------+------+---------+--------------------------------------------------------+"
+                )
+            )
+            ->shouldBeCalled();
+        $this->output
+            ->getFormatter()
+            ->shouldBeCalled()
+            ->willReturn($outputFormatter);
+
+        $method = $this->reflectExecuteMethod();
+
+        self::assertSame(
+            0,
+            $method->invoke(
+                $this->command,
+                $this->input->reveal(),
+                $this->output->reveal()
+            )
+        );
+    }
+
+    public function testRendersAnEmptyResultWhenNoRoutesArePresent(): void
+    {
+        $outputFormatter = new OutputFormatter(false);
+
+        $this->routeCollection = $this->prophesize(RouteCollector::class);
+        $this->routeCollection
+            ->getRoutes()
+            ->willReturn([]);
+
+        $this->command = new ListRoutesCommand($this->routeCollection->reveal());
+
+        $this->input
+            ->getOption('format')
+            ->willReturn(false);
+        $this->output
+            ->writeln(Argument::containingString(
+                "There are no routes in the application's routing table."
+            ))
+            ->shouldBeCalled();
+
+        $method = $this->reflectExecuteMethod();
+
+        self::assertSame(
+            0,
+            $method->invoke(
+                $this->command,
+                $this->input->reveal(),
+                $this->output->reveal()
+            )
+        );
     }
 }
