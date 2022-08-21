@@ -121,24 +121,44 @@ class ListRoutesCommand extends Command
             return 0;
         }
 
-        $rows = [];
-        foreach ($this->routeCollector->getRoutes() as $route) {
-            $rows[] = [
-                $route->getName(),
-                $route->getPath(),
-                implode(',', $route->getAllowedMethods()),
-                get_class($route->getMiddleware()),
-            ];
+        switch (strtolower((string)$input->getOption('format'))) {
+            case 'json':
+                $output->writeln(json_encode($this->getRows(true)));
+                $output->writeln("Listing the application's routing table in JSON format.");
+                break;
+            case 'table':
+            default:
+                $table = new Table($output);
+                $table->setHeaderTitle('Routes')
+                    ->setHeaders(['Name', 'Path', 'Methods', 'Middleware'])
+                    ->setRows($this->getRows());
+                $table->render();
+                $output->writeln("Listing the application's routing table in table format.");
         }
 
-        $table = new Table($output);
-        $table->setHeaderTitle('Routes')
-            ->setHeaders(['Name', 'Path', 'Methods', 'Middleware'])
-            ->setRows($rows);
-        $table->render();
-
-        $output->writeln("Listing the application's routing table in table format.");
-
         return 0;
+    }
+
+    public function getRows(bool $requireNames = false): array
+    {
+        $rows = [];
+        foreach ($this->routeCollector->getRoutes() as $route) {
+            if ($requireNames) {
+                $rows[] = [
+                    'name'       => $route->getName(),
+                    'path'       => $route->getPath(),
+                    'methods'    => implode(',', $route->getAllowedMethods()),
+                    'middleware' => get_class($route->getMiddleware()),
+                ];
+            } else {
+                $rows[] = [
+                    $route->getName(),
+                    $route->getPath(),
+                    implode(',', $route->getAllowedMethods()),
+                    get_class($route->getMiddleware()),
+                ];
+            }
+        }
+        return $rows;
     }
 }
