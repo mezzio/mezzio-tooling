@@ -232,8 +232,6 @@ class ListRoutesCommandTest extends TestCase
 
     public function testRendersAnEmptyResultWhenNoRoutesArePresent(): void
     {
-        $outputFormatter = new OutputFormatter(false);
-
         $this->routeCollection = $this->prophesize(RouteCollector::class);
         $this->routeCollection
             ->getRoutes()
@@ -248,6 +246,43 @@ class ListRoutesCommandTest extends TestCase
             ->writeln(Argument::containingString(
                 "There are no routes in the application's routing table."
             ))
+            ->shouldBeCalled();
+        $this->output
+            ->writeln(
+                Argument::containingString(
+                    ""
+                )
+            )
+            ->shouldBeCalled();
+
+        $method = $this->reflectExecuteMethod();
+
+        self::assertSame(
+            0,
+            $method->invoke(
+                $this->command,
+                $this->input->reveal(),
+                $this->output->reveal()
+            )
+        );
+    }
+
+    public function testRendersRoutesAsJsonWhenFormatSetToJson(): void
+    {
+        $this->input
+            ->getOption('format')
+            ->willReturn('json');
+        $this->output
+            ->writeln(Argument::containingString(
+                "Listing the application's routing table in JSON format."
+            ))
+            ->shouldBeCalled();
+        $this->output
+            ->writeln(
+                Argument::containingString(
+                    '[{"name":"home","path":"\/","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\SimpleMiddleware"},{"name":"home","path":"\/","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\ExpressMiddleware"}]'
+                )
+            )
             ->shouldBeCalled();
 
         $method = $this->reflectExecuteMethod();
