@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Mezzio\Tooling\Routes;
 
 use Mezzio\Router\RouteCollector;
+use Mezzio\Tooling\Routes\Sorter\RouteSorterByName;
+use Mezzio\Tooling\Routes\Sorter\RouteSorterByPath;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -80,37 +82,43 @@ class ListRoutesCommand extends Command
             'format',
             'f',
             InputOption::VALUE_REQUIRED,
-            self::HELP_OPT_FORMAT
+            self::HELP_OPT_FORMAT,
+            'table'
         );
         $this->addOption(
             'has-middleware',
             'w',
             InputOption::VALUE_REQUIRED,
-            self::HELP_OPT_HAS_MIDDLEWARE
+            self::HELP_OPT_HAS_MIDDLEWARE,
+            false
         );
         $this->addOption(
             'has-name',
             'n',
             InputOption::VALUE_REQUIRED,
-            self::HELP_OPT_HAS_NAME
+            self::HELP_OPT_HAS_NAME,
+            false
         );
         $this->addOption(
             'has-path',
             'p',
             InputOption::VALUE_REQUIRED,
-            self::HELP_OPT_HAS_PATH
+            self::HELP_OPT_HAS_PATH,
+            false
         );
         $this->addOption(
             'sort',
             's',
             InputOption::VALUE_REQUIRED,
-            self::HELP_OPT_SORT
+            self::HELP_OPT_SORT,
+            'name'
         );
         $this->addOption(
             'supports-method',
             'm',
             InputOption::VALUE_REQUIRED,
-            self::HELP_OPT_SUPPORTS_METHOD
+            self::HELP_OPT_SUPPORTS_METHOD,
+            false
         );
     }
 
@@ -124,9 +132,11 @@ class ListRoutesCommand extends Command
 
         $format = strtolower((string)$input->getOption('format'));
 
+        $sortOrder = $this->getSortOrder($input);
+
         switch ($format) {
             case 'json':
-                $output->writeln(json_encode($this->getRows(true)));
+                $output->writeln(json_encode($this->getRows(true, $sortOrder)));
                 $output->writeln(
                     "Listing the application's routing table in JSON format."
                 );
@@ -136,7 +146,7 @@ class ListRoutesCommand extends Command
                 $table = new Table($output);
                 $table->setHeaderTitle('Routes')
                     ->setHeaders(['Name', 'Path', 'Methods', 'Middleware'])
-                    ->setRows($this->getRows());
+                    ->setRows($this->getRows(false, $sortOrder));
                 $table->render();
                 $output->writeln(
                     "Listing the application's routing table in table format."
@@ -152,10 +162,16 @@ class ListRoutesCommand extends Command
         return $result;
     }
 
-    public function getRows(bool $requireNames = false): array
+    public function getRows(bool $requireNames = false, string $sortOrder = 'name'): array
     {
         $rows = [];
         $routes = $this->routeCollector->getRoutes();
+
+        $sorter = ($sortOrder === 'name')
+            ? new RouteSorterByName()
+            : new RouteSorterByPath();
+        usort($routes, $sorter);
+
         foreach ($routes as $route) {
             if ($requireNames) {
                 $rows[] = [
@@ -173,6 +189,15 @@ class ListRoutesCommand extends Command
                 ];
             }
         }
+
         return $rows;
+    }
+
+    public function getSortOrder(InputInterface $input): string
+    {
+        $sortOrder = strtolower((string)$input->getOption('sort'));
+        return (! in_array($sortOrder, ['name', 'path']))
+            ? 'name'
+            : $sortOrder;
     }
 }

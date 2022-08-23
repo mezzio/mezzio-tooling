@@ -215,6 +215,13 @@ class ListRoutesCommandTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($outputFormatter);
 
+        $this->input
+            ->getOption('sort')
+            ->willReturn(false);
+        $this->input
+            ->getOption('format')
+            ->willReturn('table');
+
         $method = $this->reflectExecuteMethod();
 
         self::assertSame(
@@ -269,6 +276,9 @@ class ListRoutesCommandTest extends TestCase
         $this->input
             ->getOption('format')
             ->willReturn('json');
+        $this->input
+            ->getOption('sort')
+            ->willReturn(false);
         $this->output
             ->writeln(Argument::containingString(
                 "Listing the application's routing table in JSON format."
@@ -303,6 +313,9 @@ class ListRoutesCommandTest extends TestCase
         $this->input
             ->getOption('format')
             ->willReturn($format);
+        $this->input
+            ->getOption('sort')
+            ->willReturn(false);
         $this->output
             ->writeln(Argument::containingString(
                 "Invalid output format supplied. Valid options are 'table' and 'json'"
@@ -336,6 +349,74 @@ class ListRoutesCommandTest extends TestCase
             [
                 'yaml'
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider sortRoutingTableDataProvider
+     * @throws ReflectionException
+     */
+    public function testCanSortResults(string $sortOrder, string $expectedOutput)
+    {
+        $routes = [
+            new Route(
+                "/contact",
+                new SimpleMiddleware(),
+                ['GET'],
+                'contact'
+            ),
+            new Route(
+                "/",
+                new ExpressMiddleware(),
+                ['GET'],
+                'home'
+            ),
+        ];
+        $this->routeCollection = $this->prophesize(RouteCollector::class);
+        $this->routeCollection
+            ->getRoutes()
+            ->willReturn($routes);
+
+        $this->command = new ListRoutesCommand($this->routeCollection->reveal());
+
+        $this->input
+            ->getOption('format')
+            ->willReturn('json');
+        $this->input
+            ->getOption('sort')
+            ->willReturn($sortOrder);
+        $this->output
+            ->writeln(Argument::containingString(
+                "Listing the application's routing table in JSON format."
+            ))
+            ->shouldBeCalled();
+        $this->output
+            ->writeln(Argument::containingString($expectedOutput))
+            ->shouldBeCalled();
+
+        $method = $this->reflectExecuteMethod();
+
+        self::assertSame(
+            0,
+            $method->invoke(
+                $this->command,
+                $this->input->reveal(),
+                $this->output->reveal()
+            )
+        );
+    }
+
+    public function sortRoutingTableDataProvider()
+    {
+        return [
+           [
+               'name',
+               '[{"name":"contact","path":"\/contact","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\SimpleMiddleware"},{"name":"home","path":"\/","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\ExpressMiddleware"}]'
+           ],
+           [
+               'path',
+               '[{"name":"home","path":"\/","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\ExpressMiddleware"},{"name":"contact","path":"\/contact","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\SimpleMiddleware"}]'
+           ],
         ];
     }
 }
