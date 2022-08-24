@@ -80,42 +80,45 @@ class ListRoutesCommand extends Command
 
         $this->addOption(
             'format',
-            'f',
+            null,
             InputOption::VALUE_REQUIRED,
             self::HELP_OPT_FORMAT,
             'table'
         );
+
+        $this->addOption(
+            'sort',
+            null,
+            InputOption::VALUE_REQUIRED,
+            self::HELP_OPT_SORT,
+            'name'
+        );
+
+        // Routing table filter options
         $this->addOption(
             'has-middleware',
-            'w',
+            null,
             InputOption::VALUE_REQUIRED,
             self::HELP_OPT_HAS_MIDDLEWARE,
             false
         );
         $this->addOption(
             'has-name',
-            'n',
+            null,
             InputOption::VALUE_REQUIRED,
             self::HELP_OPT_HAS_NAME,
             false
         );
         $this->addOption(
             'has-path',
-            'p',
+            null,
             InputOption::VALUE_REQUIRED,
             self::HELP_OPT_HAS_PATH,
             false
         );
         $this->addOption(
-            'sort',
-            's',
-            InputOption::VALUE_REQUIRED,
-            self::HELP_OPT_SORT,
-            'name'
-        );
-        $this->addOption(
             'supports-method',
-            'm',
+            null,
             InputOption::VALUE_REQUIRED,
             self::HELP_OPT_SUPPORTS_METHOD,
             false
