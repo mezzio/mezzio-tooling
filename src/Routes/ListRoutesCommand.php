@@ -18,7 +18,8 @@ use function implode;
 
 class ListRoutesCommand extends Command
 {
-    private RouteCollector $routeCollector;
+    /** @var \Mezzio\Router\Route[]  */
+    private $routes;
 
     private const HELP = <<<'EOT'
         Prints the application's routing table.
@@ -68,7 +69,7 @@ class ListRoutesCommand extends Command
 
     public function __construct(RouteCollector $routeCollector)
     {
-        $this->routeCollector = $routeCollector;
+        $this->routes = $routeCollector->getRoutes();
 
         parent::__construct();
     }
@@ -128,7 +129,7 @@ class ListRoutesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $result = 0;
-        if (empty($this->routeCollector->getRoutes())) {
+        if (empty($this->routes)) {
             $output->writeln("There are no routes in the application's routing table.");
             return $result;
         }
