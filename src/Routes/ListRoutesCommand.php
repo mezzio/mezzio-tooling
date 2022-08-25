@@ -136,11 +136,14 @@ class ListRoutesCommand extends Command
 
         $format = strtolower((string)$input->getOption('format'));
 
-        $sortOrder = $this->getSortOrder($input);
+        $sorter = ($this->getSortOrder($input) === 'name')
+            ? new RouteSorterByName()
+            : new RouteSorterByPath();
+        usort($this->routes, $sorter);
 
         switch ($format) {
             case 'json':
-                $output->writeln(json_encode($this->getRows(true, $sortOrder)));
+                $output->writeln(json_encode($this->getRows(true)));
                 $output->writeln(
                     "Listing the application's routing table in JSON format."
                 );
@@ -150,7 +153,7 @@ class ListRoutesCommand extends Command
                 $table = new Table($output);
                 $table->setHeaderTitle('Routes')
                     ->setHeaders(['Name', 'Path', 'Methods', 'Middleware'])
-                    ->setRows($this->getRows(false, $sortOrder));
+                    ->setRows($this->getRows(false));
                 $table->render();
                 $output->writeln(
                     "Listing the application's routing table in table format."
@@ -166,17 +169,11 @@ class ListRoutesCommand extends Command
         return $result;
     }
 
-    public function getRows(bool $requireNames = false, string $sortOrder = 'name'): array
+    public function getRows(bool $requireNames = false): array
     {
         $rows = [];
-        $routes = $this->routeCollector->getRoutes();
 
-        $sorter = ($sortOrder === 'name')
-            ? new RouteSorterByName()
-            : new RouteSorterByPath();
-        usort($routes, $sorter);
-
-        foreach ($routes as $route) {
+        foreach ($this->routes as $route) {
             if ($requireNames) {
                 $rows[] = [
                     'name'       => $route->getName(),
