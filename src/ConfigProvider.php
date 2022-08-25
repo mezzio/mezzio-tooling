@@ -71,7 +71,6 @@ final class ConfigProvider
                 MigrateInteropMiddlewareCommand::class          => MigrateInteropMiddlewareCommandFactory::class,
                 MigrateMiddlewareToRequestHandlerCommand::class => MigrateMiddlewareToRequestHandlerCommandFactory::class,
                 RegisterCommand::class                          => RegisterCommandFactory::class,
-                ListRoutesCommand::class                        => ListRoutesCommandFactory::class,
             ],
         ];
     }
