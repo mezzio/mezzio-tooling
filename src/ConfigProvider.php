@@ -67,10 +67,10 @@ final class ConfigProvider
                 CreateHandlerCommand::class                     => CreateHandlerCommandFactory::class,
                 CreateMiddlewareCommand::class                  => CreateMiddlewareCommandFactory::class,
                 DeregisterCommand::class                        => DeregisterCommandFactory::class,
+                ListRoutesCommand::class                        => ListRoutesCommandFactory::class,
                 MigrateInteropMiddlewareCommand::class          => MigrateInteropMiddlewareCommandFactory::class,
                 MigrateMiddlewareToRequestHandlerCommand::class => MigrateMiddlewareToRequestHandlerCommandFactory::class,
                 RegisterCommand::class                          => RegisterCommandFactory::class,
-                ListRoutesCommand::class                        => ListRoutesCommandFactory::class,
             ],
         ];
     }
