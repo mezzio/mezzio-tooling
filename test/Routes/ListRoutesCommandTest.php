@@ -245,18 +245,14 @@ class ListRoutesCommandTest extends TestCase
 
         $this->input
             ->getOption('format')
+            ->willReturn('table');
+        $this->input
+            ->getOption('sort')
             ->willReturn(false);
         $this->output
             ->writeln(Argument::containingString(
                 "There are no routes in the application's routing table."
             ))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(
-                Argument::containingString(
-                    ""
-                )
-            )
             ->shouldBeCalled();
 
         $method = $this->reflectExecuteMethod();
