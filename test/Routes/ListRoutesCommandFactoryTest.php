@@ -22,6 +22,9 @@ class ListRoutesCommandFactoryTest extends TestCase
     public function testCanInstantiateListRoutesCommandObject()
     {
         $this->routeCollection = $this->prophesize(RouteCollector::class);
+        $this->routeCollection
+            ->getRoutes()
+            ->willReturn([]);
 
         /** @var ContainerInterface|ObjectProphecy $container */
         $container = $this->prophesize(ContainerInterface::class);
