@@ -35,13 +35,26 @@ class RoutesFilter extends FilterIterator
      *
      * @var array
      */
-    private array $options;
+    private array $filterOptions;
 
-    public function __construct(ArrayIterator $routes, array $options = [])
+    public function __construct(ArrayIterator $routes, array $filterOptions = [])
     {
         parent::__construct($routes);
 
-        $this->options = $options;
+        $this->filterOptions = $filterOptions;
+
+        // Filter out any options that are, effectively, "empty".
+        $this->filterOptions = array_filter(
+            $this->filterOptions,
+            function($value) {
+                return !empty($value);
+            }
+        );
+    }
+
+    public function getFilterOptions(): array
+    {
+        return $this->filterOptions;
     }
 
     public function accept(): bool
@@ -49,23 +62,26 @@ class RoutesFilter extends FilterIterator
         /** @var Route $route */
         $route = $this->getInnerIterator()->current();
 
-        if (! empty($this->options['name'])) {
-            return $route->getName() === $this->options['name'] || $this->matchesByRegex($route, 'name');
-        }
-
-        if (! empty($this->options['path'])) {
-            return $route->getPath() === $this->options['path'] || $this->matchesByRegex($route, 'path');
-        }
-
-        if (
-            (! empty($this->options['method']) || $this->options['method'] === Route::HTTP_METHOD_ANY) &&
-            $this->matchByMethod($route)
-        ) {
+        if (empty($this->filterOptions)) {
             return true;
         }
 
-        if (! empty($this->options['middleware'])) {
-            return get_class($route->getMiddleware()) === (string) $this->options['middleware'];
+        if (! empty($this->filterOptions['name'])) {
+            return $route->getName() === $this->filterOptions['name']
+                || $this->matchesByRegex($route, 'name');
+        }
+
+        if (! empty($this->filterOptions['path'])) {
+            return $route->getPath() === $this->filterOptions['path']
+                || $this->matchesByRegex($route, 'path');
+        }
+
+        if (! empty($this->filterOptions['method'])) {
+            return $this->matchesByMethod($route);
+        }
+
+        if (! empty($this->filterOptions['middleware'])) {
+            return $this->matchesByMiddleware($route);
         }
 
         return false;
@@ -81,7 +97,7 @@ class RoutesFilter extends FilterIterator
     public function matchesByRegex(Route $route, string $routeAttribute)
     {
         if ($routeAttribute === 'path') {
-            $path = (string) $this->options['path'];
+            $path = (string)$this->filterOptions['path'];
             return preg_match(
                 sprintf("/^%s/", str_replace('/', '\/', $path)),
                 $route->getPath()
@@ -89,31 +105,66 @@ class RoutesFilter extends FilterIterator
         }
 
         if ($routeAttribute === 'name') {
-            return preg_match(sprintf("/%s/", (string) $this->options['name']), $route->getName());
+            return preg_match(
+                sprintf(
+                    "/%s/",
+                    (string)$this->filterOptions['name']
+                ),
+                $route->getName()
+            );
         }
     }
 
     /**
      * Match if the current route supports the method(s) supplied.
      */
-    public function matchByMethod(Route $route): bool
+    public function matchesByMethod(Route $route): bool
     {
         if ($route->allowsAnyMethod()) {
             return true;
         }
 
-        if (is_string($this->options['method'])) {
-            return in_array(strtoupper($this->options['method']), $route->getAllowedMethods());
+        if ($this->filterOptions['method'] === Route::HTTP_METHOD_ANY) {
+            return true;
         }
 
-        if (is_array($this->options['method'])) {
-            array_walk($this->options['method'], fn(&$value) => $value = strtoupper($value));
+        if (is_string($this->filterOptions['method'])) {
+            return in_array(strtoupper($this->filterOptions['method']), $route->getAllowedMethods());
+        }
+
+        if (is_array($this->filterOptions['method'])) {
+            array_walk($this->filterOptions['method'], fn(&$value) => $value = strtoupper($value));
             return ! empty(array_intersect(
-                $this->options['method'],
+                $this->filterOptions['method'],
                 $route->getAllowedMethods()
             ));
         }
 
         return false;
+    }
+
+    /**
+     * This method checks if a route is handled by a given middleware class
+     *
+     * The function first checks if there is an exact match on the middleware
+     * class' name, then a partial match to any part of the class' name, and
+     * finally uses a regular expression to attempt a pattern match against
+     * the class' name. The intent is to perform checks from the least to the
+     * most computationally expensive, to avoid excessive overhead.
+     */
+    public function matchesByMiddleware(Route $route): bool
+    {
+        $middlewareClass = get_class($route->getMiddleware());
+        $matchesMiddleware = (string)$this->filterOptions['middleware'];
+
+        try {
+            return $middlewareClass === $matchesMiddleware
+                || stripos($middlewareClass, $matchesMiddleware)
+                || preg_match(
+                    sprintf('/%s/', $matchesMiddleware), $middlewareClass
+                );
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

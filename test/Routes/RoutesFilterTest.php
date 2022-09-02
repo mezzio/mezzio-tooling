@@ -12,6 +12,9 @@ use MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
+use function sprintf;
+use function var_export;
+
 class RoutesFilterTest extends TestCase
 {
     use ProphecyTrait;
@@ -60,6 +63,23 @@ class RoutesFilterTest extends TestCase
         ];
     }
 
+    public function testFiltersOutEmptyOptions()
+    {
+        $routeFilter = new RoutesFilter(
+            new ArrayIterator($this->routes),
+            [
+                'middleware' => null,
+                'name'       => '',
+                'path'       => '/user',
+            ]
+        );
+
+        $this->assertSame(
+            ['path' => '/user'],
+            $routeFilter->getFilterOptions()
+        );
+    }
+
     /**
      * @dataProvider validFilterDataProvider
      */
@@ -69,12 +89,43 @@ class RoutesFilterTest extends TestCase
 
         $routeFilter = new RoutesFilter(new ArrayIterator($this->routes), $filterOptions);
 
-        $this->assertCount($expectedNumberOfRoutes, $routeFilter);
+        $this->assertCount(
+            $expectedNumberOfRoutes,
+            $routeFilter,
+            sprintf(
+                'Filtered with %s',
+                var_export($filterOptions, true)
+            )
+        );
     }
 
     public function validFilterDataProvider(): array
     {
         return [
+            [
+                5,
+                [
+                    'middleware' => 'ExpressMiddleware',
+                ],
+            ],
+            [
+                6,
+                [
+                    'middleware' => 'Tooling',
+                ],
+            ],
+            [
+                6,
+                [
+                    'middleware' => 'Tooling.*Middleware',
+                ],
+            ],
+            [
+                5,
+                [
+                    'middleware' => ExpressMiddleware::class,
+                ],
+            ],
             [
                 1,
                 [
@@ -112,7 +163,7 @@ class RoutesFilterTest extends TestCase
                 ],
             ],
             [
-                1,
+                6,
                 [
                     'method' => Route::HTTP_METHOD_ANY,
                 ],
