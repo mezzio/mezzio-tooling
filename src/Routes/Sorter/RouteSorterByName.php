@@ -10,7 +10,10 @@ class RouteSorterByName
 {
     public function __invoke(Route $routeOne, Route $routeTwo): int
     {
-        return $routeOne->getName() === $routeTwo->getName() ? 0
-            : ($routeOne->getName() < $routeTwo->getName() ? -1 : 1);
+        if ($routeOne->getName() === $routeTwo->getName()) {
+            return 0;
+        }
+
+        return $routeOne->getName() < $routeTwo->getName() ? -1 : 1;
     }
 }
