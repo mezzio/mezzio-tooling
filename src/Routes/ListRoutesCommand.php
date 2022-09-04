@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Routes;
 
+use ArrayIterator;
+use Mezzio\Router\Route;
 use Mezzio\Router\RouteCollector;
 use Mezzio\Tooling\Routes\Sorter\RouteSorterByName;
 use Mezzio\Tooling\Routes\Sorter\RouteSorterByPath;
@@ -15,11 +17,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use function get_class;
 use function implode;
+use function in_array;
+use function json_encode;
+use function strtolower;
+use function usort;
 
 class ListRoutesCommand extends Command
 {
-    /** @var \Mezzio\Router\Route[]  */
-    private $routes;
+    /** @var Route[]  */
+    private array $routes;
+
+    /**
+     * Document This!
+     *
+     * @var array
+     */
+    private array $filterOptions = [];
 
     private const HELP = <<<'EOT'
         Prints the application's routing table.
@@ -134,12 +147,19 @@ class ListRoutesCommand extends Command
             return $result;
         }
 
-        $format = strtolower((string)$input->getOption('format'));
+        $format = strtolower((string) $input->getOption('format'));
 
-        $sorter = ($this->getSortOrder($input) === 'name')
+        $sorter = $this->getSortOrder($input) === 'name'
             ? new RouteSorterByName()
             : new RouteSorterByPath();
         usort($this->routes, $sorter);
+
+        $this->filterOptions = [
+            'method'     => strtolower((string) $input->getOption('supports-method')),
+            'middleware' => strtolower((string) $input->getOption('has-middleware')),
+            'name'       => strtolower((string) $input->getOption('has-name')),
+            'path'       => strtolower((string) $input->getOption('has-path')),
+        ];
 
         switch ($format) {
             case 'json':
@@ -173,19 +193,26 @@ class ListRoutesCommand extends Command
     {
         $rows = [];
 
-        foreach ($this->routes as $route) {
+        /** @var Route[] $routesIterator */
+        $routesIterator = new RoutesFilter(
+            new ArrayIterator($this->routes),
+            $this->filterOptions
+        );
+
+        foreach ($routesIterator as $route) {
+            $routeMethods = implode(',', $route->getAllowedMethods() ?? []);
             if ($requireNames) {
                 $rows[] = [
                     'name'       => $route->getName(),
                     'path'       => $route->getPath(),
-                    'methods'    => implode(',', $route->getAllowedMethods()),
+                    'methods'    => $routeMethods,
                     'middleware' => get_class($route->getMiddleware()),
                 ];
             } else {
                 $rows[] = [
                     $route->getName(),
                     $route->getPath(),
-                    implode(',', $route->getAllowedMethods()),
+                    $routeMethods,
                     get_class($route->getMiddleware()),
                 ];
             }
@@ -196,8 +223,8 @@ class ListRoutesCommand extends Command
 
     public function getSortOrder(InputInterface $input): string
     {
-        $sortOrder = strtolower((string)$input->getOption('sort'));
-        return (! in_array($sortOrder, ['name', 'path']))
+        $sortOrder = strtolower((string) $input->getOption('sort'));
+        return ! in_array($sortOrder, ['name', 'path'])
             ? 'name'
             : $sortOrder;
     }

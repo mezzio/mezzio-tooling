@@ -163,7 +163,7 @@ class ListRoutesCommandTest extends TestCase
     }
 
     /**
-     * @phpcs:ignore
+     * @phpcs:ignore Generic.Files.LineLength.TooLong
      * @throws ReflectionException
      */
     public function testSuccessfulExecutionEmitsExpectedOutput(): void
@@ -217,6 +217,18 @@ class ListRoutesCommandTest extends TestCase
 
         $this->input
             ->getOption('sort')
+            ->willReturn(false);
+        $this->input
+            ->getOption('has-middleware')
+            ->willReturn(false);
+        $this->input
+            ->getOption('supports-method')
+            ->willReturn(false);
+        $this->input
+            ->getOption('has-name')
+            ->willReturn(false);
+        $this->input
+            ->getOption('has-path')
             ->willReturn(false);
         $this->input
             ->getOption('format')
@@ -273,6 +285,18 @@ class ListRoutesCommandTest extends TestCase
             ->getOption('format')
             ->willReturn('json');
         $this->input
+            ->getOption('has-middleware')
+            ->willReturn(false);
+        $this->input
+            ->getOption('supports-method')
+            ->willReturn(false);
+        $this->input
+            ->getOption('has-name')
+            ->willReturn(false);
+        $this->input
+            ->getOption('has-path')
+            ->willReturn(false);
+        $this->input
             ->getOption('sort')
             ->willReturn(false);
         $this->output
@@ -304,11 +328,23 @@ class ListRoutesCommandTest extends TestCase
      * @dataProvider invalidFormatDataProvider
      * @throws ReflectionException
      */
-    public function testThatOnlyAllowedFormatsCanBeSupplied($format): void
+    public function testThatOnlyAllowedFormatsCanBeSupplied(string $format): void
     {
         $this->input
             ->getOption('format')
             ->willReturn($format);
+        $this->input
+            ->getOption('has-middleware')
+            ->willReturn(false);
+        $this->input
+            ->getOption('supports-method')
+            ->willReturn(false);
+        $this->input
+            ->getOption('has-name')
+            ->willReturn(false);
+        $this->input
+            ->getOption('has-path')
+            ->willReturn(false);
         $this->input
             ->getOption('sort')
             ->willReturn(false);
@@ -334,16 +370,16 @@ class ListRoutesCommandTest extends TestCase
     {
         return [
             [
-                'rabbits'
+                'rabbits',
             ],
             [
-                'tables'
+                'tables',
             ],
             [
-                'toml'
+                'toml',
             ],
             [
-                'yaml'
+                'yaml',
             ],
         ];
     }
@@ -354,7 +390,7 @@ class ListRoutesCommandTest extends TestCase
      */
     public function testCanSortResults(string $sortOrder, string $expectedOutput)
     {
-        $routes = [
+        $routes                = [
             new Route(
                 "/contact",
                 new SimpleMiddleware(),
@@ -379,6 +415,18 @@ class ListRoutesCommandTest extends TestCase
             ->getOption('format')
             ->willReturn('json');
         $this->input
+            ->getOption('has-middleware')
+            ->willReturn(false);
+        $this->input
+            ->getOption('supports-method')
+            ->willReturn(false);
+        $this->input
+            ->getOption('has-name')
+            ->willReturn(false);
+        $this->input
+            ->getOption('has-path')
+            ->willReturn(false);
+        $this->input
             ->getOption('sort')
             ->willReturn($sortOrder);
         $this->output
@@ -402,17 +450,77 @@ class ListRoutesCommandTest extends TestCase
         );
     }
 
-    public function sortRoutingTableDataProvider()
+    public function sortRoutingTableDataProvider(): array
     {
         return [
-           [
-               'name',
-               '[{"name":"contact","path":"\/contact","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\SimpleMiddleware"},{"name":"home","path":"\/","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\ExpressMiddleware"}]'
-           ],
-           [
-               'path',
-               '[{"name":"home","path":"\/","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\ExpressMiddleware"},{"name":"contact","path":"\/contact","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\SimpleMiddleware"}]'
-           ],
+            [
+                'name',
+                '[{"name":"contact","path":"\/contact","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\SimpleMiddleware"},{"name":"home","path":"\/","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\ExpressMiddleware"}]',
+            ],
+            [
+                'path',
+                '[{"name":"home","path":"\/","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\ExpressMiddleware"},{"name":"contact","path":"\/contact","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\SimpleMiddleware"}]',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider filterRoutingTableDataProvider
+     */
+    public function testCanFilterRoutingTable(array $filterOptions, string $expectedOutput)
+    {
+        $this->command = new ListRoutesCommand($this->routeCollection->reveal());
+
+        $this->input
+            ->getOption('format')
+            ->willReturn('json');
+        $this->input
+            ->getOption('sort')
+            ->willReturn(false);
+
+        if (! empty($filterOptions['middleware'])) {
+            $this->input
+                ->getOption('has-middleware')
+                ->willReturn($filterOptions['middleware']);
+        }
+        $this->input
+            ->getOption('supports-method')
+            ->willReturn(false);
+        $this->input
+            ->getOption('has-name')
+            ->willReturn(false);
+        $this->input
+            ->getOption('has-path')
+            ->willReturn(false);
+
+        $this->output
+            ->writeln(Argument::containingString(
+                "Listing the application's routing table in JSON format."
+            ))
+            ->shouldBeCalled();
+        $this->output
+            ->writeln(Argument::containingString($expectedOutput))
+            ->shouldBeCalled();
+
+        $method = $this->reflectExecuteMethod();
+
+        self::assertSame(
+            0,
+            $method->invoke(
+                $this->command,
+                $this->input->reveal(),
+                $this->output->reveal()
+            )
+        );
+    }
+
+    public function filterRoutingTableDataProvider(): array
+    {
+        return [
+            [
+                ['middleware' => 'ExpressMiddleware'],
+                '[{"name":"home","path":"\/","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\ExpressMiddleware"}]',
+            ],
         ];
     }
 }
