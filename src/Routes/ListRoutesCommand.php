@@ -22,15 +22,13 @@ use function json_encode;
 use function strtolower;
 use function usort;
 
-class ListRoutesCommand extends Command
+final class ListRoutesCommand extends Command
 {
-    /** @var Route[]  */
+    /** @var array<int, Route>  */
     private array $routes;
 
     /**
-     * Document This!
-     *
-     * @var array
+     * @var array<string,string|array>
      */
     private array $filterOptions = [];
 
@@ -142,7 +140,7 @@ class ListRoutesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $result = 0;
-        if (empty($this->routes)) {
+        if ([] === $this->routes) {
             $output->writeln("There are no routes in the application's routing table.");
             return $result;
         }
@@ -179,6 +177,7 @@ class ListRoutesCommand extends Command
                     "Listing the application's routing table in table format."
                 );
                 break;
+            case 'format':
             default:
                 $result = -1;
                 $output->writeln(
@@ -193,7 +192,6 @@ class ListRoutesCommand extends Command
     {
         $rows = [];
 
-        /** @var Route[] $routesIterator */
         $routesIterator = new RoutesFilter(
             new ArrayIterator($this->routes),
             $this->filterOptions
