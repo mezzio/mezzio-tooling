@@ -23,7 +23,7 @@ use function strtoupper;
  * RoutesFilter filters a traversable list of Route objects based on any of the four Route criteria,
  * those being the route's name, path, middleware, or supported method(s).
  */
-class RoutesFilter extends FilterIterator
+final class RoutesFilter extends FilterIterator
 {
     /**
      * An array storing the list of route options to filter a route on along with their respective values.

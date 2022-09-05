@@ -7,7 +7,7 @@ namespace Mezzio\Tooling\Routes;
 use Mezzio\Router\RouteCollector;
 use Psr\Container\ContainerInterface;
 
-class ListRoutesCommandFactory
+final class ListRoutesCommandFactory
 {
     public function __invoke(ContainerInterface $container): ListRoutesCommand
     {
