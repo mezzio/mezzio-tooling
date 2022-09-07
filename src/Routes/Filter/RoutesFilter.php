@@ -22,6 +22,8 @@ use function strtoupper;
 /**
  * RoutesFilter filters a traversable list of Route objects based on any of the four Route criteria,
  * those being the route's name, path, middleware, or supported method(s).
+ *
+ * @template-extends FilterIterator<array-key,Route>
  */
 final class RoutesFilter extends FilterIterator
 {
@@ -37,6 +39,9 @@ final class RoutesFilter extends FilterIterator
      */
     private array $filterOptions;
 
+    /**
+     * @param ArrayIterator<array-key,Route> $routes
+     */
     public function __construct(ArrayIterator $routes, array $filterOptions = [])
     {
         parent::__construct($routes);

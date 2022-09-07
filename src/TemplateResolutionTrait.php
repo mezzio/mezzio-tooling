@@ -87,6 +87,6 @@ trait TemplateResolutionTrait
             return null;
         }
         $renderer = $container->get(TemplateRendererInterface::class);
-        return $renderer::class;
+        return get_class($renderer);
     }
 }
