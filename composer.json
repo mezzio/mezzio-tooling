@@ -51,8 +51,9 @@
         "mikey179/vfsstream": "^1.6.10",
         "mockery/mockery": "^1.2.4",
         "php-mock/php-mock-phpunit": "^2.6",
+        "phpdocumentor/reflection-docblock": "^4.0.1 || ^5.0",
         "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.5.11",
+        "phpunit/phpunit": "^9.5.23",
         "psalm/plugin-mockery": "^0.9.1",
         "psalm/plugin-phpunit": "^0.16.1",
         "vimeo/psalm": "^4.10"
@@ -79,8 +80,5 @@
         "static-analysis": "psalm --shepherd --stats",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
         "license-check": "docheader check src/"
-    },
-    "conflict": {
-        "zendframework/zend-expressive-tooling": "*"
     }
 }
