@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fb783edb6fc476b2643bf840b131e7d9",
+    "content-hash": "c69f6b099e197ae67f86e0f3dd6ed987",
     "packages": [
         {
             "name": "fig/http-message-util",
@@ -4514,21 +4514,21 @@
         },
         {
             "name": "psalm/plugin-mockery",
-            "version": "0.9.1",
+            "version": "0.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/psalm-plugin-mockery.git",
-                "reference": "b1dcf5ff3e913178df7f3213f7130dfea8d01eb8"
+                "reference": "2eb3bfa409e935cb07276ffacbf639184f7b38d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/psalm-plugin-mockery/zipball/b1dcf5ff3e913178df7f3213f7130dfea8d01eb8",
-                "reference": "b1dcf5ff3e913178df7f3213f7130dfea8d01eb8",
+                "url": "https://api.github.com/repos/psalm/psalm-plugin-mockery/zipball/2eb3bfa409e935cb07276ffacbf639184f7b38d4",
+                "reference": "2eb3bfa409e935cb07276ffacbf639184f7b38d4",
                 "shasum": ""
             },
             "require": {
                 "mockery/mockery": "^0.9 || ^1.0",
-                "vimeo/psalm": "^4.5"
+                "vimeo/psalm": "dev-master || dev-4.x || ^4.5 || ^5@beta"
             },
             "require-dev": {
                 "codeception/codeception": "^4.0.3",
@@ -4562,22 +4562,22 @@
             "description": "Psalm plugin for Mockery",
             "support": {
                 "issues": "https://github.com/psalm/psalm-plugin-mockery/issues",
-                "source": "https://github.com/psalm/psalm-plugin-mockery/tree/0.9.1"
+                "source": "https://github.com/psalm/psalm-plugin-mockery/tree/0.10.0"
             },
-            "time": "2021-11-27T18:46:32+00:00"
+            "time": "2022-11-01T21:17:43+00:00"
         },
         {
             "name": "psalm/plugin-phpunit",
-            "version": "0.17.0",
+            "version": "0.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/psalm-plugin-phpunit.git",
-                "reference": "45951541beef07e93e3ad197daf01da88e85c31d"
+                "reference": "e61073617d3efd4d9dee3b830f754f5283306aff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/psalm-plugin-phpunit/zipball/45951541beef07e93e3ad197daf01da88e85c31d",
-                "reference": "45951541beef07e93e3ad197daf01da88e85c31d",
+                "url": "https://api.github.com/repos/psalm/psalm-plugin-phpunit/zipball/e61073617d3efd4d9dee3b830f754f5283306aff",
+                "reference": "e61073617d3efd4d9dee3b830f754f5283306aff",
                 "shasum": ""
             },
             "require": {
@@ -4585,7 +4585,7 @@
                 "composer/semver": "^1.4 || ^2.0 || ^3.0",
                 "ext-simplexml": "*",
                 "php": "^7.1 || ^8.0",
-                "vimeo/psalm": "dev-master || dev-4.x || ^4.5"
+                "vimeo/psalm": "dev-master || dev-4.x || ^4.5 || ^5@beta"
             },
             "conflict": {
                 "phpunit/phpunit": "<7.5"
@@ -4622,9 +4622,9 @@
             "description": "Psalm plugin for PHPUnit",
             "support": {
                 "issues": "https://github.com/psalm/psalm-plugin-phpunit/issues",
-                "source": "https://github.com/psalm/psalm-plugin-phpunit/tree/0.17.0"
+                "source": "https://github.com/psalm/psalm-plugin-phpunit/tree/0.18.0"
             },
-            "time": "2022-06-14T17:05:57+00:00"
+            "time": "2022-11-01T18:44:31+00:00"
         },
         {
             "name": "psr/log",

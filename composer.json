@@ -54,8 +54,8 @@
         "phpdocumentor/reflection-docblock": "^4.0.1 || ^5.0",
         "phpspec/prophecy-phpunit": "^2.0.1",
         "phpunit/phpunit": "^9.5.26",
-        "psalm/plugin-mockery": "^0.9.1",
-        "psalm/plugin-phpunit": "^0.17.0",
+        "psalm/plugin-mockery": "^0.10.0",
+        "psalm/plugin-phpunit": "^0.18.0",
         "vimeo/psalm": "^4.29.0"
     },
     "autoload": {
