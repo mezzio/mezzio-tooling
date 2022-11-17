@@ -182,15 +182,9 @@ final class CreateTemplate
      */
     private function getDefaultTemplateSuffix(string $type): string
     {
-        switch ($type) {
-            case TwigRenderer::class:
-                return 'html.twig';
-            case PlatesRenderer::class:
-                // fall-through
-            case LaminasViewRenderer::class:
-                // fall-through
-            default:
-                return 'phtml';
-        }
+        return match ($type) {
+            TwigRenderer::class => 'html.twig',
+            default => 'phtml',
+        };
     }
 }

@@ -44,17 +44,15 @@ class CreateCommandTest extends TestCase
     private ObjectProphecy $input;
 
     /** @var ObjectProphecy<ConsoleOutputInterface> */
-    private $output;
+    private ObjectProphecy $output;
 
-    /** @var CreateCommand */
-    private $command;
+    private CreateCommand $command;
 
     private vfsStreamDirectory $dir;
 
     private string $projectRoot;
 
-    /** @var string */
-    private $expectedModuleArgumentDescription;
+    private string $expectedModuleArgumentDescription;
 
     protected function setUp(): void
     {
@@ -104,11 +102,11 @@ class CreateCommandTest extends TestCase
         string $composer,
         string $modulePath,
         OutputInterface $output
-    ) {
+    ): ObjectProphecy {
         $register = $this->prophesize(Command::class);
         $register
             ->run(
-                Argument::that(static function ($input) use ($name, $module, $composer, $modulePath) {
+                Argument::that(static function ($input) use ($name, $module, $composer, $modulePath): bool {
                     TestCase::assertInstanceOf(ArrayInput::class, $input);
                     $r = new ReflectionProperty($input, 'parameters');
                     $r->setAccessible(true);

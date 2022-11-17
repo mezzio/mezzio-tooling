@@ -30,11 +30,14 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
         InjectorInterface::TYPE_CONFIG_PROVIDER,
     ];
 
-    public function convertToShortArraySyntax(string $contents): string
+    public function convertToShortArraySyntax(string $contents): ?string
     {
         return preg_replace('#array\(([^)]+)\)#s', '[$1]', $contents);
     }
 
+    /**
+     * @return array<string, mixed[]>
+     */
     public function allowedTypes(): array
     {
         return [
@@ -44,6 +47,9 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
         ];
     }
 
+    /**
+     * @return array<string, array<string|bool|int>>
+     */
     public function injectComponentProvider(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
@@ -86,6 +92,9 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
         // phpcs:enable
     }
 
+    /**
+     * @return array<string, array<string|bool|int>>
+     */
     public function packageAlreadyRegisteredProvider(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
@@ -108,6 +117,9 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
         // phpcs:enable
     }
 
+    /**
+     * @return array<string, array<string|bool>>
+     */
     public function emptyConfiguration(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
@@ -130,6 +142,9 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
         ];
     }
 
+    /**
+     * @return array<string, array<string|bool>>
+     */
     public function packagePopulatedInConfiguration(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong

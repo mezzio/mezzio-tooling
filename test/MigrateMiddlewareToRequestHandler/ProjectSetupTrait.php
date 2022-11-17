@@ -51,12 +51,15 @@ trait ProjectSetupTrait
         if (! $file->isFile()) {
             return false;
         }
+
         if ($file->getExtension() !== 'php') {
             return false;
         }
+
         if (! $file->isReadable()) {
             return false;
         }
+
         return $file->isWritable();
     }
 
@@ -69,27 +72,27 @@ trait ProjectSetupTrait
 
         $console
             ->writeln(Argument::that(
-                static fn($arg) => preg_match('#Updating .*src/MultilineMiddleware\.php#', $arg) !== false
+                static fn($arg): bool => preg_match('#Updating .*src/MultilineMiddleware\.php#', $arg) !== false
             ))
             ->shouldBeCalled();
         $console
             ->writeln(Argument::that(
-                static fn($arg) => preg_match('#Updating .*src/MultipleInterfacesMiddleware\.php#', $arg) !== false
+                static fn($arg): bool => preg_match('#Updating .*src/MultipleInterfacesMiddleware\.php#', $arg) !== false
             ))
             ->shouldBeCalled();
         $console
             ->writeln(Argument::that(
-                static fn($arg) => preg_match('#Updating .*src/MyActionWithAliases\.php#', $arg) !== false
+                static fn($arg): bool => preg_match('#Updating .*src/MyActionWithAliases\.php#', $arg) !== false
             ))
             ->shouldBeCalled();
         $console
             ->writeln(Argument::that(
-                static fn($arg) => preg_match('#Updating .*src/MyMiddleware\.php#', $arg) !== false
+                static fn($arg): bool => preg_match('#Updating .*src/MyMiddleware\.php#', $arg) !== false
             ))
             ->shouldBeCalled();
         $console
             ->writeln(Argument::that(
-                static fn($arg) => preg_match('#Skipping .*src/MyMiddlewareWithHandler\.php#', $arg) !== false
+                static fn($arg): bool => preg_match('#Skipping .*src/MyMiddlewareWithHandler\.php#', $arg) !== false
             ))
             ->shouldBeCalled();
 

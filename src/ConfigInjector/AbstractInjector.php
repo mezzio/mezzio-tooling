@@ -154,6 +154,9 @@ abstract class AbstractInjector implements InjectorInterface
         return in_array($type, $this->allowedTypes, true);
     }
 
+    /**
+     * @return int[]
+     */
     public function getTypesAllowed(): array
     {
         return $this->allowedTypes;
@@ -320,6 +323,9 @@ abstract class AbstractInjector implements InjectorInterface
         return $first;
     }
 
+    /**
+     * @param string[] $modules
+     */
     public function setApplicationModules(array $modules): self
     {
         $this->applicationModules = $modules;
@@ -327,6 +333,9 @@ abstract class AbstractInjector implements InjectorInterface
         return $this;
     }
 
+    /**
+     * @param string[] $modules
+     */
     public function setModuleDependencies(array $modules): self
     {
         $this->moduleDependencies = $modules;

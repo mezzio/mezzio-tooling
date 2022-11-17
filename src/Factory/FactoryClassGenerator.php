@@ -75,6 +75,7 @@ class FactoryClassGenerator
 
     /**
      * @throws UnidentifiedTypeException If a parameter defines a non-class typehint.
+     * @return mixed[]
      */
     private function getConstructorParameters(string $className): array
     {
@@ -92,13 +93,15 @@ class FactoryClassGenerator
 
         $constructorParameters = array_filter(
             $constructorParameters,
-            static function (ReflectionParameter $argument) {
+            static function (ReflectionParameter $argument): bool {
                 if ($argument->isOptional()) {
                     return false;
                 }
+
                 if (null === $argument->getType()) {
                     throw UnidentifiedTypeException::forArgument($argument->getName());
                 }
+
                 return true;
             }
         );
@@ -122,13 +125,13 @@ class FactoryClassGenerator
     private function formatImportStatements(array $imports): string
     {
         natsort($imports);
-        $imports = array_map(static fn($import) => sprintf('use %s;', $import), $imports);
+        $imports = array_map(static fn($import): string => sprintf('use %s;', $import), $imports);
         return implode("\n", $imports);
     }
 
     private function createArgumentString(array $arguments): string
     {
-        $arguments = array_map(static fn($argument) => sprintf('$container->get(%s::class)', $argument), $arguments);
+        $arguments = array_map(static fn($argument): string => sprintf('$container->get(%s::class)', $argument), $arguments);
         switch (count($arguments)) {
             case 0:
                 return '';

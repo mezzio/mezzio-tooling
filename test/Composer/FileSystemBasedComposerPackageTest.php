@@ -59,6 +59,9 @@ class FileSystemBasedComposerPackageTest extends TestCase
         return $path;
     }
 
+    /**
+     * @return mixed[]
+     */
     public function getComposerJson(string $filename): array
     {
         $json = file_get_contents($filename);

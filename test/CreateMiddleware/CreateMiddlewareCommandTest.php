@@ -36,7 +36,7 @@ class CreateMiddlewareCommandTest extends TestCase
     private ObjectProphecy $input;
 
     /** @var ObjectProphecy<ConsoleOutputInterface> */
-    private $output;
+    private ObjectProphecy $output;
 
     private CreateMiddlewareCommand $command;
 
@@ -63,14 +63,14 @@ class CreateMiddlewareCommandTest extends TestCase
     /**
      * @return ObjectProphecy<Application>
      */
-    private function mockApplication()
+    private function mockApplication(): ObjectProphecy
     {
         $helperSet = $this->prophesize(HelperSet::class)->reveal();
 
         $factoryCommand = $this->prophesize(Command::class);
         $factoryCommand
             ->run(
-                Argument::that(static function ($input) {
+                Argument::that(static function ($input): ArrayInput {
                     Assert::assertInstanceOf(ArrayInput::class, $input);
                     Assert::assertStringContainsString('mezzio:factory:create', (string) $input);
                     Assert::assertStringContainsString('Foo\TestMiddleware', (string) $input);

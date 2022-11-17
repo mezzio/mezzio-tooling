@@ -34,7 +34,7 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
     private ObjectProphecy $input;
 
     /** @var ObjectProphecy<ConsoleOutputInterface> */
-    private $output;
+    private ObjectProphecy $output;
 
     private MigrateInteropMiddlewareCommand $command;
 
