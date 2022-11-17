@@ -8,19 +8,13 @@ use function preg_replace;
 
 final class ModuleMetadata
 {
-    private string $name;
-
-    private string $rootPath;
-
     private string $sourcePath;
 
     public function __construct(
-        string $name,
-        string $rootPath,
+        private string $name,
+        private string $rootPath,
         string $sourcePath
     ) {
-        $this->name       = $name;
-        $this->rootPath   = $rootPath;
         $this->sourcePath = preg_replace('#^\./#', '', $sourcePath);
     }
 

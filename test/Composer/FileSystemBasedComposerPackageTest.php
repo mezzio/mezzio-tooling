@@ -20,12 +20,12 @@ use const JSON_THROW_ON_ERROR;
 
 class FileSystemBasedComposerPackageTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->tearDownAssets();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $this->tearDownAssets();
     }

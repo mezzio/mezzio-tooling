@@ -18,11 +18,8 @@ use function sprintf;
 
 final class ConvertMiddleware
 {
-    private OutputInterface $output;
-
-    public function __construct(OutputInterface $output)
+    public function __construct(private OutputInterface $output)
     {
-        $this->output = $output;
     }
 
     public function process(string $directory): void
@@ -41,10 +38,16 @@ final class ConvertMiddleware
 
     private function isPhpFile(SplFileInfo $file): bool
     {
-        return $file->isFile()
-            && $file->getExtension() === 'php'
-            && $file->isReadable()
-            && $file->isWritable();
+        if (! $file->isFile()) {
+            return false;
+        }
+        if ($file->getExtension() !== 'php') {
+            return false;
+        }
+        if (! $file->isReadable()) {
+            return false;
+        }
+        return $file->isWritable();
     }
 
     private function processFile(string $filename): void

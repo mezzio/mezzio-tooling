@@ -85,7 +85,7 @@ class CreateActionCommandTest extends TestCase
         $factoryCommand = $this->prophesize(Command::class);
         $factoryCommand
             ->run(
-                Argument::that(function ($input) use ($forService) {
+                Argument::that(static function ($input) use ($forService) {
                     Assert::assertInstanceOf(ArrayInput::class, $input);
                     Assert::assertStringContainsString('mezzio:factory:create', (string) $input);
                     Assert::assertStringContainsString($forService, (string) $input);
@@ -97,7 +97,7 @@ class CreateActionCommandTest extends TestCase
 
         $application = $this->prophesize(Application::class);
         $application->getHelperSet()->willReturn($helperSet);
-        $application->find('mezzio:factory:create')->will([$factoryCommand, 'reveal']);
+        $application->find('mezzio:factory:create')->will(static fn(): object => $factoryCommand->reveal());
 
         return $application;
     }

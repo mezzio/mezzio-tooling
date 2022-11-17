@@ -15,7 +15,7 @@ class CommandCommonOptionsTest extends TestCase
     use ProphecyTrait;
 
     /** @var ObjectProphecy<InputInterface> */
-    private $input;
+    private ObjectProphecy $input;
 
     protected function setUp(): void
     {
@@ -24,6 +24,7 @@ class CommandCommonOptionsTest extends TestCase
 
     public function testGetModulesPathGetsOptionsFromInput(): void
     {
+        $config = [];
         $this->input->getOption('modules-path')->willReturn('path-from-input');
         $config[CommandCommonOptions::class]['--modules-path'] = 'path-from-config';
 
@@ -35,6 +36,7 @@ class CommandCommonOptionsTest extends TestCase
 
     public function testGetModulesPathGetsOptionsFromConfig(): void
     {
+        $config = [];
         $this->input->getOption('modules-path')->willReturn(null);
         $config[CommandCommonOptions::class]['--modules-path'] = 'path-from-config';
 

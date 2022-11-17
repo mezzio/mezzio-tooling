@@ -29,7 +29,7 @@ class CreateFactoryCommandTest extends TestCase
     use ProphecyTrait;
 
     /** @var ObjectProphecy<InputInterface> */
-    private $input;
+    private ObjectProphecy $input;
 
     /** @var ObjectProphecy<ConsoleOutputInterface> */
     private $output;

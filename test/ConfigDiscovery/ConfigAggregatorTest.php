@@ -11,11 +11,9 @@ use PHPUnit\Framework\TestCase;
 
 class ConfigAggregatorTest extends TestCase
 {
-    /** @var vfsStreamDirectory */
-    private $configDir;
+    private vfsStreamDirectory $configDir;
 
-    /** @var ConfigAggregator */
-    private $locator;
+    private ConfigAggregator $locator;
 
     protected function setUp(): void
     {
@@ -34,7 +32,8 @@ class ConfigAggregatorTest extends TestCase
     {
         vfsStream::newFile('config/config.php')
             ->at($this->configDir)
-            ->setContent('<' . "?php\nreturn [];");
+            ->setContent('<?php
+return [];');
         $this->assertFalse($this->locator->locate());
     }
 
@@ -47,12 +46,24 @@ class ConfigAggregatorTest extends TestCase
     {
         // @codingStandardsIgnoreStart
         return [
-            'fqcn-short-array'               => ['<' . "?php\n\$aggregator = new Laminas\ConfigAggregator\ConfigAggregator([\n]);"],
-            'globally-qualified-short-array' => ['<' . "?php\n\$aggregator = new \Laminas\ConfigAggregator\ConfigAggregator([\n]);"],
-            'imported-short-array'           => ['<' . "?php\n\$aggregator = new ConfigAggregator([\n]);"],
-            'fqcn-long-array'                => ['<' . "?php\n\$aggregator = new Laminas\ConfigAggregator\ConfigAggregator(array(\n));"],
-            'globally-qualified-long-array'  => ['<' . "?php\n\$aggregator = new \Laminas\ConfigAggregator\ConfigAggregator(array(\n));"],
-            'imported-long-array'            => ['<' . "?php\n\$aggregator = new ConfigAggregator(array(\n));"],
+            'fqcn-short-array'               => ['<?php
+$aggregator = new Laminas\ConfigAggregator\ConfigAggregator([
+]);'],
+            'globally-qualified-short-array' => ['<?php
+$aggregator = new \Laminas\ConfigAggregator\ConfigAggregator([
+]);'],
+            'imported-short-array'           => ['<?php
+$aggregator = new ConfigAggregator([
+]);'],
+            'fqcn-long-array'                => ['<?php
+$aggregator = new Laminas\ConfigAggregator\ConfigAggregator(array(
+));'],
+            'globally-qualified-long-array'  => ['<?php
+$aggregator = new \Laminas\ConfigAggregator\ConfigAggregator(array(
+));'],
+            'imported-long-array'            => ['<?php
+$aggregator = new ConfigAggregator(array(
+));'],
         ];
         // @codingStandardsIgnoreEnd
     }

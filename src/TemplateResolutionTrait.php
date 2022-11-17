@@ -7,8 +7,8 @@ namespace Mezzio\Tooling;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 
-use function get_class;
 use function preg_replace;
+use function str_contains;
 use function strpos;
 use function strrpos;
 use function strtolower;
@@ -53,7 +53,7 @@ trait TemplateResolutionTrait
      */
     private function getClassName(string $class): string
     {
-        return strpos($class, '\\') !== false
+        return str_contains($class, '\\')
             ? substr($class, strrpos($class, '\\') + 1)
             : $class;
     }
@@ -87,7 +87,8 @@ trait TemplateResolutionTrait
         if (! $container->has(TemplateRendererInterface::class)) {
             return null;
         }
+
         $renderer = $container->get(TemplateRendererInterface::class);
-        return get_class($renderer);
+        return $renderer::class;
     }
 }

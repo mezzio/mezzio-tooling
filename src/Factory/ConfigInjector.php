@@ -26,8 +26,14 @@ use const SORT_NATURAL;
  */
 final class ConfigInjector
 {
+    /**
+     * @var string
+     */
     public const CONFIG_FILE = 'config/autoload/mezzio-tooling-factories.global.php';
 
+    /**
+     * @var string
+     */
     public const TEMPLATE = <<<'EOT'
         <?php
         
@@ -95,6 +101,7 @@ final class ConfigInjector
 
             $normalized[] = sprintf('%s%s => %s', str_repeat(' ', 12), $class, $factory);
         }
+
         return implode(",\n", $normalized);
     }
 }
