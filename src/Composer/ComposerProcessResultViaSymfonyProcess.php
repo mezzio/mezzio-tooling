@@ -8,11 +8,8 @@ use Symfony\Component\Process\Process;
 
 final class ComposerProcessResultViaSymfonyProcess implements ComposerProcessResultInterface
 {
-    private Process $process;
-
-    public function __construct(Process $process)
+    public function __construct(private Process $process)
     {
-        $this->process = $process;
     }
 
     public function isSuccessful(): bool

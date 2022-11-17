@@ -32,7 +32,7 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
 
     public function convertToShortArraySyntax(string $contents): string
     {
-        return preg_replace('/array\(([^)]+)\)/s', '[$1]', $contents);
+        return preg_replace('#array\(([^)]+)\)#s', '[$1]', $contents);
     }
 
     public function allowedTypes(): array

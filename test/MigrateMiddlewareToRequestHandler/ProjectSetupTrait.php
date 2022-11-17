@@ -26,8 +26,7 @@ trait ProjectSetupTrait
 {
     use ProphecyTrait;
 
-    /** @param string|vfsStreamDirectory $dir */
-    private function setupSrcDir($dir): void
+    private function setupSrcDir(string|vfsStreamDirectory $dir): void
     {
         $base = realpath(__DIR__ . '/TestAsset') . DIRECTORY_SEPARATOR;
         $rdi  = new RecursiveDirectoryIterator($base . 'src');
@@ -49,10 +48,16 @@ trait ProjectSetupTrait
 
     private static function isPhpFile(SplFileInfo $file): bool
     {
-        return $file->isFile()
-            && $file->getExtension() === 'php'
-            && $file->isReadable()
-            && $file->isWritable();
+        if (! $file->isFile()) {
+            return false;
+        }
+        if ($file->getExtension() !== 'php') {
+            return false;
+        }
+        if (! $file->isReadable()) {
+            return false;
+        }
+        return $file->isWritable();
     }
 
     /**

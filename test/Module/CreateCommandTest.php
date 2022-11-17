@@ -41,7 +41,7 @@ class CreateCommandTest extends TestCase
     use ProphecyTrait;
 
     /** @var ObjectProphecy<InputInterface> */
-    private $input;
+    private ObjectProphecy $input;
 
     /** @var ObjectProphecy<ConsoleOutputInterface> */
     private $output;
@@ -68,14 +68,13 @@ class CreateCommandTest extends TestCase
         $this->expectedModuleArgumentDescription = CreateCommand::HELP_ARG_MODULE;
     }
 
-    /** @return array|ArrayObject */
-    public function createConfig(bool $configAsArrayObject = false)
+    public function createConfig(bool $configAsArrayObject = false): array|ArrayObject
     {
         $configFile = $this->projectRoot . '/config/config.php';
         $config     = include $configFile;
 
         if ($configAsArrayObject) {
-            $config = new ArrayObject($config);
+            return new ArrayObject($config);
         }
 
         return $config;
@@ -109,25 +108,20 @@ class CreateCommandTest extends TestCase
         $register = $this->prophesize(Command::class);
         $register
             ->run(
-                Argument::that(function ($input) use ($name, $module, $composer, $modulePath) {
+                Argument::that(static function ($input) use ($name, $module, $composer, $modulePath) {
                     TestCase::assertInstanceOf(ArrayInput::class, $input);
-
                     $r = new ReflectionProperty($input, 'parameters');
                     $r->setAccessible(true);
-                    $parameters = $r->getValue($input);
 
+                    $parameters = $r->getValue($input);
                     TestCase::assertArrayHasKey('command', $parameters);
                     TestCase::assertEquals($name, $parameters['command']);
-
                     TestCase::assertArrayHasKey('module', $parameters);
                     TestCase::assertEquals($module, $parameters['module']);
-
                     TestCase::assertArrayHasKey('--composer', $parameters);
                     TestCase::assertEquals($composer, $parameters['--composer']);
-
                     TestCase::assertArrayHasKey('--exact-path', $parameters);
                     TestCase::assertEquals($modulePath, $parameters['--exact-path']);
-
                     return true;
                 }),
                 $output
@@ -138,8 +132,8 @@ class CreateCommandTest extends TestCase
         $helperSet = $this->prophesize(HelperSet::class);
 
         $application = $this->prophesize(Application::class);
-        $application->find($name)->will([$register, 'reveal']);
-        $application->getHelperSet()->will([$helperSet, 'reveal']);
+        $application->find($name)->will(static fn(): object => $register->reveal());
+        $application->getHelperSet()->will(static fn(): object => $helperSet->reveal());
         return $application;
     }
 

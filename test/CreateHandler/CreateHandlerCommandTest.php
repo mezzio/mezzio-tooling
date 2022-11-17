@@ -90,7 +90,7 @@ class CreateHandlerCommandTest extends TestCase
         $factoryCommand = $this->prophesize(Command::class);
         $factoryCommand
             ->run(
-                Argument::that(function ($input) use ($forService) {
+                Argument::that(static function ($input) use ($forService) {
                     Assert::assertInstanceOf(ArrayInput::class, $input);
                     Assert::assertStringContainsString('mezzio:factory:create', (string) $input);
                     Assert::assertStringContainsString($forService, (string) $input);

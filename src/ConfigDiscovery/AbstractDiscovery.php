@@ -35,13 +35,17 @@ abstract class AbstractDiscovery implements DiscoveryInterface
      */
     public function __construct(string $projectDirectory = '')
     {
-        if ('' !== $projectDirectory && is_dir($projectDirectory)) {
-            $this->configFile = sprintf(
-                '%s/%s',
-                $projectDirectory,
-                $this->configFile
-            );
+        if ('' === $projectDirectory) {
+            return;
         }
+        if (! is_dir($projectDirectory)) {
+            return;
+        }
+        $this->configFile = sprintf(
+            '%s/%s',
+            $projectDirectory,
+            $this->configFile
+        );
     }
 
     /**

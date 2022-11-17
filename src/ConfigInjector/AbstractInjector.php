@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mezzio\Tooling\ConfigInjector;
 
 use Mezzio\Tooling\Exception;
+use Mezzio\Tooling\Exception\RuntimeException;
 
 use function addslashes;
 use function assert;
@@ -211,7 +212,7 @@ abstract class AbstractInjector implements InjectorInterface
     {
         foreach ($this->moduleDependencies as $dependency) {
             if (! $this->isRegisteredInConfig($dependency, $config)) {
-                throw new Exception\RuntimeException(sprintf(
+                throw new RuntimeException(sprintf(
                     'Dependency %s is not registered in the configuration',
                     $dependency
                 ));

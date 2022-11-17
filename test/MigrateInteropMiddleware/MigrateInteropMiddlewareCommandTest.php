@@ -31,7 +31,7 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
     use ProphecyTrait;
 
     /** @var ObjectProphecy<InputInterface> */
-    private $input;
+    private ObjectProphecy $input;
 
     /** @var ObjectProphecy<ConsoleOutputInterface> */
     private $output;
@@ -61,9 +61,10 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
         );
     }
 
-    /** @return scalar */
-    private function getConstantValue(string $const, string $class = MigrateInteropMiddlewareCommand::class)
-    {
+    private function getConstantValue(
+        string $const,
+        string $class = MigrateInteropMiddlewareCommand::class
+    ): bool|string|int|float {
         $r = new ReflectionClass($class);
 
         return $r->getConstant($const);

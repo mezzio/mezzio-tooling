@@ -23,6 +23,9 @@ use function substr;
 /** @internal */
 class FactoryClassGenerator
 {
+    /**
+     * @var string
+     */
     public const FACTORY_TEMPLATE = <<<'EOT'
         <?php
 
@@ -77,32 +80,30 @@ class FactoryClassGenerator
     {
         $reflectionClass = new ReflectionClass($className);
 
-        if (! $reflectionClass->getConstructor()) {
+        if ($reflectionClass->getConstructor() === null) {
             return [];
         }
 
         $constructorParameters = $reflectionClass->getConstructor()->getParameters();
 
-        if (! $constructorParameters) {
+        if ($constructorParameters === []) {
             return [];
         }
 
         $constructorParameters = array_filter(
             $constructorParameters,
-            function (ReflectionParameter $argument) {
+            static function (ReflectionParameter $argument) {
                 if ($argument->isOptional()) {
                     return false;
                 }
-
                 if (null === $argument->getType()) {
                     throw UnidentifiedTypeException::forArgument($argument->getName());
                 }
-
                 return true;
             }
         );
 
-        if (! $constructorParameters) {
+        if ($constructorParameters === []) {
             return [];
         }
 

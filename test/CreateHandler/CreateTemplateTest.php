@@ -19,8 +19,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
+use Test\TestHandler;
 
-use function array_push;
 use function copy;
 use function file_get_contents;
 use function file_put_contents;
@@ -36,6 +36,9 @@ class CreateTemplateTest extends TestCase
 {
     use ProphecyTrait;
 
+    /**
+     * @var array<string, string>
+     */
     private const COMMON_FILES = [
         '/TestAsset/common/PlatesRenderer.php'      => '/src/PlatesRenderer.php',
         '/TestAsset/common/TwigRenderer.php'        => '/src/TwigRenderer.php',
@@ -43,14 +46,13 @@ class CreateTemplateTest extends TestCase
     ];
 
     /** @var ObjectProphecy<ContainerInterface> */
-    private $container;
+    private ObjectProphecy $container;
 
     private vfsStreamDirectory $dir;
 
     private string $projectRoot;
 
-    /** @var PlatesRenderer|TwigRenderer|LaminasViewRenderer */
-    private $renderer;
+    private PlatesRenderer|TwigRenderer|LaminasViewRenderer|null $renderer;
 
     protected function setUp(): void
     {
@@ -127,7 +129,7 @@ class CreateTemplateTest extends TestCase
 
         $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
-        $template = $generator->forHandler('Test\TestHandler');
+        $template = $generator->forHandler(TestHandler::class);
         self::assertSame($this->projectRoot . '/config/../templates/test/test.' . $extension, $template->getPath());
         self::assertSame('test::test', $template->getName());
     }
@@ -148,7 +150,7 @@ class CreateTemplateTest extends TestCase
 
         $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
-        $template = $generator->forHandler('Test\TestHandler');
+        $template = $generator->forHandler(TestHandler::class);
         self::assertSame(
             $this->projectRoot . '/config/../src/Test/templates/test.' . $extension,
             $template->getPath()
@@ -172,7 +174,7 @@ class CreateTemplateTest extends TestCase
 
         $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
-        $template = $generator->forHandler('Test\TestHandler');
+        $template = $generator->forHandler(TestHandler::class);
         self::assertSame($this->projectRoot . '/templates/test/test.' . $extension, $template->getPath());
         self::assertSame('test::test', $template->getName());
     }
@@ -193,7 +195,7 @@ class CreateTemplateTest extends TestCase
 
         $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
-        $template = $generator->forHandler('Test\TestHandler');
+        $template = $generator->forHandler(TestHandler::class);
         self::assertSame($this->projectRoot . '/src/Test/templates/test.' . $extension, $template->getPath());
         self::assertSame('test::test', $template->getName());
     }
@@ -215,7 +217,7 @@ class CreateTemplateTest extends TestCase
 
         $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
-        $template = $generator->forHandler('Test\TestHandler');
+        $template = $generator->forHandler(TestHandler::class);
         self::assertSame($this->projectRoot . '/config/../view/for-testing/test.' . $extension, $template->getPath());
         self::assertSame('test::test', $template->getName());
     }
@@ -237,7 +239,7 @@ class CreateTemplateTest extends TestCase
 
         $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
-        $template = $generator->forHandler('Test\TestHandler');
+        $template = $generator->forHandler(TestHandler::class);
         self::assertSame($this->projectRoot . '/config/../view/for-testing/test.' . $extension, $template->getPath());
         self::assertSame('test::test', $template->getName());
     }
@@ -259,7 +261,7 @@ class CreateTemplateTest extends TestCase
 
         $this->expectException(UnresolvableRendererException::class);
         $this->expectExceptionMessage('inability to detect a service alias');
-        $generator->forHandler('Test\TestHandler');
+        $generator->forHandler(TestHandler::class);
     }
 
     /**
@@ -283,15 +285,15 @@ class CreateTemplateTest extends TestCase
 
         $this->expectException(UnresolvableRendererException::class);
         $this->expectExceptionMessage('unknown template renderer type');
-        $generator->forHandler('Test\TestHandler');
+        $generator->forHandler(TestHandler::class);
     }
 
     public function rendererTypesWithInvalidPathCounts(): iterable
     {
         foreach (['empty-paths'] as $config) {
             foreach ($this->rendererTypes() as $key => $arguments) {
-                array_push($arguments, sprintf('config.php.%s', $config));
-                $name = sprintf('%s-%s', $key, $config);
+                $arguments[] = sprintf('config.php.%s', $config);
+                $name        = sprintf('%s-%s', $key, $config);
                 yield $name => $arguments;
             }
         }
@@ -316,7 +318,7 @@ class CreateTemplateTest extends TestCase
         $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $this->expectException(TemplatePathResolutionException::class);
-        $generator->forHandler('Test\TestHandler');
+        $generator->forHandler(TestHandler::class);
     }
 
     /**
@@ -338,7 +340,7 @@ class CreateTemplateTest extends TestCase
         $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
         $this->expectException(TemplatePathResolutionException::class);
-        $generator->forHandler('Test\TestHandler');
+        $generator->forHandler(TestHandler::class);
     }
 
     /**
@@ -358,7 +360,7 @@ class CreateTemplateTest extends TestCase
 
         $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
-        $template = $generator->generateTemplate('Test\TestHandler', 'custom', 'also-custom');
+        $template = $generator->generateTemplate(TestHandler::class, 'custom', 'also-custom');
         self::assertSame(
             $this->projectRoot . '/config/../templates/custom/also-custom.' . $extension,
             $template->getPath()
@@ -383,7 +385,7 @@ class CreateTemplateTest extends TestCase
 
         $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
-        $template = $generator->generateTemplate('Test\TestHandler', 'custom', 'also-custom');
+        $template = $generator->generateTemplate(TestHandler::class, 'custom', 'also-custom');
         self::assertSame(
             $this->projectRoot . '/config/../src/Custom/templates/also-custom.' . $extension,
             $template->getPath()
@@ -407,7 +409,7 @@ class CreateTemplateTest extends TestCase
 
         $generator = new CreateTemplate($this->projectRoot, $this->container->reveal());
 
-        $template = $generator->generateTemplate('Test\TestHandler', 'custom', 'also-custom', 'XHTML');
+        $template = $generator->generateTemplate(TestHandler::class, 'custom', 'also-custom', 'XHTML');
         self::assertSame(
             $this->projectRoot . '/config/../src/Custom/templates/also-custom.XHTML',
             $template->getPath()

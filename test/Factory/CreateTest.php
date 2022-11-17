@@ -13,6 +13,7 @@ use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
+use TestHarness\NotReal\TestClass;
 
 use function file_put_contents;
 
@@ -40,7 +41,7 @@ class CreateTest extends TestCase
     public function testRaisesExceptionWhenFactoryClassFileAlreadyExists(): void
     {
         require $this->projectRoot . '/TestClass.php';
-        $className = 'TestHarness\NotReal\TestClass';
+        $className = TestClass::class;
         file_put_contents($this->projectRoot . '/TestClassFactory.php', '');
 
         $this->expectException(FactoryAlreadyExistsException::class);
@@ -54,7 +55,7 @@ class CreateTest extends TestCase
     {
         require $this->projectRoot . '/TestClass.php';
         $this->dir->chmod(0544);
-        $className = 'TestHarness\NotReal\TestClass';
+        $className = TestClass::class;
 
         $generator = $this->prophesize(FactoryClassGenerator::class);
         $generator->createFactory($className)->willReturn('not-generated');
@@ -71,7 +72,7 @@ class CreateTest extends TestCase
     public function testCanCreateFactoryFile(): void
     {
         require $this->projectRoot . '/TestClass.php';
-        $className = 'TestHarness\NotReal\TestClass';
+        $className = TestClass::class;
 
         $generator = new FactoryClassGenerator();
         $factory   = new Create($generator);
