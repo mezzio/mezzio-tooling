@@ -5,11 +5,29 @@
       <code>$package[$key]['psr-4']</code>
     </MixedArrayAssignment>
     <MixedInferredReturnType occurrences="1">
-      <code>array</code>
+      <code>mixed[]</code>
     </MixedInferredReturnType>
     <MixedReturnStatement occurrences="1">
       <code>json_decode($contents, true, 512, JSON_THROW_ON_ERROR)</code>
     </MixedReturnStatement>
+  </file>
+  <file src="src/ConfigInjector/AbstractInjector.php">
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>int[]</code>
+    </LessSpecificImplementedReturnType>
+    <PropertyTypeCoercion occurrences="2">
+      <code>$modules</code>
+      <code>$modules</code>
+    </PropertyTypeCoercion>
+  </file>
+  <file src="src/ConfigProvider.php">
+    <InvalidDocblock occurrences="1">
+      <code>public function getConsoleConfig(): array</code>
+    </InvalidDocblock>
+    <InvalidReturnStatement occurrences="1"/>
+    <InvalidReturnType occurrences="1">
+      <code>array{factories: array{Create: string, CreateActionCommand: string, CreateCommand: string, CreateFactoryCommand: string, CreateHandlerCommand: string, CreateMiddlewareCommand: string, DeregisterCommand: string, MigrateInteropMiddlewareCommand: string, MigrateMiddlewareToRequestHandlerCommand: string, RegisterCommand: string}}</code>
+    </InvalidReturnType>
   </file>
   <file src="src/CreateHandler/CreateHandler.php">
     <MixedArgument occurrences="4">
@@ -97,10 +115,8 @@
       <code>$rendererType</code>
       <code>$type</code>
     </PossiblyNullArgument>
-    <UndefinedClass occurrences="6">
+    <UndefinedClass occurrences="4">
       <code>LaminasViewRenderer</code>
-      <code>LaminasViewRenderer</code>
-      <code>PlatesRenderer</code>
       <code>PlatesRenderer</code>
       <code>TwigRenderer</code>
       <code>TwigRenderer</code>
@@ -303,15 +319,12 @@
     </MixedAssignment>
   </file>
   <file src="src/Module/RegisterCommand.php">
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>$packageFactory-&gt;loadPackage($projectRoot)</code>
-    </InvalidPropertyAssignmentValue>
     <MixedArgument occurrences="5">
       <code>$composer</code>
       <code>$module</code>
       <code>$module</code>
       <code>$module</code>
-      <code>$module</code>
+      <code>$modulePath</code>
     </MixedArgument>
     <MixedArgumentTypeCoercion occurrences="1">
       <code>[$composer, 'dump-autoload']</code>
@@ -322,10 +335,6 @@
       <code>$module</code>
       <code>$modulePath</code>
     </MixedAssignment>
-    <UndefinedDocblockClass occurrences="2">
-      <code>$this-&gt;package</code>
-      <code>ComposerPackageInterface</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/TemplateResolutionTrait.php">
     <MixedAssignment occurrences="1">
@@ -342,7 +351,7 @@
     <MixedInferredReturnType occurrences="3">
       <code>array</code>
       <code>array</code>
-      <code>array</code>
+      <code>mixed[]</code>
     </MixedInferredReturnType>
     <MixedReturnStatement occurrences="1">
       <code>json_decode($json, true, 512, JSON_THROW_ON_ERROR)</code>
@@ -352,6 +361,24 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$type</code>
     </ArgumentTypeCoercion>
+  </file>
+  <file src="test/ConfigInjector/ConfigAggregatorInjectorTest.php">
+    <ImplementedReturnTypeMismatch occurrences="4">
+      <code>array&lt;string, array&lt;string|bool&gt;&gt;</code>
+      <code>array&lt;string, array&lt;string|bool&gt;&gt;</code>
+      <code>array&lt;string, array&lt;string|bool|int&gt;&gt;</code>
+      <code>array&lt;string, array&lt;string|bool|int&gt;&gt;</code>
+    </ImplementedReturnTypeMismatch>
+    <InvalidReturnStatement occurrences="4"/>
+    <InvalidReturnType occurrences="4">
+      <code>array&lt;string, array&lt;string|bool&gt;&gt;</code>
+      <code>array&lt;string, array&lt;string|bool&gt;&gt;</code>
+      <code>array&lt;string, array&lt;string|bool|int&gt;&gt;</code>
+      <code>array&lt;string, array&lt;string|bool|int&gt;&gt;</code>
+    </InvalidReturnType>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>array&lt;string, mixed[]&gt;</code>
+    </LessSpecificImplementedReturnType>
   </file>
   <file src="test/CreateHandler/CreateTemplateTest.php">
     <InvalidStringClass occurrences="1">

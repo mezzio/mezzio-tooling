@@ -45,7 +45,7 @@ class CreateHandlerCommandTest extends TestCase
     private ObjectProphecy $input;
 
     /** @var ObjectProphecy<ConsoleOutputInterface> */
-    private $output;
+    private ObjectProphecy $output;
 
     protected function setUp(): void
     {
@@ -83,14 +83,14 @@ class CreateHandlerCommandTest extends TestCase
     /**
      * @return ObjectProphecy<Application>
      */
-    private function mockApplication(string $forService = 'Foo\TestHandler')
+    private function mockApplication(string $forService = 'Foo\TestHandler'): ObjectProphecy
     {
         $helperSet = $this->prophesize(HelperSet::class)->reveal();
 
         $factoryCommand = $this->prophesize(Command::class);
         $factoryCommand
             ->run(
-                Argument::that(static function ($input) use ($forService) {
+                Argument::that(static function ($input) use ($forService): ArrayInput {
                     Assert::assertInstanceOf(ArrayInput::class, $input);
                     Assert::assertStringContainsString('mezzio:factory:create', (string) $input);
                     Assert::assertStringContainsString($forService, (string) $input);

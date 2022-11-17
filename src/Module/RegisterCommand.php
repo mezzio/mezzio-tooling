@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mezzio\Tooling\Module;
 
 use Mezzio\Tooling\Composer\ComposerPackageFactoryInterface;
+use Mezzio\Tooling\Composer\ComposerPackageInterface;
 use Mezzio\Tooling\Composer\ComposerProcessFactoryInterface;
 use Mezzio\Tooling\ConfigInjector\ConfigAggregatorInjector;
 use Mezzio\Tooling\ConfigInjector\InjectorInterface;
@@ -44,8 +45,7 @@ final class RegisterCommand extends Command
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:module:register';
 
-    /** @var ComposerPackageInterface */
-    private $package;
+    private ComposerPackageInterface $package;
 
     private InjectorInterface $injector;
 

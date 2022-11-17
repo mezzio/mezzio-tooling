@@ -38,9 +38,11 @@ abstract class AbstractDiscovery implements DiscoveryInterface
         if ('' === $projectDirectory) {
             return;
         }
+
         if (! is_dir($projectDirectory)) {
             return;
         }
+
         $this->configFile = sprintf(
             '%s/%s',
             $projectDirectory,

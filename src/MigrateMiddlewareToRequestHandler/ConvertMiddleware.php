@@ -41,12 +41,15 @@ final class ConvertMiddleware
         if (! $file->isFile()) {
             return false;
         }
+
         if ($file->getExtension() !== 'php') {
             return false;
         }
+
         if (! $file->isReadable()) {
             return false;
         }
+
         return $file->isWritable();
     }
 
