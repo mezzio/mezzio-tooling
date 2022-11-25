@@ -8,6 +8,7 @@ use Mezzio\Tooling\Composer\ComposerPackageFactoryInterface;
 use Mezzio\Tooling\Composer\ComposerPackageInterface;
 use Mezzio\Tooling\Composer\ComposerProcessFactoryInterface;
 use Mezzio\Tooling\ConfigInjector\ConfigAggregatorInjector;
+use Mezzio\Tooling\ConfigInjector\InjectorInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -37,14 +38,18 @@ final class DeregisterCommand extends Command
 
     private ComposerProcessFactoryInterface $processFactory;
 
+    private InjectorInterface $injector;
+
     public function __construct(
         string $projectRoot,
         ComposerPackageFactoryInterface $packageFactory,
-        ComposerProcessFactoryInterface $processFactory
+        ComposerProcessFactoryInterface $processFactory,
+        ?InjectorInterface $configInjector = null
     ) {
         $this->projectRoot    = $projectRoot;
         $this->package        = $packageFactory->loadPackage($projectRoot);
         $this->processFactory = $processFactory;
+        $this->injector       = $configInjector ?? new ConfigAggregatorInjector($this->projectRoot);
 
         parent::__construct();
     }
@@ -69,12 +74,11 @@ final class DeregisterCommand extends Command
         $module   = $input->getArgument('module');
         $composer = $input->getOption('composer') ?: 'composer';
 
-        $injector       = new ConfigAggregatorInjector($this->projectRoot);
         $configProvider = sprintf('%s\ConfigProvider', $module);
         assert($configProvider !== '');
 
-        if ($injector->isRegistered($configProvider)) {
-            $injector->remove($configProvider);
+        if ($this->injector->isRegistered($configProvider)) {
+            $this->injector->remove($configProvider);
         }
 
         // If no updates are made to autoloading, no need to update the autoloader.

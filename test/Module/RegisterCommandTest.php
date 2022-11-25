@@ -90,7 +90,11 @@ class RegisterCommandTest extends TestCase
         self::assertEquals(RegisterCommand::HELP, $this->command->getHelp());
     }
 
-    /** @psalm-return array<string, array{0: bool, 1: bool, 2: bool, 3: string}> */
+    /**
+     * @psalm-return non-empty-array<
+     *     non-empty-string, array{bool, bool, bool, non-empty-string|null, non-empty-string|null}
+     * >
+     */
     public function injectedEnabled(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
