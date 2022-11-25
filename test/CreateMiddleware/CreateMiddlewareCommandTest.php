@@ -10,10 +10,8 @@ use Mezzio\Tooling\CreateMiddleware\CreateMiddlewareException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionMethod;
 use ReflectionProperty;
 use Symfony\Component\Console\Application;
@@ -30,20 +28,19 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 class CreateMiddlewareCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use ProphecyTrait;
 
-    /** @var ObjectProphecy<InputInterface> */
-    private ObjectProphecy $input;
+    /** @var InputInterface&MockObject */
+    private InputInterface $input;
 
-    /** @var ObjectProphecy<ConsoleOutputInterface> */
-    private ObjectProphecy $output;
+    /** @var ConsoleOutputInterface&MockObject */
+    private ConsoleOutputInterface $output;
 
     private CreateMiddlewareCommand $command;
 
     protected function setUp(): void
     {
-        $this->input  = $this->prophesize(InputInterface::class);
-        $this->output = $this->prophesize(ConsoleOutputInterface::class);
+        $this->input  = $this->createMock(InputInterface::class);
+        $this->output = $this->createMock(ConsoleOutputInterface::class);
 
         $this->command = new CreateMiddlewareCommand('');
 
@@ -60,29 +57,28 @@ class CreateMiddlewareCommandTest extends TestCase
         return $r;
     }
 
-    /**
-     * @return ObjectProphecy<Application>
-     */
-    private function mockApplication(): ObjectProphecy
+    /** @return Application&MockObject */
+    private function mockApplication(): Application
     {
-        $helperSet = $this->prophesize(HelperSet::class)->reveal();
+        $helperSet = $this->createMock(HelperSet::class);
 
-        $factoryCommand = $this->prophesize(Command::class);
+        $factoryCommand = $this->createMock(Command::class);
         $factoryCommand
-            ->run(
-                Argument::that(static function ($input): ArrayInput {
+            ->method('run')
+            ->with(
+                self::callback(static function ($input): bool {
                     Assert::assertInstanceOf(ArrayInput::class, $input);
                     Assert::assertStringContainsString('mezzio:factory:create', (string) $input);
                     Assert::assertStringContainsString('Foo\TestMiddleware', (string) $input);
-                    return $input;
+                    return true;
                 }),
-                $this->output->reveal()
+                $this->output
             )
             ->willReturn(0);
 
-        $application = $this->prophesize(Application::class);
-        $application->getHelperSet()->willReturn($helperSet);
-        $application->find('mezzio:factory:create')->will(static fn(): object => $factoryCommand->reveal());
+        $application = $this->createMock(Application::class);
+        $application->method('getHelperSet')->willReturn($helperSet);
+        $application->method('find')->with('mezzio:factory:create')->willReturn($factoryCommand);
 
         return $application;
     }
@@ -123,7 +119,7 @@ class CreateMiddlewareCommandTest extends TestCase
 
     public function testSuccessfulExecutionEmitsExpectedMessages(): void
     {
-        $this->command->setApplication($this->mockApplication()->reveal());
+        $this->command->setApplication($this->mockApplication());
 
         $generator = Mockery::mock('overload:' . CreateMiddleware::class);
         $generator->shouldReceive('process')
@@ -131,31 +127,32 @@ class CreateMiddlewareCommandTest extends TestCase
             ->with('Foo\TestMiddleware', '')
             ->andReturn(__DIR__);
 
-        $this->input->getArgument('middleware')->willReturn('Foo\TestMiddleware');
-        $this->input->getOption('no-factory')->willReturn(false);
-        $this->input->getOption('no-register')->willReturn(false);
+        $this->input->method('getArgument')->with('middleware')->willReturn('Foo\TestMiddleware');
+        $this->input->method('getOption')->willReturnMap([
+            ['no-factory', false],
+            ['no-register', false],
+        ]);
         $this->output
-            ->writeln(Argument::containingString('Creating middleware Foo\TestMiddleware'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Success'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Created class Foo\TestMiddleware, in file ' . __DIR__))
-            ->shouldBeCalled();
+            ->expects(self::atLeast(3))
+            ->method('writeln')
+            ->with(self::logicalOr(
+                self::stringContains('Creating middleware Foo\TestMiddleware'),
+                self::stringContains('Success'),
+                self::stringContains('Created class Foo\TestMiddleware, in file ' . __DIR__),
+            ));
 
         $method = $this->reflectExecuteMethod();
 
         self::assertSame(0, $method->invoke(
             $this->command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 
     public function testAllowsExceptionsRaisedFromCreateMiddlewareToBubbleUp(): void
     {
-        $this->command->setApplication($this->mockApplication()->reveal());
+        $this->command->setApplication($this->mockApplication());
 
         $generator = Mockery::mock('overload:' . CreateMiddleware::class);
         $generator->shouldReceive('process')
@@ -163,14 +160,15 @@ class CreateMiddlewareCommandTest extends TestCase
             ->with('Foo\TestMiddleware', '')
             ->andThrow(CreateMiddlewareException::class, 'ERROR THROWN');
 
-        $this->input->getArgument('middleware')->willReturn('Foo\TestMiddleware');
-        $this->output
-            ->writeln(Argument::containingString('Creating middleware Foo\TestMiddleware'))
-            ->shouldBeCalled();
+        $this->input->method('getArgument')->with('middleware')->willReturn('Foo\TestMiddleware');
 
         $this->output
-            ->writeln(Argument::containingString('Success'))
-            ->shouldNotBeCalled();
+            ->expects(self::atLeastOnce())
+            ->method('writeln')
+            ->with(self::logicalAnd(
+                self::stringContains('Creating middleware Foo\TestMiddleware'),
+                self::logicalNot(self::stringContains('Success')),
+            ));
 
         $method = $this->reflectExecuteMethod();
 
@@ -179,8 +177,8 @@ class CreateMiddlewareCommandTest extends TestCase
 
         $method->invoke(
             $this->command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         );
     }
 }

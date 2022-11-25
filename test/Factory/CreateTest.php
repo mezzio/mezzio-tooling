@@ -11,7 +11,6 @@ use Mezzio\Tooling\Factory\FactoryWriteException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use TestHarness\NotReal\TestClass;
 
@@ -19,8 +18,6 @@ use function file_put_contents;
 
 class CreateTest extends TestCase
 {
-    use ProphecyTrait;
-
     private vfsStreamDirectory $dir;
 
     private Create $factory;
@@ -57,10 +54,10 @@ class CreateTest extends TestCase
         $this->dir->chmod(0544);
         $className = TestClass::class;
 
-        $generator = $this->prophesize(FactoryClassGenerator::class);
-        $generator->createFactory($className)->willReturn('not-generated');
+        $generator = $this->createMock(FactoryClassGenerator::class);
+        $generator->method('createFactory')->with($className)->willReturn('not-generated');
 
-        $factory = new Create($generator->reveal());
+        $factory = new Create($generator);
 
         $this->expectException(FactoryWriteException::class);
         $factory->createForClass($className);
@@ -85,9 +82,9 @@ class CreateTest extends TestCase
         $factoryName = $className . 'Factory';
         $factory     = new $factoryName();
 
-        $container = $this->prophesize(ContainerInterface::class);
-        $container->get(FactoryClassGenerator::class)->willReturn($generator);
-        $instance = $factory($container->reveal());
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')->with(FactoryClassGenerator::class)->willReturn($generator);
+        $instance = $factory($container);
         self::assertInstanceOf($className, $instance);
     }
 }

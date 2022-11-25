@@ -10,17 +10,14 @@ use Mezzio\Tooling\MigrateMiddlewareToRequestHandler\MigrateMiddlewareToRequestH
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionClass;
 use ReflectionMethod;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 use function mkdir;
-use function preg_match;
 
 /**
  * @runTestsInSeparateProcesses
@@ -29,20 +26,19 @@ use function preg_match;
 class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use ProphecyTrait;
 
-    /** @var ObjectProphecy<InputInterface> */
-    private ObjectProphecy $input;
+    /** @var InputInterface&MockObject */
+    private InputInterface $input;
 
-    /** @var ObjectProphecy<ConsoleOutputInterface> */
-    private ObjectProphecy $output;
+    /** @var ConsoleOutputInterface&MockObject */
+    private ConsoleOutputInterface $output;
 
     private MigrateMiddlewareToRequestHandlerCommand $command;
 
     protected function setUp(): void
     {
-        $this->input  = $this->prophesize(InputInterface::class);
-        $this->output = $this->prophesize(ConsoleOutputInterface::class);
+        $this->input  = $this->createMock(InputInterface::class);
+        $this->output = $this->createMock(ConsoleOutputInterface::class);
 
         $this->command = new MigrateMiddlewareToRequestHandlerCommand('');
     }
@@ -98,22 +94,23 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
             ->with($path . '/src')
             ->andReturnNull();
 
-        $this->input->getOption('src')->willReturn('src');
+        $this->input->method('getOption')->with('src')->willReturn('src');
 
         $this->output
-            ->writeln(Argument::that(static fn($arg): int|false => preg_match('#Scanning "[^"]+" for PSR-15 middleware to convert#', $arg)))
-            ->shouldBeCalledTimes(1);
-        $this->output
-            ->writeln(Argument::containingString('Done!'))
-            ->shouldBeCalledTimes(1);
+            ->expects(self::atLeast(2))
+            ->method('writeln')
+            ->with(self::logicalOr(
+                self::matchesRegularExpression('#Scanning "[^"]+" for PSR-15 middleware to convert#'),
+                self::stringContains('Done!'),
+            ));
 
         $command = new MigrateMiddlewareToRequestHandlerCommand($path);
         $method  = $this->reflectExecuteMethod($command);
 
         self::assertSame(0, $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 
@@ -125,7 +122,7 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
         $converter = Mockery::mock('overload:' . ConvertMiddleware::class);
         $converter->shouldNotReceive('process');
 
-        $this->input->getOption('src')->willReturn('src');
+        $this->input->method('getOption')->with('src')->willReturn('src');
 
         $command = new MigrateMiddlewareToRequestHandlerCommand($path);
         $method  = $this->reflectExecuteMethod($command);
@@ -135,8 +132,8 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
 
         $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         );
     }
 }
