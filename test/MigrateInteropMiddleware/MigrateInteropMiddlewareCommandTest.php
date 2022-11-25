@@ -10,10 +10,8 @@ use Mezzio\Tooling\MigrateInteropMiddleware\MigrateInteropMiddlewareCommand;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionClass;
 use ReflectionMethod;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,20 +26,19 @@ use function mkdir;
 class MigrateInteropMiddlewareCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use ProphecyTrait;
 
-    /** @var ObjectProphecy<InputInterface> */
-    private $input;
+    /** @var InputInterface&MockObject */
+    private InputInterface $input;
 
-    /** @var ObjectProphecy<ConsoleOutputInterface> */
-    private $output;
+    /** @var ConsoleOutputInterface&MockObject */
+    private ConsoleOutputInterface $output;
 
     private MigrateInteropMiddlewareCommand $command;
 
     protected function setUp(): void
     {
-        $this->input  = $this->prophesize(InputInterface::class);
-        $this->output = $this->prophesize(ConsoleOutputInterface::class);
+        $this->input  = $this->createMock(InputInterface::class);
+        $this->output = $this->createMock(ConsoleOutputInterface::class);
 
         $this->command = new MigrateInteropMiddlewareCommand('');
     }
@@ -61,9 +58,10 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
         );
     }
 
-    /** @return scalar */
-    private function getConstantValue(string $const, string $class = MigrateInteropMiddlewareCommand::class)
-    {
+    private function getConstantValue(
+        string $const,
+        string $class = MigrateInteropMiddlewareCommand::class
+    ): bool|string|int|float {
         $r = new ReflectionClass($class);
 
         return $r->getConstant($const);
@@ -95,22 +93,23 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
             ->with($path . '/src')
             ->andReturnNull();
 
-        $this->input->getOption('src')->willReturn('src');
+        $this->input->method('getOption')->with('src')->willReturn('src');
 
         $this->output
-            ->writeln(Argument::containingString('Scanning for usage of http-interop middleware...'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Done!'))
-            ->shouldBeCalled();
+            ->expects(self::atLeast(2))
+            ->method('writeln')
+            ->with(self::logicalOr(
+                self::stringContains('Scanning for usage of http-interop middleware...'),
+                self::stringContains('Done!'),
+            ));
 
         $command = new MigrateInteropMiddlewareCommand($path);
         $method  = $this->reflectExecuteMethod($command);
 
         self::assertSame(0, $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 
@@ -122,7 +121,7 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
         $converter = Mockery::mock('overload:' . ConvertInteropMiddleware::class);
         $converter->shouldNotReceive('process');
 
-        $this->input->getOption('src')->willReturn('src');
+        $this->input->method('getOption')->with('src')->willReturn('src');
 
         $command = new MigrateInteropMiddlewareCommand($path);
         $method  = $this->reflectExecuteMethod($command);
@@ -132,8 +131,8 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
 
         $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         );
     }
 }

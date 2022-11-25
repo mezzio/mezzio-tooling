@@ -9,14 +9,8 @@ namespace Mezzio\Tooling\CreateHandler;
  */
 final class Template
 {
-    private string $name;
-
-    private string $path;
-
-    public function __construct(string $path, string $name)
+    public function __construct(private string $path, private string $name)
     {
-        $this->path = $path;
-        $this->name = $name;
     }
 
     public function getName(): string

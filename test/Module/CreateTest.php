@@ -109,8 +109,8 @@ class CreateTest extends TestCase
         self::assertEquals('my-modules/MyApp', $metadata->rootPath());
         self::assertFileExists($configProvider);
         $configProviderContent = file_get_contents($configProvider);
-        self::assertSame(1, preg_match('/\bnamespace MyApp\b/', $configProviderContent));
-        self::assertSame(1, preg_match('/\bclass ConfigProvider\b/', $configProviderContent));
+        self::assertSame(1, preg_match('#\bnamespace MyApp\b#', $configProviderContent));
+        self::assertSame(1, preg_match('#\bclass ConfigProvider\b#', $configProviderContent));
         $command         = $this->command;
         $expectedContent = sprintf($command::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED, 'MyApp', 'my-app', '');
         self::assertSame($expectedContent, $configProviderContent);
@@ -220,8 +220,8 @@ class CreateTest extends TestCase
         self::assertEquals('my-modules/MyApp', $metadata->rootPath());
         self::assertFileExists($configProvider);
         $configProviderContent = file_get_contents($configProvider);
-        self::assertSame(1, preg_match('/\bnamespace ParentNamespace\\\\MyApp\b/', $configProviderContent));
-        self::assertSame(1, preg_match('/\bclass ConfigProvider\b/', $configProviderContent));
+        self::assertSame(1, preg_match('#\bnamespace ParentNamespace\\\MyApp\b#', $configProviderContent));
+        self::assertSame(1, preg_match('#\bclass ConfigProvider\b#', $configProviderContent));
         $command         = $this->command;
         $expectedContent = sprintf(
             $command::TEMPLATE_CONFIG_PROVIDER_RECOMMENDED,

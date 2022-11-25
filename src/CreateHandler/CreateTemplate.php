@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\CreateHandler;
 
+use ArrayAccess;
 use Mezzio\LaminasView\LaminasViewRenderer;
 use Mezzio\Plates\PlatesRenderer;
 use Mezzio\Tooling\TemplateResolutionTrait;
@@ -15,6 +16,7 @@ use function array_shift;
 use function count;
 use function file_put_contents;
 use function in_array;
+use function is_countable;
 use function is_dir;
 use function ltrim;
 use function mkdir;
@@ -39,18 +41,14 @@ final class CreateTemplate
         LaminasViewRenderer::class,
     ];
 
-    private ContainerInterface $container;
-
     /**
      * Root directory of project; used to determine if handler path indicates a
      * module.
      */
-    private string $projectPath;
-
-    public function __construct(string $projectPath, ContainerInterface $container)
-    {
-        $this->projectPath = $projectPath;
-        $this->container   = $container;
+    public function __construct(
+        private string $projectPath,
+        private ContainerInterface $container
+    ) {
     }
 
     public function forHandler(string $handler): Template
@@ -108,10 +106,8 @@ final class CreateTemplate
 
         // We only need to test for a known renderer type if there is no
         // template suffix available.
-        if (null === $templateSuffix) {
-            if (! in_array($type, self::KNOWN_RENDERERS, true)) {
-                throw UnresolvableRendererException::dueToUnknownType($type);
-            }
+        if (null === $templateSuffix && ! in_array($type, self::KNOWN_RENDERERS, true)) {
+            throw UnresolvableRendererException::dueToUnknownType($type);
         }
 
         return $type;
@@ -121,7 +117,7 @@ final class CreateTemplate
     {
         $r    = new ReflectionClass($handler);
         $path = $r->getFileName();
-        $path = preg_replace('#^' . preg_quote($this->projectPath) . '#', '', $path);
+        $path = preg_replace('#^' . preg_quote($this->projectPath, '#') . '#', '', $path);
         $path = ltrim($path, '/\\');
         return rtrim($path, '/\\');
     }
@@ -129,22 +125,24 @@ final class CreateTemplate
     /**
      * @todo If more than one template path exists, we should likely prompt the
      *     user for which one to which to install the template.
-     * @param array|ArrayAccess $config
      * @return null|string Returns null if no template path configuration
      *     exists for the namespace.
      * @throws TemplatePathResolutionException If configuration has zero paths
      *     defined for the namespace.
      */
-    private function getTemplatePathForNamespaceFromConfig(string $templateNamespace, $config): ?string
-    {
+    private function getTemplatePathForNamespaceFromConfig(
+        string $templateNamespace,
+        array|ArrayAccess $config
+    ): ?string {
         if (! isset($config['templates']['paths'][$templateNamespace])) {
             return null;
         }
 
         $paths = $config['templates']['paths'][$templateNamespace];
-        if (count($paths) === 0) {
+        if ((is_countable($paths) ? count($paths) : 0) === 0) {
             throw TemplatePathResolutionException::forNamespace($templateNamespace);
         }
+
         $path = array_shift($paths);
         return rtrim($path, '/\\');
     }
@@ -157,6 +155,7 @@ final class CreateTemplate
         if ($this->pathRepresentsModule($path, $namespace)) {
             return sprintf('%s/src/%s/templates', $this->projectPath, $namespace);
         }
+
         return sprintf('%s/templates/%s', $this->projectPath, $templateNamespace);
     }
 
@@ -173,6 +172,7 @@ final class CreateTemplate
         if (! isset($config['templates']['extension'])) {
             return $this->getDefaultTemplateSuffix($type);
         }
+
         return $config['templates']['extension'];
     }
 
@@ -182,15 +182,9 @@ final class CreateTemplate
      */
     private function getDefaultTemplateSuffix(string $type): string
     {
-        switch ($type) {
-            case TwigRenderer::class:
-                return 'html.twig';
-            case PlatesRenderer::class:
-                // fall-through
-            case LaminasViewRenderer::class:
-                // fall-through
-            default:
-                return 'phtml';
-        }
+        return match ($type) {
+            TwigRenderer::class => 'html.twig',
+            default => 'phtml',
+        };
     }
 }

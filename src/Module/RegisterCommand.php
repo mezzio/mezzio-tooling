@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mezzio\Tooling\Module;
 
 use Mezzio\Tooling\Composer\ComposerPackageFactoryInterface;
+use Mezzio\Tooling\Composer\ComposerPackageInterface;
 use Mezzio\Tooling\Composer\ComposerProcessFactoryInterface;
 use Mezzio\Tooling\ConfigInjector\ConfigAggregatorInjector;
 use Mezzio\Tooling\ConfigInjector\InjectorInterface;
@@ -19,6 +20,9 @@ use function sprintf;
 
 final class RegisterCommand extends Command
 {
+    /**
+     * @var string
+     */
     public const HELP = <<<'EOT'
         Register an existing middleware module with the application, by:
         
@@ -33,29 +37,26 @@ final class RegisterCommand extends Command
 
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_ARG_MODULE = 'The module to register with the application';
 
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:module:register';
 
-    /** @var ComposerPackageInterface */
-    private $package;
+    private ComposerPackageInterface $package;
 
-    private string $projectRoot;
-
-    private ComposerProcessFactoryInterface $processFactory;
     private InjectorInterface $injector;
 
     public function __construct(
-        string $projectRoot,
+        private string $projectRoot,
         ComposerPackageFactoryInterface $packageFactory,
-        ComposerProcessFactoryInterface $processFactory,
+        private ComposerProcessFactoryInterface $processFactory,
         ?InjectorInterface $configInjector = null
     ) {
-        $this->projectRoot    = $projectRoot;
-        $this->package        = $packageFactory->loadPackage($projectRoot);
-        $this->processFactory = $processFactory;
-        $this->injector       = $configInjector ?? new ConfigAggregatorInjector($this->projectRoot);
+        $this->package  = $packageFactory->loadPackage($projectRoot);
+        $this->injector = $configInjector ?? new ConfigAggregatorInjector($this->projectRoot);
 
         parent::__construct();
     }

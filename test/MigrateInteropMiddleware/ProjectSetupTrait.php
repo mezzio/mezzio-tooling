@@ -7,9 +7,7 @@ namespace MezzioTest\Tooling\MigrateInteropMiddleware;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\Assert;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\MockObject\MockObject;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
@@ -23,10 +21,7 @@ use const DIRECTORY_SEPARATOR;
 
 trait ProjectSetupTrait
 {
-    use ProphecyTrait;
-
-    /** @param string|vfsStreamDirectory $dir */
-    private function setupSrcDir($dir): void
+    private function setupSrcDir(string|vfsStreamDirectory $dir): void
     {
         $base = realpath(__DIR__ . '/TestAsset') . DIRECTORY_SEPARATOR;
         $rdi  = new RecursiveDirectoryIterator($base . 'src');
@@ -48,37 +43,37 @@ trait ProjectSetupTrait
 
     private static function isPhpFile(SplFileInfo $file): bool
     {
-        return $file->isFile()
-            && $file->getExtension() === 'php'
-            && $file->isReadable()
-            && $file->isWritable();
+        if (! $file->isFile()) {
+            return false;
+        }
+
+        if ($file->getExtension() !== 'php') {
+            return false;
+        }
+
+        if (! $file->isReadable()) {
+            return false;
+        }
+
+        return $file->isWritable();
     }
 
-    /**
-     * @return ObjectProphecy<OutputInterface>
-     */
-    private function setupConsoleHelper()
+    /** @return OutputInterface&MockObject */
+    private function setupConsoleHelper(): OutputInterface
     {
-        $console = $this->prophesize(OutputInterface::class);
+        $console = $this->createMock(OutputInterface::class);
 
         $console
-            ->writeln(Argument::containingString('src/InteropAliasMiddleware.php'))
-            ->shouldBeCalled();
-        $console
-            ->writeln(Argument::containingString('src/MultilineMiddleware.php'))
-            ->shouldBeCalled();
-        $console
-            ->writeln(Argument::containingString('src/MultipleInterfacesMiddleware.php'))
-            ->shouldBeCalled();
-        $console
-            ->writeln(Argument::containingString('src/MyClass.php'))
-            ->shouldBeCalled();
-        $console
-            ->writeln(Argument::containingString('src/MyInteropDelegate.php'))
-            ->shouldBeCalled();
-        $console
-            ->writeln(Argument::containingString('src/MyInteropMiddleware.php'))
-            ->shouldBeCalled();
+            ->expects(self::atLeast(6))
+            ->method('writeln')
+            ->with(self::logicalOr(
+                self::stringContains('src/InteropAliasMiddleware.php'),
+                self::stringContains('src/MultilineMiddleware.php'),
+                self::stringContains('src/MultipleInterfacesMiddleware.php'),
+                self::stringContains('src/MyClass.php'),
+                self::stringContains('src/MyInteropDelegate.php'),
+                self::stringContains('src/MyInteropMiddleware.php'),
+            ));
 
         return $console;
     }

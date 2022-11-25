@@ -11,10 +11,8 @@ use Mezzio\Tooling\Factory\CreateFactoryCommand;
 use Mezzio\Tooling\Factory\FactoryClassGenerator;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionMethod;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
@@ -26,20 +24,19 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 class CreateFactoryCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use ProphecyTrait;
 
-    /** @var ObjectProphecy<InputInterface> */
-    private $input;
+    /** @var InputInterface&MockObject */
+    private InputInterface $input;
 
-    /** @var ObjectProphecy<ConsoleOutputInterface> */
-    private $output;
+    /** @var ConsoleOutputInterface&MockObject */
+    private ConsoleOutputInterface $output;
 
     private CreateFactoryCommand $command;
 
     protected function setUp(): void
     {
-        $this->input  = $this->prophesize(InputInterface::class);
-        $this->output = $this->prophesize(ConsoleOutputInterface::class);
+        $this->input  = $this->createMock(InputInterface::class);
+        $this->output = $this->createMock(ConsoleOutputInterface::class);
 
         $this->command = new CreateFactoryCommand(
             new Create(new FactoryClassGenerator()),
@@ -83,8 +80,12 @@ class CreateFactoryCommandTest extends TestCase
 
     public function testSuccessfulExecutionEmitsExpectedMessages(): void
     {
-        $generator = $this->prophesize(Create::class);
-        $generator->createForClass('Foo\TestHandler')->willReturn(__DIR__)->shouldBeCalled();
+        $generator = $this->createMock(Create::class);
+        $generator
+            ->expects(self::atLeastOnce())
+            ->method('createForClass')
+            ->with('Foo\TestHandler')
+            ->willReturn(__DIR__);
 
         $injector = Mockery::mock('overload:' . ConfigInjector::class);
         $injector->shouldReceive('injectFactoryForClass')
@@ -92,51 +93,51 @@ class CreateFactoryCommandTest extends TestCase
             ->with('Foo\TestHandlerFactory', 'Foo\TestHandler')
             ->andReturn('some-file-name');
 
-        $this->input->getArgument('class')->willReturn('Foo\TestHandler');
-        $this->input->getOption('no-register')->willReturn(false);
-        $this->output
-            ->writeln(Argument::containingString('Creating factory for class Foo\TestHandler'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Registering factory with container'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Success'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Created factory class Foo\TestHandlerFactory, in file ' . __DIR__))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Registered factory to container'))
-            ->shouldBeCalled();
+        $this->input->method('getArgument')->with('class')->willReturn('Foo\TestHandler');
+        $this->input->method('getOption')->with('no-register')->willReturn(false);
 
-        $command = new CreateFactoryCommand($generator->reveal(), '');
+        $this->output
+            ->expects(self::atLeast(5))
+            ->method('writeln')
+            ->with(self::logicalOr(
+                self::stringContains('Creating factory for class Foo\TestHandler'),
+                self::stringContains('Registering factory with container'),
+                self::stringContains('Success'),
+                self::stringContains('Created factory class Foo\TestHandlerFactory, in file ' . __DIR__),
+                self::stringContains('Registered factory to container'),
+            ));
+
+        $command = new CreateFactoryCommand($generator, '');
 
         $method = $this->reflectExecuteMethod($command);
 
         self::assertSame(0, $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 
     public function testAllowsExceptionsRaisedFromCreateToBubbleUp(): void
     {
-        $generator = $this->prophesize(Create::class);
-        $generator->createForClass('Foo\TestHandler')->willThrow(ClassNotFoundException::class)->shouldBeCalled();
+        $generator = $this->createMock(Create::class);
+        $generator->expects(self::atLeastOnce())
+            ->method('createForClass')
+            ->with('Foo\TestHandler')
+            ->willThrowException(new ClassNotFoundException());
 
-        $this->input->getArgument('class')->willReturn('Foo\TestHandler');
-        $this->input->getOption('no-register')->willReturn(false);
+        $this->input->method('getArgument')->with('class')->willReturn('Foo\TestHandler');
+        $this->input->method('getOption')->with('no-register')->willReturn(false);
+
         $this->output
-            ->writeln(Argument::containingString('Creating factory for class Foo\TestHandler'))
-            ->shouldBeCalled();
+            ->expects(self::atLeastOnce())
+            ->method('writeln')
+            ->with(self::logicalAnd(
+                self::stringContains('Creating factory for class Foo\TestHandler'),
+                self::logicalNot(self::stringContains('Success')),
+            ));
 
-        $this->output
-            ->writeln(Argument::containingString('Success'))
-            ->shouldNotBeCalled();
-
-        $command = new CreateFactoryCommand($generator->reveal(), '');
+        $command = new CreateFactoryCommand($generator, '');
 
         $method = $this->reflectExecuteMethod($command);
 
@@ -144,8 +145,8 @@ class CreateFactoryCommandTest extends TestCase
 
         $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         );
     }
 }

@@ -9,32 +9,50 @@ use Symfony\Component\Console\Input\InputOption;
 
 final class CreateActionCommand extends CreateHandlerCommand
 {
+    /**
+     * @var string
+     */
     public const HELP_DESCRIPTION = 'Create an action class file.';
 
+    /**
+     * @var string
+     */
     public const HELP = <<<'EOT'
         Creates an action class file named after the provided class. For a path, it
         matches the class namespace against PSR-4 autoloader namespaces in your
         composer.json.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_ARG_ACTION = <<<'EOT'
         Fully qualified class name of the action class to create. This value
         should be quoted to ensure namespace separators are not interpreted as
         escape sequences by your shell.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_OPT_NO_FACTORY = <<<'EOT'
         By default, this command generates a factory for the action class it creates,
         and registers it with the container. Passing this option disables that
         feature.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_OPT_NO_REGISTER = <<<'EOT'
         By default, when this command generates a factory for the action class it
         creates, it registers it with the container. Passing this option disables
         registration of the generated factory with the container.
         EOT;
 
+    /**
+     * @var string
+     */
     public const STATUS_TEMPLATE = '<info>Creating action %s...</info>';
 
     /** @var null|string Cannot be defined explicitly due to parent class */

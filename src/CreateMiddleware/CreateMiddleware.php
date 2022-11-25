@@ -21,7 +21,7 @@ use function json_decode;
 use function mkdir;
 use function sprintf;
 use function str_replace;
-use function strpos;
+use function str_starts_with;
 use function trim;
 
 use const DIRECTORY_SEPARATOR;
@@ -98,7 +98,7 @@ final class CreateMiddleware
         [$namespace, $path] = $this->discoverNamespaceAndPath($class, $autoloaders);
 
         // Absolute path to namespace
-        $path = implode([$projectRoot, DIRECTORY_SEPARATOR, $path]);
+        $path = implode('', [$projectRoot, DIRECTORY_SEPARATOR, $path]);
 
         $parts     = explode('\\', $class);
         $className = array_pop($parts);
@@ -107,16 +107,14 @@ final class CreateMiddleware
         $nsParts    = explode('\\', trim($namespace, '\\'));
         $subNsParts = array_slice($parts, count($nsParts));
 
-        if (0 < count($subNsParts)) {
+        if ([] !== $subNsParts) {
             $subNsPath = implode(DIRECTORY_SEPARATOR, $subNsParts);
-            $path      = implode([$path, DIRECTORY_SEPARATOR, $subNsPath]);
+            $path      = implode('', [$path, DIRECTORY_SEPARATOR, $subNsPath]);
         }
 
         // Create path if it does not exist
-        if (! is_dir($path)) {
-            if (false === mkdir($path, 0755, true)) {
-                throw CreateMiddlewareException::unableToCreatePath($path, $class);
-            }
+        if (! is_dir($path) && ! mkdir($path, 0755, true)) {
+            throw CreateMiddlewareException::unableToCreatePath($path, $class);
         }
 
         return $path . DIRECTORY_SEPARATOR . $className . '.php';
@@ -135,8 +133,8 @@ final class CreateMiddleware
 
         try {
             $composer = json_decode(file_get_contents($composerPath), true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            throw CreateMiddlewareException::invalidComposerJson($e->getMessage());
+        } catch (JsonException $jsonException) {
+            throw CreateMiddlewareException::invalidComposerJson($jsonException->getMessage());
         }
 
         if (! isset($composer['autoload']['psr-4'])) {
@@ -157,7 +155,7 @@ final class CreateMiddleware
     private function discoverNamespaceAndPath(string $class, array $autoloaders): array
     {
         foreach ($autoloaders as $namespace => $path) {
-            if (0 === strpos($class, $namespace)) {
+            if (str_starts_with($class, $namespace)) {
                 $path = trim(
                     str_replace(
                         ['/', '\\'],

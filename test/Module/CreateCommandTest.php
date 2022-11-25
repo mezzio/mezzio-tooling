@@ -14,10 +14,8 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionMethod;
 use ReflectionProperty;
 use Symfony\Component\Console\Application;
@@ -38,44 +36,40 @@ class CreateCommandTest extends TestCase
 {
     use CommonOptionsAndAttributesTrait;
     use MockeryPHPUnitIntegration;
-    use ProphecyTrait;
 
-    /** @var ObjectProphecy<InputInterface> */
-    private $input;
+    /** @var InputInterface&MockObject */
+    private InputInterface $input;
 
-    /** @var ObjectProphecy<ConsoleOutputInterface> */
-    private $output;
+    /** @var ConsoleOutputInterface&MockObject */
+    private ConsoleOutputInterface $output;
 
-    /** @var CreateCommand */
-    private $command;
+    private CreateCommand $command;
 
     private vfsStreamDirectory $dir;
 
     private string $projectRoot;
 
-    /** @var string */
-    private $expectedModuleArgumentDescription;
+    private string $expectedModuleArgumentDescription;
 
     protected function setUp(): void
     {
         $this->dir         = vfsStream::setup('project');
         $this->projectRoot = vfsStream::url('project');
 
-        $this->input  = $this->prophesize(InputInterface::class);
-        $this->output = $this->prophesize(ConsoleOutputInterface::class);
+        $this->input  = $this->createMock(InputInterface::class);
+        $this->output = $this->createMock(ConsoleOutputInterface::class);
 
         $this->command                           = new CreateCommand([], '');
         $this->expectedModuleArgumentDescription = CreateCommand::HELP_ARG_MODULE;
     }
 
-    /** @return array|ArrayObject */
-    public function createConfig(bool $configAsArrayObject = false)
+    public function createConfig(bool $configAsArrayObject = false): array|ArrayObject
     {
         $configFile = $this->projectRoot . '/config/config.php';
         $config     = include $configFile;
 
         if ($configAsArrayObject) {
-            $config = new ArrayObject($config);
+            return new ArrayObject($config);
         }
 
         return $config;
@@ -96,7 +90,7 @@ class CreateCommandTest extends TestCase
     }
 
     /**
-     * @psalm-return ObjectProphecy<Application>
+     * @psalm-return Application&MockObject
      */
     private function mockApplicationWithRegisterCommand(
         int $return,
@@ -105,29 +99,25 @@ class CreateCommandTest extends TestCase
         string $composer,
         string $modulePath,
         OutputInterface $output
-    ) {
-        $register = $this->prophesize(Command::class);
+    ): Application {
+        $register = $this->createMock(Command::class);
         $register
-            ->run(
-                Argument::that(function ($input) use ($name, $module, $composer, $modulePath) {
+            ->method('run')
+            ->with(
+                self::callback(static function ($input) use ($name, $module, $composer, $modulePath): bool {
                     TestCase::assertInstanceOf(ArrayInput::class, $input);
-
                     $r = new ReflectionProperty($input, 'parameters');
                     $r->setAccessible(true);
-                    $parameters = $r->getValue($input);
 
+                    $parameters = $r->getValue($input);
                     TestCase::assertArrayHasKey('command', $parameters);
                     TestCase::assertEquals($name, $parameters['command']);
-
                     TestCase::assertArrayHasKey('module', $parameters);
                     TestCase::assertEquals($module, $parameters['module']);
-
                     TestCase::assertArrayHasKey('--composer', $parameters);
                     TestCase::assertEquals($composer, $parameters['--composer']);
-
                     TestCase::assertArrayHasKey('--exact-path', $parameters);
                     TestCase::assertEquals($modulePath, $parameters['--exact-path']);
-
                     return true;
                 }),
                 $output
@@ -135,11 +125,11 @@ class CreateCommandTest extends TestCase
             ->willReturn($return);
 
         // HelperSet is needed as setApplication retrieves it to inject in the new command
-        $helperSet = $this->prophesize(HelperSet::class);
+        $helperSet = $this->createStub(HelperSet::class);
 
-        $application = $this->prophesize(Application::class);
-        $application->find($name)->will([$register, 'reveal']);
-        $application->getHelperSet()->will([$helperSet, 'reveal']);
+        $application = $this->createMock(Application::class);
+        $application->method('find')->with($name)->willReturn($register);
+        $application->method('getHelperSet')->willReturn($helperSet);
         return $application;
     }
 
@@ -170,19 +160,22 @@ class CreateCommandTest extends TestCase
             ->with('Foo', 'library/modules', $projectRoot, false, '')
             ->andReturn($metadata);
 
-        $this->input->getArgument('module')->willReturn('Foo');
-        $this->input->getOption('composer')->willReturn('composer.phar');
-        $this->input->getOption('modules-path')->willReturn('./library/modules');
-        $this->input->getOption('flat')->willReturn(false);
-        $this->input->getOption('with-route-delegator')->willReturn(false);
-        $this->input->getOption('with-namespace')->willReturn('');
+        $this->input->method('getArgument')->with('module')->willReturn('Foo');
+        $this->input->method('getOption')->willReturnMap([
+            ['composer', 'composer.phar'],
+            ['modules-path', './library/modules'],
+            ['flat', false],
+            ['with-route-delegator', false],
+            ['with-namespace', ''],
+        ]);
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
         $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
 
         $this->output
-             ->writeln(Argument::containingString('Created module "Foo" in directory "./library/modules"'))
-             ->shouldBeCalled();
+            ->expects(self::atLeastOnce())
+            ->method('writeln')
+            ->with(self::stringContains('Created module "Foo" in directory "./library/modules"'));
 
         $app = $this->mockApplicationWithRegisterCommand(
             0,
@@ -190,15 +183,15 @@ class CreateCommandTest extends TestCase
             'Foo',
             'composer.phar',
             'library/modules/Foo/src',
-            $this->output->reveal()
+            $this->output
         );
-        $command->setApplication($app->reveal());
+        $command->setApplication($app);
 
         $method = $this->reflectExecuteMethod($command);
         self::assertSame(0, $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 
@@ -219,20 +212,23 @@ class CreateCommandTest extends TestCase
             ->with('Foo', 'library/modules', $projectRoot, false, '')
             ->andReturn($metadata);
 
-        $this->input->getArgument('module')->willReturn('Foo');
-        $this->input->getOption('composer')->willReturn('composer.phar');
-        $this->input->getOption('modules-path')->willReturn('./library/modules');
-        $this->input->getOption('flat')->willReturn(false);
-        $this->input->getOption('with-route-delegator')->willReturn(false);
-        $this->input->getOption('with-namespace')->willReturn('');
+        $this->input->method('getArgument')->with('module')->willReturn('Foo');
+        $this->input->method('getOption')->willReturnMap([
+            ['composer', 'composer.phar'],
+            ['modules-path', './library/modules'],
+            ['flat', false],
+            ['with-route-delegator', false],
+            ['with-namespace', ''],
+        ]);
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
 
         $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
 
         $this->output
-             ->writeln(Argument::containingString('Created module "Foo" in directory "./library/modules"'))
-             ->shouldBeCalled();
+            ->expects(self::atLeastOnce())
+            ->method('writeln')
+            ->with(self::stringContains('Created module "Foo" in directory "./library/modules"'));
 
         $app = $this->mockApplicationWithRegisterCommand(
             1,
@@ -240,15 +236,15 @@ class CreateCommandTest extends TestCase
             'Foo',
             'composer.phar',
             'library/modules/Foo/src',
-            $this->output->reveal()
+            $this->output
         );
-        $command->setApplication($app->reveal());
+        $command->setApplication($app);
 
         $method = $this->reflectExecuteMethod($command);
         self::assertSame(1, $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 
@@ -264,12 +260,14 @@ class CreateCommandTest extends TestCase
             ->once()
             ->andThrow(RuntimeException::class, 'ERROR THROWN');
 
-        $this->input->getArgument('module')->willReturn('Foo');
-        $this->input->getOption('composer')->willReturn('composer.phar');
-        $this->input->getOption('modules-path')->willReturn('./library/modules');
-        $this->input->getOption('flat')->willReturn(false);
-        $this->input->getOption('with-route-delegator')->willReturn(false);
-        $this->input->getOption('with-namespace')->willReturn('');
+        $this->input->method('getArgument')->with('module')->willReturn('Foo');
+        $this->input->method('getOption')->willReturnMap([
+            ['composer', 'composer.phar'],
+            ['modules-path', './library/modules'],
+            ['flat', false],
+            ['with-route-delegator', false],
+            ['with-namespace', ''],
+        ]);
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
 
@@ -281,8 +279,8 @@ class CreateCommandTest extends TestCase
         $this->expectExceptionMessage('ERROR THROWN');
         $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         );
     }
 
@@ -303,19 +301,22 @@ class CreateCommandTest extends TestCase
             ->with('Foo', 'library/modules', $projectRoot, false, '')
             ->andReturn($metadata);
 
-        $this->input->getArgument('module')->willReturn('Foo');
-        $this->input->getOption('composer')->willReturn('composer.phar');
-        $this->input->getOption('modules-path')->willReturn('./library/modules');
-        $this->input->getOption('flat')->willReturn(true);
-        $this->input->getOption('with-route-delegator')->willReturn(false);
-        $this->input->getOption('with-namespace')->willReturn('');
+        $this->input->method('getArgument')->with('module')->willReturn('Foo');
+        $this->input->method('getOption')->willReturnMap([
+            ['composer', 'composer.phar'],
+            ['modules-path', './library/modules'],
+            ['flat', true],
+            ['with-route-delegator', false],
+            ['with-namespace', ''],
+        ]);
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
         $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
 
         $this->output
-             ->writeln(Argument::containingString('Created module "Foo" in directory "./library/modules"'))
-             ->shouldBeCalled();
+            ->expects(self::atLeastOnce())
+            ->method('writeln')
+            ->with(self::stringContains('Created module "Foo" in directory "./library/modules"'));
 
         $app = $this->mockApplicationWithRegisterCommand(
             0,
@@ -323,15 +324,15 @@ class CreateCommandTest extends TestCase
             'Foo',
             'composer.phar',
             'library/modules/Foo',
-            $this->output->reveal()
+            $this->output
         );
-        $command->setApplication($app->reveal());
+        $command->setApplication($app);
 
         $method = $this->reflectExecuteMethod($command);
         self::assertSame(0, $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 
@@ -352,19 +353,22 @@ class CreateCommandTest extends TestCase
             ->with('Foo', 'library/modules', $projectRoot, true, '')
             ->andReturn($metadata);
 
-        $this->input->getArgument('module')->willReturn('Foo');
-        $this->input->getOption('composer')->willReturn('composer.phar');
-        $this->input->getOption('modules-path')->willReturn('./library/modules');
-        $this->input->getOption('flat')->willReturn(false);
-        $this->input->getOption('with-route-delegator')->willReturn(true);
-        $this->input->getOption('with-namespace')->willReturn('');
+        $this->input->method('getArgument')->with('module')->willReturn('Foo');
+        $this->input->method('getOption')->willReturnMap([
+            ['composer', 'composer.phar'],
+            ['modules-path', './library/modules'],
+            ['flat', false],
+            ['with-route-delegator', true],
+            ['with-namespace', ''],
+        ]);
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
         $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
 
         $this->output
-             ->writeln(Argument::containingString('Created module "Foo" in directory "./library/modules"'))
-             ->shouldBeCalled();
+            ->expects(self::atLeastOnce())
+            ->method('writeln')
+            ->with(self::stringContains('Created module "Foo" in directory "./library/modules"'));
 
         $app = $this->mockApplicationWithRegisterCommand(
             0,
@@ -372,15 +376,15 @@ class CreateCommandTest extends TestCase
             'Foo',
             'composer.phar',
             'library/modules/Foo/src',
-            $this->output->reveal()
+            $this->output
         );
-        $command->setApplication($app->reveal());
+        $command->setApplication($app);
 
         $method = $this->reflectExecuteMethod($command);
         self::assertSame(0, $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 
@@ -401,21 +405,22 @@ class CreateCommandTest extends TestCase
             ->with('Foo', 'library/modules', $projectRoot, true, 'ParentNamespace')
             ->andReturn($metadata);
 
-        $this->input->getArgument('module')->willReturn('Foo');
-        $this->input->getOption('composer')->willReturn('composer.phar');
-        $this->input->getOption('modules-path')->willReturn('./library/modules');
-        $this->input->getOption('flat')->willReturn(false);
-        $this->input->getOption('with-route-delegator')->willReturn(true);
-        $this->input->getOption('with-namespace')->willReturn('ParentNamespace');
+        $this->input->method('getArgument')->with('module')->willReturn('Foo');
+        $this->input->method('getOption')->willReturnMap([
+            ['composer', 'composer.phar'],
+            ['modules-path', './library/modules'],
+            ['flat', false],
+            ['with-route-delegator', true],
+            ['with-namespace', 'ParentNamespace'],
+        ]);
 
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset', $this->dir);
         $command = new CreateCommand($this->createConfig($configAsArrayObject), $projectRoot);
 
         $this->output
-            ->writeln(Argument::containingString(
-                'Created module "ParentNamespace\\Foo" in directory "library/modules/Foo"'
-            ))
-            ->shouldBeCalled();
+            ->expects(self::atLeastOnce())
+            ->method('writeln')
+            ->with(self::stringContains('Created module "ParentNamespace\\Foo" in directory "library/modules/Foo"'));
 
         $app = $this->mockApplicationWithRegisterCommand(
             0,
@@ -423,15 +428,15 @@ class CreateCommandTest extends TestCase
             'ParentNamespace\\Foo', // Note: passing parent namespace as module argument!
             'composer.phar',
             'library/modules/Foo/src',
-            $this->output->reveal()
+            $this->output
         );
-        $command->setApplication($app->reveal());
+        $command->setApplication($app);
 
         $method = $this->reflectExecuteMethod($command);
         self::assertSame(0, $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 }

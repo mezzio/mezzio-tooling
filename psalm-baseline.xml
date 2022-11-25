@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.27.0@faf106e717c37b8c81721845dba9de3d8deed8ff">
+<files psalm-version="4.30.0@d0bc6e25d89f649e4f36a534f330f8bb4643dd69">
   <file src="src/Composer/FileSystemBasedComposerPackage.php">
     <MixedArrayAssignment occurrences="1">
       <code>$package[$key]['psr-4']</code>
     </MixedArrayAssignment>
     <MixedInferredReturnType occurrences="1">
-      <code>array</code>
+      <code>mixed[]</code>
     </MixedInferredReturnType>
     <MixedReturnStatement occurrences="1">
       <code>json_decode($contents, true, 512, JSON_THROW_ON_ERROR)</code>
     </MixedReturnStatement>
+  </file>
+  <file src="src/ConfigInjector/AbstractInjector.php">
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>int[]</code>
+    </LessSpecificImplementedReturnType>
+    <PropertyTypeCoercion occurrences="2">
+      <code>$modules</code>
+      <code>$modules</code>
+    </PropertyTypeCoercion>
+  </file>
+  <file src="src/ConfigProvider.php">
+    <InvalidDocblock occurrences="1">
+      <code>public function getConsoleConfig(): array</code>
+    </InvalidDocblock>
+    <InvalidReturnStatement occurrences="1"/>
+    <InvalidReturnType occurrences="1">
+      <code>array{factories: array{Create: string, CreateActionCommand: string, CreateCommand: string, CreateFactoryCommand: string, CreateHandlerCommand: string, CreateMiddlewareCommand: string, DeregisterCommand: string, MigrateInteropMiddlewareCommand: string, MigrateMiddlewareToRequestHandlerCommand: string, RegisterCommand: string}}</code>
+    </InvalidReturnType>
   </file>
   <file src="src/CreateHandler/CreateHandler.php">
     <MixedArgument occurrences="4">
@@ -18,8 +36,10 @@
       <code>$path</code>
       <code>$value</code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="1">
+    <MixedArgumentTypeCoercion occurrences="3">
       <code>$key</code>
+      <code>$namespace</code>
+      <code>[$this-&gt;projectRoot, DIRECTORY_SEPARATOR, $path]</code>
     </MixedArgumentTypeCoercion>
     <MixedArrayAccess occurrences="2">
       <code>$composer['autoload']</code>
@@ -72,35 +92,35 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$handler</code>
     </ArgumentTypeCoercion>
-    <MixedArgument occurrences="2">
+    <MixedArgument occurrences="3">
       <code>$config</code>
-      <code>$config</code>
+      <code>$path</code>
+      <code>$paths</code>
     </MixedArgument>
-    <MixedAssignment occurrences="1">
+    <MixedAssignment occurrences="3">
       <code>$config</code>
+      <code>$path</code>
+      <code>$paths</code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="2">
-      <code>null|string</code>
+    <MixedInferredReturnType occurrences="1">
       <code>string</code>
     </MixedInferredReturnType>
     <MixedReturnStatement occurrences="1">
       <code>$config['templates']['extension']</code>
     </MixedReturnStatement>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$config</code>
+    </PossiblyInvalidArgument>
     <PossiblyNullArgument occurrences="2">
       <code>$rendererType</code>
       <code>$type</code>
     </PossiblyNullArgument>
-    <UndefinedClass occurrences="6">
+    <UndefinedClass occurrences="4">
       <code>LaminasViewRenderer</code>
-      <code>LaminasViewRenderer</code>
-      <code>PlatesRenderer</code>
       <code>PlatesRenderer</code>
       <code>TwigRenderer</code>
       <code>TwigRenderer</code>
     </UndefinedClass>
-    <UndefinedDocblockClass occurrences="1">
-      <code>array|ArrayAccess</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/CreateMiddleware/CreateMiddleware.php">
     <MixedArgument occurrences="3">
@@ -108,8 +128,10 @@
       <code>$namespace</code>
       <code>$path</code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="1">
+    <MixedArgumentTypeCoercion occurrences="3">
+      <code>$namespace</code>
       <code>[$namespace, $class]</code>
+      <code>[$projectRoot, DIRECTORY_SEPARATOR, $path]</code>
     </MixedArgumentTypeCoercion>
     <MixedArrayAccess occurrences="2">
       <code>$composer['autoload']</code>
@@ -242,18 +264,20 @@
     </PossiblyInvalidDocblockTag>
   </file>
   <file src="src/Module/CommandCommonOptions.php">
-    <MixedArgument occurrences="1">
+    <MixedArgument occurrences="2">
       <code>$command::HELP_ARG_MODULE</code>
+      <code>$modulesPath</code>
     </MixedArgument>
-    <MixedInferredReturnType occurrences="1">
-      <code>string</code>
-    </MixedInferredReturnType>
+    <MixedArrayAccess occurrences="1">
+      <code>$config[self::class]['--modules-path']</code>
+    </MixedArrayAccess>
+    <MixedAssignment occurrences="2">
+      <code>$configuredModulesPath</code>
+      <code>$modulesPath</code>
+    </MixedAssignment>
     <UndefinedConstant occurrences="1">
       <code>$command::HELP_ARG_MODULE</code>
     </UndefinedConstant>
-    <UndefinedDocblockClass occurrences="1">
-      <code>array|ArrayAccess</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/Module/CreateCommand.php">
     <MixedArgument occurrences="2">
@@ -265,15 +289,13 @@
       <code>$module</code>
       <code>$parentNamespace</code>
     </MixedAssignment>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$this-&gt;config</code>
+    </PossiblyInvalidArgument>
     <PossiblyNullReference occurrences="1">
       <code>find</code>
     </PossiblyNullReference>
-    <PropertyNotSetInConstructor occurrences="2">
-      <code>$config</code>
-      <code>$projectRoot</code>
-    </PropertyNotSetInConstructor>
-    <UndefinedDocblockClass occurrences="2">
-      <code>array|ArrayAccess</code>
+    <UndefinedDocblockClass occurrences="1">
       <code>array|ArrayAccess</code>
     </UndefinedDocblockClass>
   </file>
@@ -297,15 +319,12 @@
     </MixedAssignment>
   </file>
   <file src="src/Module/RegisterCommand.php">
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>$packageFactory-&gt;loadPackage($projectRoot)</code>
-    </InvalidPropertyAssignmentValue>
     <MixedArgument occurrences="5">
       <code>$composer</code>
       <code>$module</code>
       <code>$module</code>
       <code>$module</code>
-      <code>$module</code>
+      <code>$modulePath</code>
     </MixedArgument>
     <MixedArgumentTypeCoercion occurrences="1">
       <code>[$composer, 'dump-autoload']</code>
@@ -316,15 +335,8 @@
       <code>$module</code>
       <code>$modulePath</code>
     </MixedAssignment>
-    <UndefinedDocblockClass occurrences="2">
-      <code>$this-&gt;package</code>
-      <code>ComposerPackageInterface</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/TemplateResolutionTrait.php">
-    <MixedArgument occurrences="1">
-      <code>$renderer</code>
-    </MixedArgument>
     <MixedAssignment occurrences="1">
       <code>$renderer</code>
     </MixedAssignment>
@@ -339,7 +351,7 @@
     <MixedInferredReturnType occurrences="3">
       <code>array</code>
       <code>array</code>
-      <code>array</code>
+      <code>mixed[]</code>
     </MixedInferredReturnType>
     <MixedReturnStatement occurrences="1">
       <code>json_decode($json, true, 512, JSON_THROW_ON_ERROR)</code>
@@ -350,16 +362,46 @@
       <code>$type</code>
     </ArgumentTypeCoercion>
   </file>
+  <file src="test/ConfigInjector/ConfigAggregatorInjectorTest.php">
+    <ImplementedReturnTypeMismatch occurrences="4">
+      <code>array&lt;string, array&lt;string|bool&gt;&gt;</code>
+      <code>array&lt;string, array&lt;string|bool&gt;&gt;</code>
+      <code>array&lt;string, array&lt;string|bool|int&gt;&gt;</code>
+      <code>array&lt;string, array&lt;string|bool|int&gt;&gt;</code>
+    </ImplementedReturnTypeMismatch>
+    <InvalidReturnStatement occurrences="4"/>
+    <InvalidReturnType occurrences="4">
+      <code>array&lt;string, array&lt;string|bool&gt;&gt;</code>
+      <code>array&lt;string, array&lt;string|bool&gt;&gt;</code>
+      <code>array&lt;string, array&lt;string|bool|int&gt;&gt;</code>
+      <code>array&lt;string, array&lt;string|bool|int&gt;&gt;</code>
+    </InvalidReturnType>
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>array&lt;string, mixed[]&gt;</code>
+    </LessSpecificImplementedReturnType>
+  </file>
   <file src="test/CreateHandler/CreateTemplateTest.php">
     <InvalidStringClass occurrences="1">
       <code>new $renderer()</code>
     </InvalidStringClass>
-    <MixedArgument occurrences="2">
-      <code>$arguments</code>
+    <MixedArgument occurrences="14">
       <code>$config</code>
+      <code>TestHandler::class</code>
+      <code>TestHandler::class</code>
+      <code>TestHandler::class</code>
+      <code>TestHandler::class</code>
+      <code>TestHandler::class</code>
+      <code>TestHandler::class</code>
+      <code>TestHandler::class</code>
+      <code>TestHandler::class</code>
+      <code>TestHandler::class</code>
+      <code>TestHandler::class</code>
+      <code>TestHandler::class</code>
+      <code>TestHandler::class</code>
+      <code>TestHandler::class</code>
     </MixedArgument>
     <MixedArrayAssignment occurrences="1">
-      <code>sprintf('config.php.%s', $config)</code>
+      <code>$arguments[]</code>
     </MixedArrayAssignment>
     <MixedArrayOffset occurrences="1"/>
     <MixedAssignment occurrences="2">
@@ -377,17 +419,28 @@
     <PropertyTypeCoercion occurrences="1">
       <code>new $renderer()</code>
     </PropertyTypeCoercion>
-    <UndefinedClass occurrences="6">
+    <UndefinedClass occurrences="20">
       <code>LaminasViewRenderer</code>
       <code>LaminasViewRenderer</code>
       <code>PlatesRenderer</code>
       <code>PlatesRenderer</code>
+      <code>PlatesRenderer|TwigRenderer|LaminasViewRenderer|null</code>
+      <code>TestHandler</code>
+      <code>TestHandler</code>
+      <code>TestHandler</code>
+      <code>TestHandler</code>
+      <code>TestHandler</code>
+      <code>TestHandler</code>
+      <code>TestHandler</code>
+      <code>TestHandler</code>
+      <code>TestHandler</code>
+      <code>TestHandler</code>
+      <code>TestHandler</code>
+      <code>TestHandler</code>
+      <code>TestHandler</code>
       <code>TwigRenderer</code>
       <code>TwigRenderer</code>
     </UndefinedClass>
-    <UndefinedDocblockClass occurrences="1">
-      <code>PlatesRenderer|TwigRenderer|LaminasViewRenderer</code>
-    </UndefinedDocblockClass>
     <UnresolvableInclude occurrences="15">
       <code>include $configFile</code>
       <code>require $sourceFile</code>
@@ -429,7 +482,7 @@
     </ArgumentTypeCoercion>
     <InternalClass occurrences="5">
       <code>new Create($generator)</code>
-      <code>new Create($generator-&gt;reveal())</code>
+      <code>new Create($generator)</code>
       <code>new Create(new FactoryClassGenerator())</code>
       <code>new FactoryClassGenerator()</code>
       <code>new FactoryClassGenerator()</code>
@@ -439,21 +492,30 @@
       <code>createForClass</code>
       <code>createForClass</code>
       <code>new Create($generator)</code>
-      <code>new Create($generator-&gt;reveal())</code>
+      <code>new Create($generator)</code>
       <code>new Create(new FactoryClassGenerator())</code>
     </InternalMethod>
+    <InvalidFunctionCall occurrences="1">
+      <code>$factory($container)</code>
+    </InvalidFunctionCall>
     <InvalidStringClass occurrences="1">
       <code>new $factoryName()</code>
     </InvalidStringClass>
-    <MixedAssignment occurrences="2">
-      <code>$factory</code>
+    <MixedArgument occurrences="3">
+      <code>$className</code>
+      <code>$className</code>
+      <code>$className</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="4">
+      <code>$className</code>
+      <code>$className</code>
+      <code>$className</code>
       <code>$instance</code>
     </MixedAssignment>
-    <MixedFunctionCall occurrences="1">
-      <code>$factory($container-&gt;reveal())</code>
-    </MixedFunctionCall>
-    <UndefinedClass occurrences="1">
-      <code>$factoryName</code>
+    <UndefinedClass occurrences="3">
+      <code>TestClass</code>
+      <code>TestClass</code>
+      <code>TestClass</code>
     </UndefinedClass>
     <UnresolvableInclude occurrences="4">
       <code>require $fileName</code>
@@ -485,12 +547,7 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="test/MigrateMiddlewareToRequestHandler/ProjectSetupTrait.php">
-    <MixedArgument occurrences="6">
-      <code>$arg</code>
-      <code>$arg</code>
-      <code>$arg</code>
-      <code>$arg</code>
-      <code>$arg</code>
+    <MixedArgument occurrences="1">
       <code>$file</code>
     </MixedArgument>
     <MixedAssignment occurrences="1">
@@ -502,22 +559,19 @@
   </file>
   <file src="test/Module/CommandCommonOptionsTest.php">
     <InternalClass occurrences="3">
-      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal())</code>
-      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal(), $config)</code>
-      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal(), $config)</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input)</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input, $config)</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input, $config)</code>
     </InternalClass>
     <InternalMethod occurrences="3">
-      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal())</code>
-      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal(), $config)</code>
-      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal(), $config)</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input)</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input, $config)</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input, $config)</code>
     </InternalMethod>
-    <MixedArrayAssignment occurrences="2">
-      <code>$config[CommandCommonOptions::class]['--modules-path']</code>
-      <code>$config[CommandCommonOptions::class]['--modules-path']</code>
-    </MixedArrayAssignment>
-    <PossiblyUndefinedVariable occurrences="2">
-      <code>$config</code>
-      <code>$config</code>
-    </PossiblyUndefinedVariable>
+  </file>
+  <file src="test/TestAsset/config/container.php">
+    <InternalMethod occurrences="1">
+      <code>getMock</code>
+    </InternalMethod>
   </file>
 </files>

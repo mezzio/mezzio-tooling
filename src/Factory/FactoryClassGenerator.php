@@ -23,6 +23,9 @@ use function substr;
 /** @internal */
 class FactoryClassGenerator
 {
+    /**
+     * @var string
+     */
     public const FACTORY_TEMPLATE = <<<'EOT'
         <?php
 
@@ -72,24 +75,25 @@ class FactoryClassGenerator
 
     /**
      * @throws UnidentifiedTypeException If a parameter defines a non-class typehint.
+     * @return mixed[]
      */
     private function getConstructorParameters(string $className): array
     {
         $reflectionClass = new ReflectionClass($className);
 
-        if (! $reflectionClass->getConstructor()) {
+        if ($reflectionClass->getConstructor() === null) {
             return [];
         }
 
         $constructorParameters = $reflectionClass->getConstructor()->getParameters();
 
-        if (! $constructorParameters) {
+        if ($constructorParameters === []) {
             return [];
         }
 
         $constructorParameters = array_filter(
             $constructorParameters,
-            function (ReflectionParameter $argument) {
+            static function (ReflectionParameter $argument): bool {
                 if ($argument->isOptional()) {
                     return false;
                 }
@@ -102,7 +106,7 @@ class FactoryClassGenerator
             }
         );
 
-        if (! $constructorParameters) {
+        if ($constructorParameters === []) {
             return [];
         }
 
@@ -121,13 +125,13 @@ class FactoryClassGenerator
     private function formatImportStatements(array $imports): string
     {
         natsort($imports);
-        $imports = array_map(static fn($import) => sprintf('use %s;', $import), $imports);
+        $imports = array_map(static fn($import): string => sprintf('use %s;', $import), $imports);
         return implode("\n", $imports);
     }
 
     private function createArgumentString(array $arguments): string
     {
-        $arguments = array_map(static fn($argument) => sprintf('$container->get(%s::class)', $argument), $arguments);
+        $arguments = array_map(static fn($argument): string => sprintf('$container->get(%s::class)', $argument), $arguments);
         switch (count($arguments)) {
             case 0:
                 return '';
