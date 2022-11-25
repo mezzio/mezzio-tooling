@@ -44,15 +44,18 @@ final class RegisterCommand extends Command
     private string $projectRoot;
 
     private ComposerProcessFactoryInterface $processFactory;
+    private InjectorInterface $injector;
 
     public function __construct(
         string $projectRoot,
         ComposerPackageFactoryInterface $packageFactory,
-        ComposerProcessFactoryInterface $processFactory
+        ComposerProcessFactoryInterface $processFactory,
+        ?InjectorInterface $configInjector = null
     ) {
         $this->projectRoot    = $projectRoot;
         $this->package        = $packageFactory->loadPackage($projectRoot);
         $this->processFactory = $processFactory;
+        $this->injector       = $configInjector ?? new ConfigAggregatorInjector($this->projectRoot);
 
         parent::__construct();
     }
@@ -81,11 +84,10 @@ final class RegisterCommand extends Command
         $modulesPath = CommandCommonOptions::getModulesPath($input);
         $exactPath   = $input->getOption('exact-path');
 
-        $injector       = new ConfigAggregatorInjector($this->projectRoot);
         $configProvider = sprintf('%s\ConfigProvider', $module);
         assert($configProvider !== '');
-        if (! $injector->isRegistered($configProvider)) {
-            $injector->inject(
+        if (! $this->injector->isRegistered($configProvider)) {
+            $this->injector->inject(
                 $configProvider,
                 InjectorInterface::TYPE_CONFIG_PROVIDER
             );
