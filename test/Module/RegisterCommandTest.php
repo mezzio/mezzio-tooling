@@ -9,19 +9,13 @@ use Mezzio\Tooling\Composer\ComposerPackageInterface;
 use Mezzio\Tooling\Composer\ComposerProcessFactoryInterface;
 use Mezzio\Tooling\Composer\ComposerProcessInterface;
 use Mezzio\Tooling\Composer\ComposerProcessResultInterface;
-use Mezzio\Tooling\ConfigInjector\ConfigAggregatorInjector;
 use Mezzio\Tooling\ConfigInjector\InjectorInterface;
 use Mezzio\Tooling\Module\RegisterCommand;
 use Mezzio\Tooling\Module\RuntimeException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionMethod;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
@@ -30,31 +24,31 @@ use function mkdir;
 use function preg_replace;
 use function sprintf;
 
+/** @covers \Mezzio\Tooling\Module\RegisterCommand */
 class RegisterCommandTest extends TestCase
 {
     use CommonOptionsAndAttributesTrait;
-    use MockeryPHPUnitIntegration;
-    use ProphecyTrait;
 
     private vfsStreamDirectory $dir;
 
-    /** @var ObjectProphecy<InputInterface> */
-    private $input;
+    /** @var InputInterface&MockObject */
+    private InputInterface $input;
 
-    /** @var ObjectProphecy<ConsoleOutputInterface> */
-    private $output;
+    /** @var ConsoleOutputInterface&MockObject */
+    private ConsoleOutputInterface $output;
 
-    /** @var RegisterCommand */
-    private $command;
+    private RegisterCommand $command;
 
-    /** @var string */
-    private $expectedModuleArgumentDescription;
+    private string $expectedModuleArgumentDescription;
 
     /** @var ComposerPackageInterface&MockObject */
-    private $package;
+    private ComposerPackageInterface $package;
 
     /** @var ComposerProcessFactoryInterface&MockObject */
-    private $processFactory;
+    private ComposerProcessFactoryInterface $processFactory;
+
+    /** @var InjectorInterface&MockObject */
+    private InjectorInterface $injector;
 
     protected function setUp(): void
     {
@@ -63,16 +57,18 @@ class RegisterCommandTest extends TestCase
         $this->dir            = vfsStream::setup('project');
         $this->package        = $this->createMock(ComposerPackageInterface::class);
         $this->processFactory = $this->createMock(ComposerProcessFactoryInterface::class);
+        $this->injector       = $this->createMock(InjectorInterface::class);
 
         $packageFactory = $this->createMock(ComposerPackageFactoryInterface::class);
         $packageFactory->method('loadPackage')->with($this->dir->url())->willReturn($this->package);
 
-        $this->input                             = $this->prophesize(InputInterface::class);
-        $this->output                            = $this->prophesize(ConsoleOutputInterface::class);
+        $this->input                             = $this->createMock(InputInterface::class);
+        $this->output                            = $this->createMock(ConsoleOutputInterface::class);
         $this->command                           = new RegisterCommand(
             $this->dir->url(),
             $packageFactory,
-            $this->processFactory
+            $this->processFactory,
+            $this->injector
         );
         $this->expectedModuleArgumentDescription = RegisterCommand::HELP_ARG_MODULE;
     }
@@ -119,11 +115,7 @@ class RegisterCommandTest extends TestCase
         // phpcs:enable
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     * @dataProvider injectedEnabled
-     */
+    /** @dataProvider injectedEnabled */
     public function testCommandEmitsExpectedMessagesWhenItInjectsConfigurationAndEnablesModule(
         bool $injected,
         bool $enabled,
@@ -156,25 +148,29 @@ class RegisterCommandTest extends TestCase
             );
         mkdir($pathToCreate, 0777, true);
 
-        $this->input->getArgument('module')->willReturn($module);
-        $this->input->getOption('composer')->willReturn($composer);
-        $this->input->getOption('modules-path')->willReturn($modulesPath);
-        $this->input->getOption('exact-path')->willReturn($exactPath);
+        $this->input->method('getArgument')->with('module')->willReturn($module);
+        $this->input->method('getOption')->willReturnMap([
+            ['composer', $composer],
+            ['modules-path', $modulesPath],
+            ['exact-path', $exactPath],
+        ]);
 
-        $injectorMock = Mockery::mock('overload:' . ConfigAggregatorInjector::class);
-        $injectorMock
-            ->shouldReceive('isRegistered')
+        $this->injector
+            ->expects(self::once())
+            ->method('isRegistered')
             ->with($configProvider)
-            ->andReturn(! $injected)
-            ->once();
+            ->willReturn(! $injected);
+
         if ($injected) {
-            $injectorMock
-                ->shouldReceive('inject')
-                ->with($configProvider, InjectorInterface::TYPE_CONFIG_PROVIDER)
-                ->once();
+            $this->injector
+                ->expects(self::once())
+                ->method('inject')
+                ->with($configProvider, InjectorInterface::TYPE_CONFIG_PROVIDER);
         } else {
-            $injectorMock
-                ->shouldNotReceive('inject');
+            $this->injector
+                ->expects(self::never())
+                ->method('inject')
+                ->with($configProvider, InjectorInterface::TYPE_CONFIG_PROVIDER);
         }
 
         $this->package
@@ -214,10 +210,9 @@ class RegisterCommandTest extends TestCase
                 ->willReturn($process);
 
             $this->output
-                ->writeln(Argument::containingString(
-                    'Registered config provider and autoloading rules for module ' . $module
-                ))
-                ->shouldBeCalled();
+                ->expects(self::atLeastOnce())
+                ->method('writeln')
+                ->with(self::stringContains('Registered config provider and autoloading rules for module ' . $module));
         }
 
         if ($enabled === false) {
@@ -226,38 +221,34 @@ class RegisterCommandTest extends TestCase
                 ->method('createProcess');
 
             $this->output
-                ->writeln(Argument::containingString(
-                    'Registered config provider for module ' . $module
-                ))
-                ->shouldBeCalled();
+                ->expects(self::atLeastOnce())
+                ->method('writeln')
+                ->with(self::stringContains('Registered config provider for module ' . $module));
         }
 
         $method = $this->reflectExecuteMethod();
 
         self::assertSame(0, $method->invoke(
             $this->command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testAllowsRuntimeExceptionsThrownFromEnableToBubbleUp(): void
     {
-        $this->input->getArgument('module')->willReturn('MyApp');
-        $this->input->getOption('composer')->willReturn('composer.phar');
-        $this->input->getOption('modules-path')->willReturn('./library/modules');
-        $this->input->getOption('exact-path')->willReturn(null);
+        $this->input->method('getArgument')->with('module')->willReturn('MyApp');
+        $this->input->method('getOption')->willReturnMap([
+            ['composer', 'composer.phar'],
+            ['modules-path', './library/modules'],
+            ['exact-path', null],
+        ]);
 
-        $injectorMock = Mockery::mock('overload:' . ConfigAggregatorInjector::class);
-        $injectorMock
-            ->shouldReceive('isRegistered')
+        $this->injector
+            ->expects(self::once())
+            ->method('isRegistered')
             ->with('MyApp\ConfigProvider')
-            ->andReturn(true)
-            ->once();
+            ->willReturn(true);
 
         $this->processFactory->expects($this->never())->method('createProcess');
 
@@ -268,8 +259,8 @@ class RegisterCommandTest extends TestCase
 
         $method->invoke(
             $this->command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         );
     }
 }
