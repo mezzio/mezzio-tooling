@@ -482,7 +482,7 @@
     </ArgumentTypeCoercion>
     <InternalClass occurrences="5">
       <code>new Create($generator)</code>
-      <code>new Create($generator-&gt;reveal())</code>
+      <code>new Create($generator)</code>
       <code>new Create(new FactoryClassGenerator())</code>
       <code>new FactoryClassGenerator()</code>
       <code>new FactoryClassGenerator()</code>
@@ -492,11 +492,11 @@
       <code>createForClass</code>
       <code>createForClass</code>
       <code>new Create($generator)</code>
-      <code>new Create($generator-&gt;reveal())</code>
+      <code>new Create($generator)</code>
       <code>new Create(new FactoryClassGenerator())</code>
     </InternalMethod>
     <InvalidFunctionCall occurrences="1">
-      <code>$factory($container-&gt;reveal())</code>
+      <code>$factory($container)</code>
     </InvalidFunctionCall>
     <InvalidStringClass occurrences="1">
       <code>new $factoryName()</code>
@@ -547,12 +547,7 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="test/MigrateMiddlewareToRequestHandler/ProjectSetupTrait.php">
-    <MixedArgument occurrences="6">
-      <code>$arg</code>
-      <code>$arg</code>
-      <code>$arg</code>
-      <code>$arg</code>
-      <code>$arg</code>
+    <MixedArgument occurrences="1">
       <code>$file</code>
     </MixedArgument>
     <MixedAssignment occurrences="1">
@@ -564,14 +559,19 @@
   </file>
   <file src="test/Module/CommandCommonOptionsTest.php">
     <InternalClass occurrences="3">
-      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal())</code>
-      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal(), $config)</code>
-      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal(), $config)</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input)</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input, $config)</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input, $config)</code>
     </InternalClass>
     <InternalMethod occurrences="3">
-      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal())</code>
-      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal(), $config)</code>
-      <code>CommandCommonOptions::getModulesPath($this-&gt;input-&gt;reveal(), $config)</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input)</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input, $config)</code>
+      <code>CommandCommonOptions::getModulesPath($this-&gt;input, $config)</code>
+    </InternalMethod>
+  </file>
+  <file src="test/TestAsset/config/container.php">
+    <InternalMethod occurrences="1">
+      <code>getMock</code>
     </InternalMethod>
   </file>
 </files>
