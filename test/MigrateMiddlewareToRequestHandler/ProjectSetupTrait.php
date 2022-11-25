@@ -7,9 +7,7 @@ namespace MezzioTest\Tooling\MigrateMiddlewareToRequestHandler;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\Assert;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\MockObject\MockObject;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
@@ -24,8 +22,6 @@ use const DIRECTORY_SEPARATOR;
 
 trait ProjectSetupTrait
 {
-    use ProphecyTrait;
-
     private function setupSrcDir(string|vfsStreamDirectory $dir): void
     {
         $base = realpath(__DIR__ . '/TestAsset') . DIRECTORY_SEPARATOR;
@@ -63,38 +59,21 @@ trait ProjectSetupTrait
         return $file->isWritable();
     }
 
-    /**
-     * @return ObjectProphecy<OutputInterface>
-     */
-    private function setupConsoleHelper()
+    /** @return OutputInterface&MockObject */
+    private function setupConsoleHelper(): OutputInterface
     {
-        $console = $this->prophesize(OutputInterface::class);
+        $console = $this->createMock(OutputInterface::class);
 
         $console
-            ->writeln(Argument::that(
-                static fn($arg): bool => preg_match('#Updating .*src/MultilineMiddleware\.php#', $arg) !== false
-            ))
-            ->shouldBeCalled();
-        $console
-            ->writeln(Argument::that(
-                static fn($arg): bool => preg_match('#Updating .*src/MultipleInterfacesMiddleware\.php#', $arg) !== false
-            ))
-            ->shouldBeCalled();
-        $console
-            ->writeln(Argument::that(
-                static fn($arg): bool => preg_match('#Updating .*src/MyActionWithAliases\.php#', $arg) !== false
-            ))
-            ->shouldBeCalled();
-        $console
-            ->writeln(Argument::that(
-                static fn($arg): bool => preg_match('#Updating .*src/MyMiddleware\.php#', $arg) !== false
-            ))
-            ->shouldBeCalled();
-        $console
-            ->writeln(Argument::that(
-                static fn($arg): bool => preg_match('#Skipping .*src/MyMiddlewareWithHandler\.php#', $arg) !== false
-            ))
-            ->shouldBeCalled();
+            ->expects(self::atLeast(5))
+            ->method('writeln')
+            ->with(self::logicalOr(
+                self::callback(static fn(string $arg): bool => preg_match('#Updating .*src/MultilineMiddleware\.php#', $arg) !== false),
+                self::callback(static fn(string $arg): bool => preg_match('#Updating .*src/MultipleInterfacesMiddleware\.php#', $arg) !== false),
+                self::callback(static fn(string $arg): bool => preg_match('#Updating .*src/MyActionWithAliases\.php#', $arg) !== false),
+                self::callback(static fn(string $arg): bool => preg_match('#Updating .*src/MyMiddleware\.php#', $arg) !== false),
+                self::callback(static fn(string $arg): bool => preg_match('#Updating .*src/MyMiddlewareWithHandler\.php#', $arg) !== false),
+            ));
 
         return $console;
     }
