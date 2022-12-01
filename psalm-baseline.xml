@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.30.0@d0bc6e25d89f649e4f36a534f330f8bb4643dd69">
+<files psalm-version="5.0.0@4e177bf0c9f03c17d2fbfd83b7cc9c47605274d8">
   <file src="src/Composer/FileSystemBasedComposerPackage.php">
-    <MixedArrayAssignment occurrences="1">
+    <MixedArrayAccess occurrences="1">
+      <code>$package[$key]['psr-4'][$namespace]</code>
+    </MixedArrayAccess>
+    <MixedArrayAssignment occurrences="2">
       <code>$package[$key]['psr-4']</code>
+      <code>$package[$key]['psr-4'][$namespace]</code>
     </MixedArrayAssignment>
     <MixedInferredReturnType occurrences="1">
       <code>mixed[]</code>
@@ -41,9 +45,11 @@
       <code>$namespace</code>
       <code>[$this-&gt;projectRoot, DIRECTORY_SEPARATOR, $path]</code>
     </MixedArgumentTypeCoercion>
-    <MixedArrayAccess occurrences="2">
+    <MixedArrayAccess occurrences="4">
       <code>$composer['autoload']</code>
       <code>$composer['autoload']</code>
+      <code>$composer['autoload']['psr-4']</code>
+      <code>$composer['autoload']['psr-4']</code>
     </MixedArrayAccess>
     <MixedAssignment occurrences="3">
       <code>$composer</code>
@@ -58,7 +64,7 @@
     </MixedReturnStatement>
   </file>
   <file src="src/CreateHandler/CreateHandlerCommand.php">
-    <MixedArgument occurrences="8">
+    <MixedArgument occurrences="7">
       <code>$handler</code>
       <code>$handler</code>
       <code>$handler</code>
@@ -66,7 +72,6 @@
       <code>$templateExtension</code>
       <code>$templateName</code>
       <code>$templateNamespace</code>
-      <code>static::STATUS_TEMPLATE</code>
     </MixedArgument>
     <MixedAssignment occurrences="6">
       <code>$handler</code>
@@ -92,11 +97,15 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$handler</code>
     </ArgumentTypeCoercion>
+    <InvalidConstantAssignmentValue occurrences="1"/>
     <MixedArgument occurrences="3">
       <code>$config</code>
       <code>$path</code>
       <code>$paths</code>
     </MixedArgument>
+    <MixedArrayAccess occurrences="1">
+      <code>$config['templates']['paths'][$templateNamespace]</code>
+    </MixedArrayAccess>
     <MixedAssignment occurrences="3">
       <code>$config</code>
       <code>$path</code>
@@ -133,9 +142,11 @@
       <code>[$namespace, $class]</code>
       <code>[$projectRoot, DIRECTORY_SEPARATOR, $path]</code>
     </MixedArgumentTypeCoercion>
-    <MixedArrayAccess occurrences="2">
+    <MixedArrayAccess occurrences="4">
       <code>$composer['autoload']</code>
       <code>$composer['autoload']</code>
+      <code>$composer['autoload']['psr-4']</code>
+      <code>$composer['autoload']['psr-4']</code>
     </MixedArrayAccess>
     <MixedAssignment occurrences="2">
       <code>$composer</code>
@@ -167,8 +178,9 @@
     <MixedArgument occurrences="1">
       <code>$config</code>
     </MixedArgument>
-    <MixedArrayAccess occurrences="1">
+    <MixedArrayAccess occurrences="2">
       <code>$config['dependencies']</code>
+      <code>$config['dependencies']['factories']</code>
     </MixedArrayAccess>
     <MixedArrayAssignment occurrences="1">
       <code>$config[$class]</code>
@@ -419,11 +431,13 @@
     <PropertyTypeCoercion occurrences="1">
       <code>new $renderer()</code>
     </PropertyTypeCoercion>
-    <UndefinedClass occurrences="20">
+    <UndefinedClass occurrences="22">
       <code>LaminasViewRenderer</code>
       <code>LaminasViewRenderer</code>
       <code>PlatesRenderer</code>
       <code>PlatesRenderer</code>
+      <code>PlatesRenderer|TwigRenderer|LaminasViewRenderer|null</code>
+      <code>PlatesRenderer|TwigRenderer|LaminasViewRenderer|null</code>
       <code>PlatesRenderer|TwigRenderer|LaminasViewRenderer|null</code>
       <code>TestHandler</code>
       <code>TestHandler</code>

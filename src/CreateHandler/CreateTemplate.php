@@ -33,7 +33,7 @@ final class CreateTemplate
     /**
      * Array of renderers we can generate templates for.
      *
-     * @var string[]
+     * @var list<class-string>
      */
     private const KNOWN_RENDERERS = [
         PlatesRenderer::class,
