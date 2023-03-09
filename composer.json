@@ -82,5 +82,8 @@
     },
     "conflict": {
         "zendframework/zend-expressive-tooling": "*"
-    }
+    },
+    "bin": [
+        "bin/laminas"
+    ]
 }
