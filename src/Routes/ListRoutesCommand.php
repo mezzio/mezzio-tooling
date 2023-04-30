@@ -27,9 +27,7 @@ final class ListRoutesCommand extends Command
     /** @var array<int, Route>  */
     private array $routes;
 
-    /**
-     * @var array<string,string|array>
-     */
+    /** @var array<string,string|array> */
     private array $filterOptions = [];
 
     private const HELP = <<<'EOT'

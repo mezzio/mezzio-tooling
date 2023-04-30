@@ -175,6 +175,7 @@ class ListRoutesCommandTest extends TestCase
                 "Listing the application's routing table in table format."
             ))
             ->shouldBeCalled();
+        // phpcs:disable Generic.Files.LineLength
         $this->output
             ->writeln(
                 Argument::containingString(
@@ -189,6 +190,7 @@ class ListRoutesCommandTest extends TestCase
                 )
             )
             ->shouldBeCalled();
+        // phpcs:enable
         $this->output
             ->writeln(
                 Argument::containingString(
@@ -304,6 +306,7 @@ class ListRoutesCommandTest extends TestCase
                 "Listing the application's routing table in JSON format."
             ))
             ->shouldBeCalled();
+        // phpcs:disable Generic.Files.LineLength
         $this->output
             ->writeln(
                 Argument::containingString(
@@ -311,6 +314,7 @@ class ListRoutesCommandTest extends TestCase
                 )
             )
             ->shouldBeCalled();
+        // phpcs:enable
 
         $method = $this->reflectExecuteMethod();
 
@@ -452,6 +456,7 @@ class ListRoutesCommandTest extends TestCase
 
     public function sortRoutingTableDataProvider(): array
     {
+        // phpcs:disable Generic.Files.LineLength
         return [
             [
                 'name',
@@ -462,6 +467,7 @@ class ListRoutesCommandTest extends TestCase
                 '[{"name":"home","path":"\/","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\ExpressMiddleware"},{"name":"contact","path":"\/contact","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\SimpleMiddleware"}]',
             ],
         ];
+        // phpcs:enable
     }
 
     /**
@@ -516,11 +522,13 @@ class ListRoutesCommandTest extends TestCase
 
     public function filterRoutingTableDataProvider(): array
     {
+        // phpcs:disable Generic.Files.LineLength
         return [
             [
                 ['middleware' => 'ExpressMiddleware'],
                 '[{"name":"home","path":"\/","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\ExpressMiddleware"}]',
             ],
         ];
+        // phpcs:enable
     }
 }
