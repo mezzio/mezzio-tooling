@@ -65,6 +65,9 @@ final class FileSystemBasedComposerPackage implements ComposerPackageInterface
         return true;
     }
 
+    /**
+     * @return mixed[]
+     */
     private function parse(): array
     {
         if (! file_exists($this->composerFile)) {

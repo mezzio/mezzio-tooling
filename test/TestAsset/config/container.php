@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Prophecy\Prophet;
+use PHPUnit\Framework\MockObject\Generator;
 use Psr\Container\ContainerInterface;
 
-$prophet   = new Prophet();
-$container = $prophet->prophesize(ContainerInterface::class);
-
-return $container->reveal();
+// Note: not using an anonymous class because `psr/container` changes major version constantly,
+//       and is a pain to maintain in dependency upgrades.
+return (new Generator())
+    ->getMock(ContainerInterface::class);

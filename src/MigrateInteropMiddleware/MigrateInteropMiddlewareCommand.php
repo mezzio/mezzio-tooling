@@ -14,8 +14,14 @@ use function sprintf;
 
 final class MigrateInteropMiddlewareCommand extends Command
 {
+    /**
+     * @var string
+     */
     private const DEFAULT_SRC = '/src';
 
+    /**
+     * @var string
+     */
     private const HELP = <<<'EOT'
         Migrate an Mezzio application to PSR-15 middleware.
         
@@ -28,6 +34,9 @@ final class MigrateInteropMiddlewareCommand extends Command
         mezzio-tooling.
         EOT;
 
+    /**
+     * @var string
+     */
     private const HELP_OPT_SRC = <<<'EOT'
         Specify a path to PHP files to migrate interop middleware.
         If not specified, assumes src/ under the current working path.
@@ -36,13 +45,8 @@ final class MigrateInteropMiddlewareCommand extends Command
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:middleware:migrate-from-interop';
 
-    /** @var null|string Path from which to resolve default src directory */
-    private ?string $projectRoot;
-
-    public function __construct(string $projectRoot)
+    public function __construct(private ?string $projectRoot)
     {
-        $this->projectRoot = $projectRoot;
-
         parent::__construct();
     }
 

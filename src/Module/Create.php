@@ -11,14 +11,17 @@ use function file_put_contents;
 use function ltrim;
 use function rtrim;
 use function sprintf;
+use function str_starts_with;
 use function strlen;
-use function strpos;
 use function substr;
 
 final class Create
 {
     use TemplateResolutionTrait;
 
+    /**
+     * @var string
+     */
     public const TEMPLATE_CONFIG_PROVIDER_FLAT = <<<'EOT'
         <?php
         
@@ -62,6 +65,9 @@ final class Create
         
         EOT;
 
+    /**
+     * @var string
+     */
     public const TEMPLATE_CONFIG_PROVIDER_RECOMMENDED = <<<'EOT'
         <?php
         
@@ -118,6 +124,9 @@ final class Create
         
         EOT;
 
+    /**
+     * @var string
+     */
     public const TEMPLATE_ROUTE_DELEGATOR_CONFIG = <<<'EOT'
         
                     'delegators' => [
@@ -127,6 +136,9 @@ final class Create
                     ],
         EOT;
 
+    /**
+     * @var string
+     */
     public const TEMPLATE_ROUTE_DELEGATOR = <<<'EOT'
         <?php
         
@@ -158,11 +170,8 @@ final class Create
 
         EOT;
 
-    private bool $useFlatStructure;
-
-    public function __construct(bool $useFlatStructure = false)
+    public function __construct(private bool $useFlatStructure = false)
     {
-        $this->useFlatStructure = $useFlatStructure;
     }
 
     /**
@@ -293,7 +302,7 @@ final class Create
 
     private function stripProjectRootFromPath(string $projectRoot, string $path): string
     {
-        if (0 !== strpos($path, $projectRoot)) {
+        if (! str_starts_with($path, $projectRoot)) {
             return $path;
         }
 

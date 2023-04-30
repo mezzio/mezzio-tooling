@@ -20,7 +20,7 @@ class ConvertInteropMiddlewareTest extends TestCase
 
         $console = $this->setupConsoleHelper();
 
-        $converter = new ConvertInteropMiddleware($console->reveal());
+        $converter = new ConvertInteropMiddleware($console);
         $converter->process($path);
 
         self::assertExpected($path);

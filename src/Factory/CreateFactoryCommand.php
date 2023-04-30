@@ -15,13 +15,22 @@ use function sprintf;
 
 final class CreateFactoryCommand extends Command
 {
+    /**
+     * @var string
+     */
     public const DEFAULT_SRC = '/src';
 
+    /**
+     * @var string
+     */
     public const HELP = <<<'EOT'
         Creates a factory class file for generating the provided class, in the
         same directory as the provided class.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_ARG_CLASS = <<<'EOT'
         Fully qualified class name of the class for which to create a factory.
         This value should be quoted to ensure namespace separators are not
@@ -29,6 +38,9 @@ final class CreateFactoryCommand extends Command
         autoloadable.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_OPT_NO_REGISTER = <<<'EOT'
         When this flag is present, the command WILL NOT register the factory
         with the application container.
@@ -37,15 +49,8 @@ final class CreateFactoryCommand extends Command
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:factory:create';
 
-    private Create $generator;
-
-    private string $projectRoot;
-
-    public function __construct(Create $generator, string $projectRoot)
+    public function __construct(private Create $generator, private string $projectRoot)
     {
-        $this->generator   = $generator;
-        $this->projectRoot = $projectRoot;
-
         parent::__construct();
     }
 

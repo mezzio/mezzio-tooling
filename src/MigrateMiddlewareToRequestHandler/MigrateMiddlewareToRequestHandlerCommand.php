@@ -14,8 +14,14 @@ use function sprintf;
 
 final class MigrateMiddlewareToRequestHandlerCommand extends Command
 {
+    /**
+     * @var string
+     */
     private const DEFAULT_SRC = '/src';
 
+    /**
+     * @var string
+     */
     private const HELP = <<<'EOT'
         Migrate PSR-15 middleware to request handlers.
         
@@ -25,6 +31,9 @@ final class MigrateMiddlewareToRequestHandlerCommand extends Command
         handlers.
         EOT;
 
+    /**
+     * @var string
+     */
     private const HELP_OPT_SRC = <<<'EOT'
         Specify a path to PHP files under which to migrate PSR-15 middleware to request
         handlers. If not specified, assumes src/ under the current working path.
@@ -33,16 +42,11 @@ final class MigrateMiddlewareToRequestHandlerCommand extends Command
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:middleware:to-request-handler';
 
-    /** @var string Path from which to resolve default src directory */
-    private string $projectRoot;
-
     /**
      * @var null|string Project root against which to scan.
      */
-    public function __construct(string $projectRoot)
+    public function __construct(private string $projectRoot)
     {
-        $this->projectRoot = $projectRoot;
-
         parent::__construct();
     }
 

@@ -9,17 +9,12 @@ use Mezzio\Tooling\Composer\ComposerPackageInterface;
 use Mezzio\Tooling\Composer\ComposerProcessFactoryInterface;
 use Mezzio\Tooling\Composer\ComposerProcessInterface;
 use Mezzio\Tooling\Composer\ComposerProcessResultInterface;
-use Mezzio\Tooling\ConfigInjector\ConfigAggregatorInjector;
+use Mezzio\Tooling\ConfigInjector\InjectorInterface;
 use Mezzio\Tooling\Module\DeregisterCommand;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionMethod;
 use RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,28 +23,27 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 class DeregisterCommandTest extends TestCase
 {
     use CommonOptionsAndAttributesTrait;
-    use MockeryPHPUnitIntegration;
-    use ProphecyTrait;
 
     private vfsStreamDirectory $dir;
 
-    /** @var ObjectProphecy<InputInterface> */
+    /** @var InputInterface&MockObject */
     private $input;
 
-    /** @var ObjectProphecy<ConsoleOutputInterface> */
+    /** @var ConsoleOutputInterface&MockObject */
     private $output;
 
-    /** @var DeregisterCommand */
-    private $command;
+    private DeregisterCommand $command;
 
-    /** @var string */
-    private $expectedModuleArgumentDescription;
+    private string $expectedModuleArgumentDescription;
 
     /** @var ComposerPackageInterface&MockObject */
-    private $package;
+    private ComposerPackageInterface $package;
 
     /** @var ComposerProcessFactoryInterface&MockObject */
-    private $processFactory;
+    private ComposerProcessFactoryInterface $processFactory;
+
+    /** @var InjectorInterface&MockObject */
+    private InjectorInterface $injector;
 
     protected function setUp(): void
     {
@@ -58,16 +52,18 @@ class DeregisterCommandTest extends TestCase
         $this->dir            = vfsStream::setup('project');
         $this->package        = $this->createMock(ComposerPackageInterface::class);
         $this->processFactory = $this->createMock(ComposerProcessFactoryInterface::class);
+        $this->injector       = $this->createMock(InjectorInterface::class);
 
         $packageFactory = $this->createMock(ComposerPackageFactoryInterface::class);
         $packageFactory->method('loadPackage')->with($this->dir->url())->willReturn($this->package);
 
-        $this->input                             = $this->prophesize(InputInterface::class);
-        $this->output                            = $this->prophesize(ConsoleOutputInterface::class);
+        $this->input                             = $this->createMock(InputInterface::class);
+        $this->output                            = $this->createMock(ConsoleOutputInterface::class);
         $this->command                           = new DeregisterCommand(
             $this->dir->url(),
             $packageFactory,
-            $this->processFactory
+            $this->processFactory,
+            $this->injector
         );
         $this->expectedModuleArgumentDescription = DeregisterCommand::HELP_ARG_MODULE;
     }
@@ -113,23 +109,24 @@ class DeregisterCommandTest extends TestCase
         $composer       = 'composer.phar';
         $configProvider = $module . '\ConfigProvider';
 
-        $this->input->getArgument('module')->willReturn('MyApp');
-        $this->input->getOption('composer')->willReturn('composer.phar');
+        $this->input->method('getArgument')->with('module')->willReturn('MyApp');
+        $this->input->method('getOption')->with('composer')->willReturn('composer.phar');
 
-        $injectorMock = Mockery::mock('overload:' . ConfigAggregatorInjector::class);
-        $injectorMock
-            ->shouldReceive('isRegistered')
+        $this->injector
+            ->expects(self::once())
+            ->method('isRegistered')
             ->with($configProvider)
-            ->andReturn($removed)
-            ->once();
+            ->willReturn($removed);
+
         if ($removed) {
-            $injectorMock
-                ->shouldReceive('remove')
-                ->with($configProvider)
-                ->once();
+            $this->injector
+                ->expects(self::once())
+                ->method('remove')
+                ->with($configProvider);
         } else {
-            $injectorMock
-                ->shouldNotReceive('remove');
+            $this->injector
+                ->expects(self::never())
+                ->method('remove');
         }
 
         $this->package
@@ -165,10 +162,9 @@ class DeregisterCommandTest extends TestCase
                 ->willReturn($process);
 
             $this->output
-                ->writeln(Argument::containingString(
-                    'Removed config provider and autoloading rules for module ' . $module
-                ))
-                ->shouldBeCalled();
+                ->expects(self::atLeastOnce())
+                ->method('writeln')
+                ->with(self::stringContains('Removed config provider and autoloading rules for module ' . $module));
         }
 
         if ($disabled === false) {
@@ -176,18 +172,17 @@ class DeregisterCommandTest extends TestCase
                 ->expects($this->never())
                 ->method('createProcess');
             $this->output
-                ->writeln(Argument::containingString(
-                    'Removed config provider for module ' . $module
-                ))
-                ->shouldBeCalled();
+                ->expects(self::atLeastOnce())
+                ->method('writeln')
+                ->with(self::stringContains('Removed config provider for module ' . $module));
         }
 
         $method = $this->reflectExecuteMethod();
 
         self::assertSame(0, $method->invoke(
             $this->command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 
@@ -197,16 +192,17 @@ class DeregisterCommandTest extends TestCase
      */
     public function testAllowsExceptionsThrownFromDisableToBubbleUp(): void
     {
-        $this->input->getArgument('module')->willReturn('MyApp');
-        $this->input->getOption('composer')->willReturn('composer.phar');
-        $this->input->getOption('modules-path')->willReturn('./library/modules');
+        $this->input->method('getArgument')->with('module')->willReturn('MyApp');
+        $this->input->method('getOption')->willReturnMap([
+            ['composer', 'composer.phar'],
+            ['modules-path', './library/modules'],
+        ]);
 
-        $injectorMock = Mockery::mock('overload:' . ConfigAggregatorInjector::class);
-        $injectorMock
-            ->shouldReceive('isRegistered')
+        $this->injector
+            ->expects(self::once())
+            ->method('isRegistered')
             ->with('MyApp\ConfigProvider')
-            ->andReturn(false)
-            ->once();
+            ->willReturn(false);
 
         $this->package
             ->expects($this->once())
@@ -223,8 +219,8 @@ class DeregisterCommandTest extends TestCase
 
         $method->invoke(
             $this->command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         );
     }
 }

@@ -18,6 +18,9 @@ final class ConfigAggregatorInjector extends AbstractInjector
 {
     use ConditionalDiscoveryTrait;
 
+    /**
+     * @var string
+     */
     public const DEFAULT_CONFIG_FILE = 'config/config.php';
 
     /** @var list<InjectorInterface::TYPE_*> */
@@ -75,7 +78,7 @@ final class ConfigAggregatorInjector extends AbstractInjector
         $this->isRegisteredPattern = '/new (?:'
             . $ns
             . '?'
-            . preg_quote('Laminas\ConfigAggregator\\')
+            . preg_quote('Laminas\ConfigAggregator\\', '/')
             . ')?ConfigAggregator\(\s*(?:array\(|\[).*\s+'
             . $ns
             . '?%s::class/s';

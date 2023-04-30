@@ -38,6 +38,9 @@ final class ConfigProvider
         ];
     }
 
+    /**
+     * @return array<string, array{mezzio:action:create: class-string<CreateActionCommand>, mezzio:factory:create: class-string<CreateFactoryCommand>, mezzio:handler:create: class-string<CreateHandlerCommand>, mezzio:middleware:create: class-string<CreateMiddlewareCommand>, mezzio:middleware:migrate-from-interop: class-string<MigrateInteropMiddlewareCommand>, mezzio:middleware:to-request-handler: class-string<MigrateMiddlewareToRequestHandlerCommand>, mezzio:module:create: class-string<CreateCommand>, mezzio:module:deregister: class-string<DeregisterCommand>, mezzio:module:register: class-string<RegisterCommand>}>
+     */
     public function getConsoleConfig(): array
     {
         return [
@@ -56,6 +59,9 @@ final class ConfigProvider
         ];
     }
 
+    /**
+     * @return array{factories: array{Create: string, CreateActionCommand: string, CreateCommand: string, CreateFactoryCommand: string, CreateHandlerCommand: string, CreateMiddlewareCommand: string, DeregisterCommand: string, MigrateInteropMiddlewareCommand: string, MigrateMiddlewareToRequestHandlerCommand: string, RegisterCommand: string}}
+     */
     public function getDependencies(): array
     {
         return [

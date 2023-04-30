@@ -15,6 +15,9 @@ use function sprintf;
 
 final class CreateCommand extends Command
 {
+    /**
+     * @var string
+     */
     public const HELP = <<<'EOT'
         Create a new middleware module for the application.
         
@@ -26,22 +29,17 @@ final class CreateCommand extends Command
           configuration.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_ARG_MODULE = 'The module to create and register with the application.';
 
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:module:create';
 
-    /** @var array|ArrayAccess */
-    private $config;
-
-    private string $projectRoot;
-
     /** @param array|ArrayAccess $config */
-    public function __construct($config, string $projectRoot)
+    public function __construct(private $config, private string $projectRoot)
     {
-        $this->config      = $config;
-        $this->projectRoot = $projectRoot;
-
         parent::__construct();
     }
 

@@ -10,10 +10,8 @@ use Mezzio\Tooling\CreateHandler\CreateHandler;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -31,29 +29,27 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 class CreateActionCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use ProphecyTrait;
 
-    /** @psalm-var ObjectProphecy<ContainerInterface> */
-    private $container;
+    /** @psalm-var ContainerInterface&MockObject */
+    private ContainerInterface $container;
 
-    /** @psalm-var ObjectProphecy<InputInterface> */
-    private $input;
+    /** @psalm-var InputInterface&MockObject */
+    private InputInterface $input;
 
-    /** @psalm-var ObjectProphecy<ConsoleOutputInterface> */
-    private $output;
+    /** @psalm-var ConsoleOutputInterface&MockObject */
+    private ConsoleOutputInterface $output;
 
     protected function setUp(): void
     {
-        $this->input  = $this->prophesize(InputInterface::class);
-        $this->output = $this->prophesize(ConsoleOutputInterface::class);
-
-        $this->container = $this->prophesize(ContainerInterface::class);
+        $this->input     = $this->createMock(InputInterface::class);
+        $this->output    = $this->createMock(ConsoleOutputInterface::class);
+        $this->container = $this->createMock(ContainerInterface::class);
     }
 
     private function createCommand(): CreateActionCommand
     {
         return new CreateActionCommand(
-            $this->container->reveal(),
+            $this->container,
             ''
         );
     }
@@ -75,50 +71,49 @@ class CreateActionCommandTest extends TestCase
         return $r;
     }
 
-    /**
-     * @return ObjectProphecy<Application>
-     */
-    private function mockApplication(string $forService = 'Foo\TestAction')
+    /** @return Application&MockObject */
+    private function mockApplication(string $forService = 'Foo\TestAction'): Application
     {
-        $helperSet = $this->prophesize(HelperSet::class)->reveal();
+        $helperSet = $this->createMock(HelperSet::class);
 
-        $factoryCommand = $this->prophesize(Command::class);
+        $factoryCommand = $this->createMock(Command::class);
         $factoryCommand
-            ->run(
-                Argument::that(function ($input) use ($forService) {
+            ->method('run')
+            ->with(
+                self::callback(static function ($input) use ($forService): bool {
                     Assert::assertInstanceOf(ArrayInput::class, $input);
                     Assert::assertStringContainsString('mezzio:factory:create', (string) $input);
                     Assert::assertStringContainsString($forService, (string) $input);
-                    return $input;
+                    return true;
                 }),
-                $this->output->reveal()
+                $this->output
             )
             ->willReturn(0);
 
-        $application = $this->prophesize(Application::class);
-        $application->getHelperSet()->willReturn($helperSet);
-        $application->find('mezzio:factory:create')->will([$factoryCommand, 'reveal']);
+        $application = $this->createMock(Application::class);
+        $application->method('getHelperSet')->willReturn($helperSet);
+        $application->method('find')->with('mezzio:factory:create')->willReturn($factoryCommand);
 
         return $application;
     }
 
     public function testConfigureSetsExpectedDescriptionWhenRequestingAnAction(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(false);
         $command = $this->createCommand();
         self::assertStringContainsString(CreateActionCommand::HELP_DESCRIPTION, $command->getDescription());
     }
 
     public function testConfigureSetsExpectedHelpWhenRequestingAnAction(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(false);
         $command = $this->createCommand();
         self::assertEquals(CreateActionCommand::HELP, $command->getHelp());
     }
 
     public function testConfigureSetsExpectedArgumentsWhenRequestingAnAction(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(false);
         $command    = $this->createCommand();
         $definition = $command->getDefinition();
         self::assertTrue($definition->hasArgument('action'));
@@ -129,7 +124,7 @@ class CreateActionCommandTest extends TestCase
 
     public function testConfigureSetsExpectedOptionsWhenRequestingAnAction(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(false);
         $command    = $this->createCommand();
         $definition = $command->getDefinition();
 
@@ -151,7 +146,7 @@ class CreateActionCommandTest extends TestCase
 
     public function testConfigureSetsExpectedTemplateOptionsWhenRequestingAnActionAndRendererIsPresent(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(true);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(true);
         $command    = $this->createCommand();
         $definition = $command->getDefinition();
 
@@ -178,10 +173,10 @@ class CreateActionCommandTest extends TestCase
 
     public function testSuccessfulExecutionEmitsExpectedMessagesWhenRequestingAnAction(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(false);
         $command = $this->createCommand();
         $this->disableRequireHandlerDirective($command);
-        $command->setApplication($this->mockApplication('Foo\TestAction')->reveal());
+        $command->setApplication($this->mockApplication('Foo\TestAction'));
 
         $generator = Mockery::mock('overload:' . CreateHandler::class);
         $generator->shouldReceive('process')
@@ -189,25 +184,26 @@ class CreateActionCommandTest extends TestCase
             ->with('Foo\TestAction', [])
             ->andReturn(__DIR__);
 
-        $this->input->getArgument('action')->willReturn('Foo\TestAction');
-        $this->input->getOption('no-factory')->willReturn(false);
-        $this->input->getOption('no-register')->willReturn(false);
+        $this->input->method('getArgument')->with('action')->willReturn('Foo\TestAction');
+        $this->input->method('getOption')->willReturnMap([
+            ['no-factory', false],
+            ['no-register', false],
+        ]);
         $this->output
-            ->writeln(Argument::containingString('Creating action Foo\TestAction'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Success'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Created class Foo\TestAction, in file ' . __DIR__))
-            ->shouldBeCalled();
+            ->expects(self::atLeast(3))
+            ->method('writeln')
+            ->with(self::logicalOr(
+                self::stringContains('Creating action Foo\TestAction'),
+                self::stringContains('Success'),
+                self::stringContains('Created class Foo\TestAction, in file ' . __DIR__)
+            ));
 
         $method = $this->reflectExecuteMethod($command);
 
         self::assertSame(0, $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 }

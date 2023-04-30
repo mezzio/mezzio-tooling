@@ -13,10 +13,8 @@ use Mezzio\Tooling\CreateHandler\Template;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -36,29 +34,27 @@ use function sprintf;
 class CreateHandlerCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use ProphecyTrait;
 
-    /** @var ObjectProphecy<ContainerInterface> */
-    private ObjectProphecy $container;
+    /** @var ContainerInterface&MockObject */
+    private ContainerInterface $container;
 
-    /** @var ObjectProphecy<InputInterface> */
-    private ObjectProphecy $input;
+    /** @var InputInterface&MockObject */
+    private InputInterface $input;
 
-    /** @var ObjectProphecy<ConsoleOutputInterface> */
-    private $output;
+    /** @var ConsoleOutputInterface&MockObject */
+    private ConsoleOutputInterface $output;
 
     protected function setUp(): void
     {
-        $this->input  = $this->prophesize(InputInterface::class);
-        $this->output = $this->prophesize(ConsoleOutputInterface::class);
-
-        $this->container = $this->prophesize(ContainerInterface::class);
+        $this->input     = $this->createMock(InputInterface::class);
+        $this->output    = $this->createMock(ConsoleOutputInterface::class);
+        $this->container = $this->createMock(ContainerInterface::class);
     }
 
     private function createCommand(): CreateHandlerCommand
     {
         return new CreateHandlerCommand(
-            $this->container->reveal(),
+            $this->container,
             ''
         );
     }
@@ -80,50 +76,49 @@ class CreateHandlerCommandTest extends TestCase
         return $r;
     }
 
-    /**
-     * @return ObjectProphecy<Application>
-     */
-    private function mockApplication(string $forService = 'Foo\TestHandler')
+    /** @return Application&MockObject */
+    private function mockApplication(string $forService = 'Foo\TestHandler'): Application
     {
-        $helperSet = $this->prophesize(HelperSet::class)->reveal();
+        $helperSet = $this->createMock(HelperSet::class);
 
-        $factoryCommand = $this->prophesize(Command::class);
+        $factoryCommand = $this->createMock(Command::class);
         $factoryCommand
-            ->run(
-                Argument::that(function ($input) use ($forService) {
+            ->method('run')
+            ->with(
+                self::callback(static function ($input) use ($forService): bool {
                     Assert::assertInstanceOf(ArrayInput::class, $input);
                     Assert::assertStringContainsString('mezzio:factory:create', (string) $input);
                     Assert::assertStringContainsString($forService, (string) $input);
-                    return $input;
+                    return true;
                 }),
-                $this->output->reveal()
+                $this->output
             )
             ->willReturn(0);
 
-        $application = $this->prophesize(Application::class);
-        $application->getHelperSet()->willReturn($helperSet);
-        $application->find('mezzio:factory:create')->will([$factoryCommand, 'reveal']);
+        $application = $this->createMock(Application::class);
+        $application->method('getHelperSet')->willReturn($helperSet);
+        $application->method('find')->with('mezzio:factory:create')->willReturn($factoryCommand);
 
         return $application;
     }
 
     public function testConfigureSetsExpectedDescriptionWhenRequestingAHandler(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(false);
         $command = $this->createCommand();
         self::assertStringContainsString(CreateHandlerCommand::HELP_DESCRIPTION, $command->getDescription());
     }
 
     public function testConfigureSetsExpectedHelpWhenRequestingAHandler(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(true);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(true);
         $command = $this->createCommand();
         self::assertEquals(CreateHandlerCommand::HELP, $command->getHelp());
     }
 
     public function testConfigureSetsExpectedArguments(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(true);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(true);
         $command    = $this->createCommand();
         $definition = $command->getDefinition();
 
@@ -135,7 +130,7 @@ class CreateHandlerCommandTest extends TestCase
 
     public function testConfigureSetsExpectedOptionsWhenRequestingAHandler(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(false);
         $command    = $this->createCommand();
         $definition = $command->getDefinition();
 
@@ -157,8 +152,8 @@ class CreateHandlerCommandTest extends TestCase
 
     public function testConfigureSetsExpectedTemplateOptionsWhenRequestingAHandlerAndRendererIsPresent(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(true);
-        $command    = new CreateHandlerCommand($this->container->reveal(), '');
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(true);
+        $command    = new CreateHandlerCommand($this->container, '');
         $definition = $command->getDefinition();
 
         self::assertTrue($definition->hasOption('without-template'));
@@ -184,10 +179,10 @@ class CreateHandlerCommandTest extends TestCase
 
     public function testSuccessfulExecutionEmitsExpectedMessages(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(false);
         $command = $this->createCommand();
         $this->disableRequireHandlerDirective($command);
-        $command->setApplication($this->mockApplication()->reveal());
+        $command->setApplication($this->mockApplication());
 
         $generator = Mockery::mock('overload:' . CreateHandler::class);
         $generator->shouldReceive('process')
@@ -195,25 +190,27 @@ class CreateHandlerCommandTest extends TestCase
             ->with('Foo\TestHandler', [])
             ->andReturn(__DIR__);
 
-        $this->input->getArgument('handler')->willReturn('Foo\TestHandler');
-        $this->input->getOption('no-factory')->willReturn(false);
-        $this->input->getOption('no-register')->willReturn(false);
+        $this->input->method('getArgument')->with('handler')->willReturn('Foo\TestHandler');
+        $this->input->method('getOption')
+            ->willReturnMap([
+                ['no-factory', false],
+                ['no-register', false],
+            ]);
         $this->output
-            ->writeln(Argument::containingString('Creating request handler Foo\TestHandler'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Success'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Created class Foo\TestHandler, in file ' . __DIR__))
-            ->shouldBeCalled();
+            ->expects(self::atLeast(3))
+            ->method('writeln')
+            ->with(self::logicalOr(
+                self::stringContains('Creating request handler Foo\TestHandler'),
+                self::stringContains('Success'),
+                self::stringContains('Created class Foo\TestHandler, in file ' . __DIR__)
+            ));
 
         $method = $this->reflectExecuteMethod($command);
 
         self::assertSame(0, $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 
@@ -227,10 +224,10 @@ class CreateHandlerCommandTest extends TestCase
         $templateNamespace     = 'foo';
         $templateName          = 'test';
 
-        $this->container->has(TemplateRendererInterface::class)->willReturn(true);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(true);
         $command = $this->createCommand();
         $this->disableRequireHandlerDirective($command);
-        $command->setApplication($this->mockApplication()->reveal());
+        $command->setApplication($this->mockApplication());
 
         $generator = Mockery::mock('overload:' . CreateHandler::class);
         $generator->shouldReceive('process')
@@ -245,32 +242,32 @@ class CreateHandlerCommandTest extends TestCase
             ->with('Foo\TestHandler', $templateNamespace, $templateName, null)
             ->andReturn($template);
 
-        $this->input->getArgument('handler')->willReturn('Foo\TestHandler');
-        $this->input->getOption('without-template')->willReturn(false);
-        $this->input->getOption('with-template-namespace')->willReturn(null);
-        $this->input->getOption('with-template-name')->willReturn(null);
-        $this->input->getOption('with-template-extension')->willReturn(null);
-        $this->input->getOption('no-factory')->willReturn(false);
-        $this->input->getOption('no-register')->willReturn(false);
+        $this->input->method('getArgument')->with('handler')->willReturn('Foo\TestHandler');
+        $this->input->method('getOption')
+            ->willReturnMap([
+                ['without-template' => false],
+                ['with-template-namespace', null],
+                ['with-template-name', null],
+                ['with-template-extension', null],
+                ['no-factory', false],
+                ['no-register', false],
+            ]);
         $this->output
-            ->writeln(Argument::containingString('Creating request handler Foo\TestHandler'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Success'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Created template ' . $generatedTemplate . ' in file ' . __FILE__))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Created class Foo\TestHandler, in file ' . __DIR__))
-            ->shouldBeCalled();
+            ->expects(self::atLeast(4))
+            ->method('writeln')
+            ->with(self::logicalOr(
+                self::stringContains('Creating request handler Foo\TestHandler'),
+                self::stringContains('Success'),
+                self::stringContains('Created template ' . $generatedTemplate . ' in file ' . __FILE__),
+                self::stringContains('Created class Foo\TestHandler, in file ' . __DIR__)
+            ));
 
         $method = $this->reflectExecuteMethod($command);
 
         self::assertSame(0, $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 
@@ -285,10 +282,10 @@ class CreateHandlerCommandTest extends TestCase
             '%template-name%'      => $templateName,
         ];
 
-        $this->container->has(TemplateRendererInterface::class)->willReturn(true);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(true);
         $command = $this->createCommand();
         $this->disableRequireHandlerDirective($command);
-        $command->setApplication($this->mockApplication()->reveal());
+        $command->setApplication($this->mockApplication());
 
         $generator = Mockery::mock('overload:' . CreateHandler::class);
         $generator->shouldReceive('process')
@@ -303,41 +300,42 @@ class CreateHandlerCommandTest extends TestCase
             ->with('Foo\TestHandler', $templateNamespace, $templateName, $templateExtension)
             ->andReturn($template);
 
-        $this->input->getArgument('handler')->willReturn('Foo\TestHandler');
-        $this->input->getOption('without-template')->willReturn(false);
-        $this->input->getOption('with-template-namespace')->willReturn($templateNamespace);
-        $this->input->getOption('with-template-name')->willReturn($templateName);
-        $this->input->getOption('with-template-extension')->willReturn($templateExtension);
-        $this->input->getOption('no-factory')->willReturn(false);
-        $this->input->getOption('no-register')->willReturn(false);
+        $this->input->method('getArgument')->with('handler')->willReturn('Foo\TestHandler');
+        $this->input->method('getOption')
+            ->willReturnMap([
+                ['without-template', false],
+                ['with-template-namespace', $templateNamespace],
+                ['with-template-name', $templateName],
+                ['with-template-extension', $templateExtension],
+                ['no-factory', false],
+                ['no-register', false],
+            ]);
+
         $this->output
-            ->writeln(Argument::containingString('Creating request handler Foo\TestHandler'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Success'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Created template ' . $generatedTemplate . ' in file ' . __FILE__))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Created class Foo\TestHandler, in file ' . __DIR__))
-            ->shouldBeCalled();
+            ->expects(self::atLeast(4))
+            ->method('writeln')
+            ->with(self::logicalOr(
+                self::stringContains('Creating request handler Foo\TestHandler'),
+                self::stringContains('Success'),
+                self::stringContains('Created template ' . $generatedTemplate . ' in file ' . __FILE__),
+                self::stringContains('Created class Foo\TestHandler, in file ' . __DIR__)
+            ));
 
         $method = $this->reflectExecuteMethod($command);
 
         self::assertSame(0, $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 
     public function testCommandWillNotGenerateTemplateWithProvidedOptionsWhenWithoutTemplateOptionProvided(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(true);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(true);
         $command = $this->createCommand();
         $this->disableRequireHandlerDirective($command);
-        $command->setApplication($this->mockApplication()->reveal());
+        $command->setApplication($this->mockApplication());
 
         $generator = Mockery::mock('overload:' . CreateHandler::class);
         $generator->shouldReceive('process')
@@ -345,40 +343,40 @@ class CreateHandlerCommandTest extends TestCase
             ->with('Foo\TestHandler', [])
             ->andReturn(__DIR__);
 
-        $this->input->getArgument('handler')->willReturn('Foo\TestHandler');
-        $this->input->getOption('without-template')->willReturn(true);
-        $this->input->getOption('with-template-namespace')->shouldNotBeCalled();
-        $this->input->getOption('with-template-name')->shouldNotBeCalled();
-        $this->input->getOption('with-template-extension')->shouldNotBeCalled();
-        $this->input->getOption('no-factory')->willReturn(false);
-        $this->input->getOption('no-register')->willReturn(false);
+        $this->input->method('getArgument')->with('handler')->willReturn('Foo\TestHandler');
+        $this->input->method('getOption')
+            ->willReturnMap([
+                ['without-template', true],
+                ['no-factory', false],
+                ['no-register', false],
+            ]);
+
         $this->output
-            ->writeln(Argument::containingString('Creating request handler Foo\TestHandler'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Success'))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Created template'))
-            ->shouldNotBeCalled();
-        $this->output
-            ->writeln(Argument::containingString('Created class Foo\TestHandler, in file ' . __DIR__))
-            ->shouldBeCalled();
+            ->expects(self::atLeast(3))
+            ->method('writeln')
+            ->with(self::logicalAnd(
+                self::logicalOr(
+                    self::stringContains('Creating request handler Foo\TestHandler'),
+                    self::stringContains('Success'),
+                    self::stringContains('Created class Foo\TestHandler, in file ' . __DIR__)
+                ),
+                self::logicalNot(self::stringContains('Created template')),
+            ));
 
         $method = $this->reflectExecuteMethod($command);
 
         self::assertSame(0, $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         ));
     }
 
     public function testAllowsExceptionsRaisedFromCreateHandlerToBubbleUp(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(false);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(false);
         $command = $this->createCommand();
-        $command->setApplication($this->mockApplication()->reveal());
+        $command->setApplication($this->mockApplication());
 
         $generator = Mockery::mock('overload:' . CreateHandler::class);
         $generator->shouldReceive('process')
@@ -386,14 +384,14 @@ class CreateHandlerCommandTest extends TestCase
             ->with('Foo\TestHandler', [])
             ->andThrow(CreateHandlerException::class, 'ERROR THROWN');
 
-        $this->input->getArgument('handler')->willReturn('Foo\TestHandler');
+        $this->input->method('getArgument')->with('handler')->willReturn('Foo\TestHandler');
         $this->output
-            ->writeln(Argument::containingString('Creating request handler Foo\TestHandler'))
-            ->shouldBeCalled();
-
-        $this->output
-            ->writeln(Argument::containingString('Success'))
-            ->shouldNotBeCalled();
+            ->expects(self::atLeast(1))
+            ->method('writeln')
+            ->with(self::logicalAnd(
+                self::stringContains('Creating request handler Foo\TestHandler'),
+                self::logicalNot(self::stringContains('Success')),
+            ));
 
         $method = $this->reflectExecuteMethod($command);
 
@@ -402,17 +400,17 @@ class CreateHandlerCommandTest extends TestCase
 
         $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         );
     }
 
     public function testAllowsExceptionsRaisedFromCreateHandlerToBubbleUpWhenRendererIsRegistered(): void
     {
-        $this->container->has(TemplateRendererInterface::class)->willReturn(true);
+        $this->container->method('has')->with(TemplateRendererInterface::class)->willReturn(true);
         $command = $this->createCommand();
         $this->disableRequireHandlerDirective($command);
-        $command->setApplication($this->mockApplication()->reveal());
+        $command->setApplication($this->mockApplication());
 
         $generator = Mockery::mock('overload:' . CreateHandler::class);
         $generator->shouldReceive('process')
@@ -423,18 +421,21 @@ class CreateHandlerCommandTest extends TestCase
             ])
             ->andThrow(CreateHandlerException::class, 'ERROR THROWN');
 
-        $this->input->getArgument('handler')->willReturn('InvalidTestHandler');
-        $this->input->getOption('without-template')->willReturn(false);
-        $this->input->getOption('with-template-namespace')->willReturn(null);
-        $this->input->getOption('with-template-name')->willReturn(null);
-        $this->input->getOption('with-template-extension')->willReturn(null);
-        $this->output
-            ->writeln(Argument::containingString('Creating request handler InvalidTestHandler'))
-            ->shouldBeCalled();
+        $this->input->method('getArgument')->with('handler')->willReturn('InvalidTestHandler');
+        $this->input->method('getOption')->willReturnMap([
+            ['without-template', false],
+            ['with-template-namespace', null],
+            ['with-template-name', null],
+            ['with-template-extension', null],
+        ]);
 
         $this->output
-            ->writeln(Argument::containingString('Success'))
-            ->shouldNotBeCalled();
+            ->expects(self::atLeast(1))
+            ->method('writeln')
+            ->with(self::logicalAnd(
+                self::stringContains('Creating request handler InvalidTestHandler'),
+                self::logicalNot(self::stringContains('Success')),
+            ));
 
         $method = $this->reflectExecuteMethod($command);
 
@@ -443,8 +444,8 @@ class CreateHandlerCommandTest extends TestCase
 
         $method->invoke(
             $command,
-            $this->input->reveal(),
-            $this->output->reveal()
+            $this->input,
+            $this->output
         );
     }
 }

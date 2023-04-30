@@ -15,25 +15,40 @@ use function sprintf;
 
 final class CreateMiddlewareCommand extends Command
 {
+    /**
+     * @var string
+     */
     public const DEFAULT_SRC = '/src';
 
+    /**
+     * @var string
+     */
     public const HELP = <<<'EOT'
         Creates a PSR-15 middleware class file named after the provided class. For a
         path, it matches the class namespace against PSR-4 autoloader namespaces in
         your composer.json.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_ARG_MIDDLEWARE = <<<'EOT'
         Fully qualified class name of the middleware to create. This value
         should be quoted to ensure namespace separators are not interpreted as
         escape sequences by your shell.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_OPT_NO_FACTORY = <<<'EOT'
         By default, this command generates a factory for the middleware it creates, and
         registers it with the container. Passing this option disables that feature.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_OPT_NO_REGISTER = <<<'EOT'
         By default, when this command generates a factory for the middleware it
         creates, it registers it with the container. Passing this option disables
@@ -43,8 +58,6 @@ final class CreateMiddlewareCommand extends Command
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:middleware:create';
 
-    private string $projectRoot;
-
     /**
      * Flag indicating whether or not to require the generated middleware before
      * generating its factory. By default, this is true, as it is necessary
@@ -53,10 +66,8 @@ final class CreateMiddlewareCommand extends Command
      */
     private bool $requireMiddlewareBeforeGeneratingFactory = true;
 
-    public function __construct(string $projectRoot)
+    public function __construct(private string $projectRoot)
     {
-        $this->projectRoot = $projectRoot;
-
         parent::__construct();
     }
 
@@ -97,6 +108,7 @@ final class CreateMiddlewareCommand extends Command
             if ($this->requireMiddlewareBeforeGeneratingFactory) {
                 require $path;
             }
+
             return $this->generateFactory($middleware, $input, $output);
         }
 

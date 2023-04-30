@@ -9,6 +9,7 @@ use MezzioTest\Tooling\Factory\TestAsset\ComplexDependencyObject;
 use MezzioTest\Tooling\Factory\TestAsset\InvokableObject;
 use MezzioTest\Tooling\Factory\TestAsset\SimpleDependencyObject;
 use PHPUnit\Framework\TestCase;
+use This\Duplicates\ClassDuplicatingNamespaceNameCase\ClassDuplicatingNamespaceName;
 
 use function file_get_contents;
 
@@ -51,7 +52,7 @@ class FactoryClassGeneratorTest extends TestCase
     public function testCreateFactoryCreatesAppropriatelyNamedFactoryWhenClassNameAppearsWithinNamespace(): void
     {
         require __DIR__ . '/TestAsset/classes/ClassDuplicatingNamespaceName.php';
-        $className = 'This\Duplicates\ClassDuplicatingNamespaceNameCase\ClassDuplicatingNamespaceName';
+        $className = ClassDuplicatingNamespaceName::class;
         $factory   = file_get_contents(__DIR__ . '/TestAsset/factories/ClassDuplicatingNamespaceName.php');
 
         self::assertEquals($factory, $this->generator->createFactory($className));

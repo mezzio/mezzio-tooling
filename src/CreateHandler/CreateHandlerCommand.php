@@ -19,40 +19,64 @@ class CreateHandlerCommand extends Command
 {
     use TemplateResolutionTrait;
 
+    /**
+     * @var string
+     */
     public const DEFAULT_SRC = '/src';
 
+    /**
+     * @var string
+     */
     public const HELP_DESCRIPTION = 'Create a PSR-15 request handler class file.';
 
+    /**
+     * @var string
+     */
     public const HELP = <<<'EOT'
         Creates a PSR-15 request handler class file named after the provided
         class. For a path, it matches the class namespace against PSR-4 autoloader
         namespaces in your composer.json.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_ARG_HANDLER = <<<'EOT'
         Fully qualified class name of the request handler to create. This value
         should be quoted to ensure namespace separators are not interpreted as
         escape sequences by your shell.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_OPT_NO_FACTORY = <<<'EOT'
         By default, this command generates a factory for the request handler it
         creates, and registers it with the container. Passing this option disables
         that feature.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_OPT_NO_REGISTER = <<<'EOT'
         By default, when this command generates a factory for the request handler it
         creates, it registers it with the container. Passing this option disables
         registration of the generated factory with the container.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_OPTION_WITHOUT_TEMPLATE = <<<'EOT'
         By default, this command generates a template for the newly generated class,
         and adds functionality to it render the template. Passing this flag
         disables template generation and invocation.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_OPTION_WITH_TEMPLATE_EXTENSION = <<<'EOT'
         By default, this command will look for a template file extension name
         first via the "templates.extension" configuration directive, and then
@@ -62,6 +86,9 @@ class CreateHandlerCommand extends Command
         may pass this option to specify a custom extension in that case.
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_OPTION_WITH_TEMPLATE_NAME = <<<'EOT'
         By default, this command uses a normalized version of the class name as the
         template name. Use this option to provide an alternative template name
@@ -70,6 +97,9 @@ class CreateHandlerCommand extends Command
         renderer.  If --without-template is provided, this option is ignored. 
         EOT;
 
+    /**
+     * @var string
+     */
     public const HELP_OPTION_WITH_TEMPLATE_NAMESPACE = <<<'EOT'
         By default, this command uses a normalized version of the root namespace of the
         class generated as the template namespace.  Use this option to provide an
@@ -79,6 +109,9 @@ class CreateHandlerCommand extends Command
         --without-template is provided, this option is ignored.
         EOT;
 
+    /**
+     * @var string
+     */
     public const STATUS_TEMPLATE = '<info>Creating request handler %s...</info>';
 
     /** @var null|string Cannot be defined explicitly due to parent class */
@@ -101,14 +134,6 @@ class CreateHandlerCommand extends Command
      */
     protected $requireHandlerBeforeGeneratingFactory = true;
 
-    private ContainerInterface $container;
-
-    /**
-     * Root path of the project. Defaults to getcwd(). Mainly exists for
-     * testing purposes, to allow injecting a virtual filesystem location.
-     */
-    private string $projectRoot;
-
     /**
      * Whether or not the template renderer is registered in the container.
      */
@@ -119,10 +144,14 @@ class CreateHandlerCommand extends Command
      */
     private bool $templateRendererIsRegistered = false;
 
-    public function __construct(ContainerInterface $container, string $projectRoot)
-    {
-        $this->projectRoot          = $projectRoot;
-        $this->container            = $container;
+    /**
+     * Root path of the project. Defaults to getcwd(). Mainly exists for
+     * testing purposes, to allow injecting a virtual filesystem location.
+     */
+    public function __construct(
+        private ContainerInterface $container,
+        private string $projectRoot
+    ) {
         $this->rendererIsRegistered = $this->containerDefinesRendererService($container);
 
         // Must do last, so that container and/or project root are in scope
