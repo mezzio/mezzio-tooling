@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Mezzio\Tooling\Routes;
 
 use ArrayIterator;
+use Exception;
 use FilterIterator;
 use Mezzio\Router\Route;
 
+use function array_filter;
 use function array_intersect;
 use function array_walk;
 use function get_class;
@@ -17,6 +19,7 @@ use function is_string;
 use function preg_match;
 use function sprintf;
 use function str_replace;
+use function stripos;
 use function strtoupper;
 
 /**
@@ -51,8 +54,8 @@ final class RoutesFilter extends FilterIterator
         // Filter out any options that are, effectively, "empty".
         $this->filterOptions = array_filter(
             $this->filterOptions,
-            function($value) {
-                return !empty($value);
+            function ($value) {
+                return ! empty($value);
             }
         );
     }
@@ -102,7 +105,7 @@ final class RoutesFilter extends FilterIterator
     public function matchesByRegex(Route $route, string $routeAttribute)
     {
         if ($routeAttribute === 'path') {
-            $path = (string)$this->filterOptions['path'];
+            $path = (string) $this->filterOptions['path'];
             return preg_match(
                 sprintf("/^%s/", str_replace('/', '\/', $path)),
                 $route->getPath()
@@ -113,7 +116,7 @@ final class RoutesFilter extends FilterIterator
             return preg_match(
                 sprintf(
                     "/%s/",
-                    (string)$this->filterOptions['name']
+                    (string) $this->filterOptions['name']
                 ),
                 $route->getName()
             );
@@ -159,16 +162,17 @@ final class RoutesFilter extends FilterIterator
      */
     public function matchesByMiddleware(Route $route): bool
     {
-        $middlewareClass = get_class($route->getMiddleware());
-        $matchesMiddleware = (string)$this->filterOptions['middleware'];
+        $middlewareClass   = get_class($route->getMiddleware());
+        $matchesMiddleware = (string) $this->filterOptions['middleware'];
 
         try {
             return $middlewareClass === $matchesMiddleware
                 || stripos($middlewareClass, $matchesMiddleware)
                 || preg_match(
-                    sprintf('/%s/', $matchesMiddleware), $middlewareClass
+                    sprintf('/%s/', $matchesMiddleware),
+                    $middlewareClass
                 );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
