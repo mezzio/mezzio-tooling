@@ -6,7 +6,7 @@ namespace MezzioTest\Tooling\Routes;
 
 use ArrayIterator;
 use Mezzio\Router\Route;
-use Mezzio\Tooling\Routes\RoutesFilter;
+use Mezzio\Tooling\Routes\Filter\RoutesFilter;
 use MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware;
 use MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ class RoutesFilterTest extends TestCase
 {
     use ProphecyTrait;
 
-    private array $routes;
+    private array $routes = [];
 
     public function setUp(): void
     {
@@ -63,7 +63,7 @@ class RoutesFilterTest extends TestCase
         ];
     }
 
-    public function testFiltersOutEmptyOptions()
+    public function testFiltersOutEmptyOptions(): void
     {
         $routeFilter = new RoutesFilter(
             new ArrayIterator($this->routes),
@@ -99,6 +99,9 @@ class RoutesFilterTest extends TestCase
         );
     }
 
+    /**
+     * @return array<int,array<int,array<>>>
+     */
     public function validFilterDataProvider(): array
     {
         return [

@@ -10,9 +10,9 @@ use Mezzio\Tooling\Routes\ListRoutesCommand;
 use MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware;
 use MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionClass;
 use ReflectionException;
@@ -23,80 +23,78 @@ use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 use function str_replace;
 use function strtoupper;
 
 class ListRoutesCommandTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @var ObjectProphecy|InputInterface */
+    /**
+     * @var (InputInterface&MockObject)
+     */
     private $input;
 
-    /** @var ObjectProphecy|OutputInterface */
+    /**
+     * @var (ConsoleOutputInterface&MockObject)
+     */
     private $output;
 
-    /** @var ObjectProphecy|RouteCollector */
+    /**
+     * @var (RouteCollector&MockObject)
+     */
     private $routeCollection;
 
     private ListRoutesCommand $command;
 
-    private array $routes;
-
     protected function setUp(): void
     {
-        $this->input  = $this->prophesize(InputInterface::class);
-        $this->output = $this->prophesize(ConsoleOutputInterface::class);
+        $this->input  = $this->createMock(InputInterface::class);
+        $this->output = $this->createMock(ConsoleOutputInterface::class);
 
-        $this->routes = [
-            new Route(
-                "/",
-                new SimpleMiddleware(),
-                ['GET'],
-                'home'
-            ),
-            new Route(
-                "/",
-                new ExpressMiddleware(),
-                ['GET'],
-                'home'
-            ),
+        $routes = [
+            new Route("/", new SimpleMiddleware(), ['GET'], 'home'),
+            new Route("/", new ExpressMiddleware(), ['GET'], 'home'),
         ];
 
-        $this->routeCollection = $this->prophesize(RouteCollector::class);
+        $this->routeCollection = $this->createMock(RouteCollector::class);
         $this->routeCollection
-            ->getRoutes()
-            ->willReturn($this->routes);
+            ->expects($this->once())
+            ->method('getRoutes')
+            ->willReturn($routes);
 
-        $this->command = new ListRoutesCommand($this->routeCollection->reveal());
+        $this->command = new ListRoutesCommand($this->routeCollection);
     }
 
-    /**
-     * @return ObjectProphecy|Application
-     */
     private function mockApplication(RouteCollector $routeCollector)
     {
-        $helperSet = $this->prophesize(HelperSet::class)->reveal();
+        $helperSet = $this->createMock(HelperSet::class);
 
-        $factoryCommand = $this->prophesize(ListRoutesCommand::class);
+        $factoryCommand = $this->createMock(ListRoutesCommand::class);
         $factoryCommand
-            ->run(
+            ->expects($this->once())
+            ->method('run')
+            ->with(
                 Argument::that(function ($input) {
                     Assert::assertInstanceOf(ArrayInput::class, $input);
                     Assert::assertStringContainsString('mezzio:routes:list', (string) $input);
                     return $input;
                 }),
-                $this->output->reveal()
+                $this->output
             )
             ->willReturn(0);
         $factoryCommand->routeCollector = $routeCollector;
 
-        /** @var Application|ObjectProphecy $application */
-        $application = $this->prophesize(Application::class);
-        $application->getHelperSet()->willReturn($helperSet);
-        $application->find('mezzio:routes:list')->will([$factoryCommand, 'reveal']);
+        /** @var (Application&MockObject) $application */
+        $application = $this->createMock(Application::class);
+        $application
+            ->expects($this->once())
+            ->method('getHelperSet')
+            ->willReturn($helperSet);
+        $application
+            ->expects($this->once())
+            ->method('find')
+            ->with('mezzio:routes:list')
+            ->will([$factoryCommand, 'reveal']);
 
         return $application;
     }
@@ -171,70 +169,43 @@ class ListRoutesCommandTest extends TestCase
         $outputFormatter = new OutputFormatter(false);
 
         $this->output
-            ->writeln(Argument::containingString(
+            ->expects($this->once())
+            ->method('writeln')
+            ->with(
                 "Listing the application's routing table in table format."
-            ))
-            ->shouldBeCalled();
+            );
+
         // phpcs:disable Generic.Files.LineLength
         $this->output
-            ->writeln(
-                Argument::containingString(
-                    "+------+------+---------+------------<fg=black;bg=white;options=bold> Routes </>------------------------------------+"
-                )
-            )
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(
-                Argument::containingString(
-                    "|<info> Name </info>|<info> Path </info>|<info> Methods </info>|<info> Middleware                                             </info>|"
-                )
-            )
-            ->shouldBeCalled();
+            ->expects($this->once())
+            ->method('writeln')
+            ->withConsecutive(
+                ["+------+------+---------+------------<fg=black;bg=white;options=bold> Routes </>------------------------------------+"],
+                ["|<info> Name </info>|<info> Path </info>|<info> Methods </info>|<info> Middleware                                             </info>|"],
+                [
+                    "| home | /    | GET     | MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware  |"
+                ],
+                [
+                    "| home | /    | GET     | MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware |"
+                ],
+                [
+                    "+------+------+---------+--------------------------------------------------------+"
+                ],
+            );
         // phpcs:enable
         $this->output
-            ->writeln(
-                Argument::containingString(
-                    "| home | /    | GET     | MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware  |"
-                )
-            )
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(
-                Argument::containingString(
-                    "| home | /    | GET     | MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware |"
-                )
-            )
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(
-                Argument::containingString(
-                    "+------+------+---------+--------------------------------------------------------+"
-                )
-            )
-            ->shouldBeCalled();
-        $this->output
-            ->getFormatter()
-            ->shouldBeCalled()
+            ->expects($this->once())
+            ->method('getFormatter')
             ->willReturn($outputFormatter);
-
         $this->input
-            ->getOption('sort')
-            ->willReturn(false);
-        $this->input
-            ->getOption('has-middleware')
-            ->willReturn(false);
-        $this->input
-            ->getOption('supports-method')
-            ->willReturn(false);
-        $this->input
-            ->getOption('has-name')
-            ->willReturn(false);
-        $this->input
-            ->getOption('has-path')
-            ->willReturn(false);
-        $this->input
-            ->getOption('format')
-            ->willReturn('table');
+            ->method('getOption')
+            ->willReturnOnConsecutiveCalls(
+                'table',
+                false,
+                false,
+                false,
+                false
+            );
 
         $method = $this->reflectExecuteMethod();
 
@@ -242,32 +213,32 @@ class ListRoutesCommandTest extends TestCase
             0,
             $method->invoke(
                 $this->command,
-                $this->input->reveal(),
-                $this->output->reveal()
+                $this->input,
+                $this->output
             )
         );
     }
 
     public function testRendersAnEmptyResultWhenNoRoutesArePresent(): void
     {
-        $this->routeCollection = $this->prophesize(RouteCollector::class);
+        $this->routeCollection = $this->createMock(RouteCollector::class);
         $this->routeCollection
-            ->getRoutes()
+            ->expects($this->once())
+            ->method('getRoutes')
             ->willReturn([]);
 
-        $this->command = new ListRoutesCommand($this->routeCollection->reveal());
+        $this->command = new ListRoutesCommand($this->routeCollection);
 
         $this->input
-            ->getOption('format')
-            ->willReturn('table');
-        $this->input
-            ->getOption('sort')
-            ->willReturn(false);
+            ->method('getOption')
+            ->with('format')
+            ->willReturnOnConsecutiveCalls('table', false);
         $this->output
-            ->writeln(Argument::containingString(
+            ->expects($this->once())
+            ->method('writeln')
+            ->with(
                 "There are no routes in the application's routing table."
-            ))
-            ->shouldBeCalled();
+            );
 
         $method = $this->reflectExecuteMethod();
 
@@ -275,8 +246,8 @@ class ListRoutesCommandTest extends TestCase
             0,
             $method->invoke(
                 $this->command,
-                $this->input->reveal(),
-                $this->output->reveal()
+                $this->input,
+                $this->output
             )
         );
     }
@@ -284,36 +255,24 @@ class ListRoutesCommandTest extends TestCase
     public function testRendersRoutesAsJsonWhenFormatSetToJson(): void
     {
         $this->input
-            ->getOption('format')
-            ->willReturn('json');
-        $this->input
-            ->getOption('has-middleware')
-            ->willReturn(false);
-        $this->input
-            ->getOption('supports-method')
-            ->willReturn(false);
-        $this->input
-            ->getOption('has-name')
-            ->willReturn(false);
-        $this->input
-            ->getOption('has-path')
-            ->willReturn(false);
-        $this->input
-            ->getOption('sort')
-            ->willReturn(false);
-        $this->output
-            ->writeln(Argument::containingString(
-                "Listing the application's routing table in JSON format."
-            ))
-            ->shouldBeCalled();
+            ->method('getOption')
+            ->willReturnOnConsecutiveCalls(
+                'json', // format
+                false,  // supports-method
+                false,  // has-middleware
+                false,  // has-name
+                false,  // has-path
+                false
+            );
         // phpcs:disable Generic.Files.LineLength
         $this->output
-            ->writeln(
-                Argument::containingString(
+            ->method('writeln')
+            ->withConsecutive(
+                [
                     '[{"name":"home","path":"\/","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\SimpleMiddleware"},{"name":"home","path":"\/","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\ExpressMiddleware"}]'
-                )
-            )
-            ->shouldBeCalled();
+                ],
+                ["Listing the application's routing table in JSON format."],
+            );
         // phpcs:enable
 
         $method = $this->reflectExecuteMethod();
@@ -322,8 +281,8 @@ class ListRoutesCommandTest extends TestCase
             0,
             $method->invoke(
                 $this->command,
-                $this->input->reveal(),
-                $this->output->reveal()
+                $this->input,
+                $this->output
             )
         );
     }
@@ -335,28 +294,21 @@ class ListRoutesCommandTest extends TestCase
     public function testThatOnlyAllowedFormatsCanBeSupplied(string $format): void
     {
         $this->input
-            ->getOption('format')
-            ->willReturn($format);
-        $this->input
-            ->getOption('has-middleware')
-            ->willReturn(false);
-        $this->input
-            ->getOption('supports-method')
-            ->willReturn(false);
-        $this->input
-            ->getOption('has-name')
-            ->willReturn(false);
-        $this->input
-            ->getOption('has-path')
-            ->willReturn(false);
-        $this->input
-            ->getOption('sort')
-            ->willReturn(false);
+            ->method('getOption')
+            ->willReturnOnConsecutiveCalls(
+                $format,    // format
+                false,  // has-middleware
+                false,  // supports-method
+                false,  // has-name
+                false,  // has-path
+                false   // sort
+            );
         $this->output
-            ->writeln(Argument::containingString(
+            ->expects($this->once())
+            ->method('writeln')
+            ->with(
                 "Invalid output format supplied. Valid options are 'table' and 'json'"
-            ))
-            ->shouldBeCalled();
+            );
 
         $method = $this->reflectExecuteMethod();
 
@@ -364,12 +316,15 @@ class ListRoutesCommandTest extends TestCase
             -1,
             $method->invoke(
                 $this->command,
-                $this->input->reveal(),
-                $this->output->reveal()
+                $this->input,
+                $this->output
             )
         );
     }
 
+    /**
+     * @return array[]
+     */
     public function invalidFormatDataProvider(): array
     {
         return [
@@ -392,55 +347,35 @@ class ListRoutesCommandTest extends TestCase
      * @dataProvider sortRoutingTableDataProvider
      * @throws ReflectionException
      */
-    public function testCanSortResults(string $sortOrder, string $expectedOutput)
+    public function testCanSortResults(string $sortOrder, string $expectedOutput): void
     {
         $routes                = [
-            new Route(
-                "/contact",
-                new SimpleMiddleware(),
-                ['GET'],
-                'contact'
-            ),
-            new Route(
-                "/",
-                new ExpressMiddleware(),
-                ['GET'],
-                'home'
-            ),
+            new Route("/contact", new SimpleMiddleware(), ['GET'], 'contact'),
+            new Route("/", new ExpressMiddleware(), ['GET'], 'home'),
         ];
-        $this->routeCollection = $this->prophesize(RouteCollector::class);
+        $this->routeCollection = $this->createMock(RouteCollector::class);
         $this->routeCollection
-            ->getRoutes()
+            ->method('getRoutes')
             ->willReturn($routes);
 
-        $this->command = new ListRoutesCommand($this->routeCollection->reveal());
+        $this->command = new ListRoutesCommand($this->routeCollection);
 
         $this->input
-            ->getOption('format')
-            ->willReturn('json');
-        $this->input
-            ->getOption('has-middleware')
-            ->willReturn(false);
-        $this->input
-            ->getOption('supports-method')
-            ->willReturn(false);
-        $this->input
-            ->getOption('has-name')
-            ->willReturn(false);
-        $this->input
-            ->getOption('has-path')
-            ->willReturn(false);
-        $this->input
-            ->getOption('sort')
-            ->willReturn($sortOrder);
+            ->method('getOption')
+            ->willReturnOnConsecutiveCalls(
+                'json', // format
+                false,  // has-middleware
+                false,  // supports-method
+                false,  // has-name
+                false,  // has-path
+                $sortOrder // sort
+            );
         $this->output
-            ->writeln(Argument::containingString(
-                "Listing the application's routing table in JSON format."
-            ))
-            ->shouldBeCalled();
-        $this->output
-            ->writeln(Argument::containingString($expectedOutput))
-            ->shouldBeCalled();
+            ->method('writeln')
+            ->withConsecutive(
+                [$expectedOutput],
+                ["Listing the application's routing table in JSON format."]
+            );
 
         $method = $this->reflectExecuteMethod();
 
@@ -448,12 +383,15 @@ class ListRoutesCommandTest extends TestCase
             0,
             $method->invoke(
                 $this->command,
-                $this->input->reveal(),
-                $this->output->reveal()
+                $this->input,
+                $this->output
             )
         );
     }
 
+    /**
+     * @return array[]
+     */
     public function sortRoutingTableDataProvider(): array
     {
         // phpcs:disable Generic.Files.LineLength
@@ -473,40 +411,65 @@ class ListRoutesCommandTest extends TestCase
     /**
      * @dataProvider filterRoutingTableDataProvider
      */
-    public function testCanFilterRoutingTable(array $filterOptions, string $expectedOutput)
+    public function testCanFilterRoutingTable(array $filterOptions, string $expectedOutput): void
     {
-        $this->command = new ListRoutesCommand($this->routeCollection->reveal());
+        $routes = [
+            new Route("/", new SimpleMiddleware(), ['GET'], 'home'),
+            new Route("/", new ExpressMiddleware(), ['GET'], 'home'),
+        ];
+
+        $routeCollection = $this->createMock(RouteCollector::class);
+        $routeCollection
+            ->method('getRoutes')
+            ->willReturn($routes);
+
+        $this->command = new ListRoutesCommand($routeCollection);
 
         $this->input
-            ->getOption('format')
+            ->expects($this->once())
+            ->method('getOption')
+            ->with('format')
             ->willReturn('json');
         $this->input
-            ->getOption('sort')
+            ->expects($this->once())
+            ->method('getOption')
+            ->with('sort')
             ->willReturn(false);
 
         if (! empty($filterOptions['middleware'])) {
             $this->input
-                ->getOption('has-middleware')
+                ->expects($this->once())
+                ->method('getOption')
+                ->with('has-middleware')
                 ->willReturn($filterOptions['middleware']);
         }
+
         $this->input
-            ->getOption('supports-method')
+            ->expects($this->once())
+            ->method('getOption')
+            ->with('supports-method')
             ->willReturn(false);
         $this->input
-            ->getOption('has-name')
+            ->expects($this->once())
+            ->method('getOption')
+            ->with('has-name')
             ->willReturn(false);
         $this->input
-            ->getOption('has-path')
+            ->expects($this->once())
+            ->method('getOption')
+            ->with('has-path')
             ->willReturn(false);
 
         $this->output
-            ->writeln(Argument::containingString(
+            ->expects($this->once())
+            ->method('writeln')
+            ->with(
                 "Listing the application's routing table in JSON format."
-            ))
-            ->shouldBeCalled();
+            );
         $this->output
-            ->writeln(Argument::containingString($expectedOutput))
-            ->shouldBeCalled();
+            ->expects($this->once())
+            ->method('writeln')
+            ->with($expectedOutput);
 
         $method = $this->reflectExecuteMethod();
 
@@ -514,13 +477,16 @@ class ListRoutesCommandTest extends TestCase
             0,
             $method->invoke(
                 $this->command,
-                $this->input->reveal(),
-                $this->output->reveal()
+                $this->input,
+                $this->output
             )
         );
     }
 
-    public function filterRoutingTableDataProvider(): array
+    /**
+     * @return array[]
+     */
+    public static function filterRoutingTableDataProvider(): array
     {
         // phpcs:disable Generic.Files.LineLength
         return [

@@ -17,7 +17,7 @@ use function usort;
 class RouteSorterByNameTest extends TestCase
 {
     /** @var Route[] */
-    private array $routes;
+    private array $routes =[];
 
     public function setUp(): void
     {
@@ -61,7 +61,7 @@ class RouteSorterByNameTest extends TestCase
         ];
     }
 
-    public function testCanSortRoutesByName()
+    public function testCanSortRoutesByName(): void
     {
         $sorter = new RouteSorterByName();
         usort($this->routes, $sorter);
@@ -69,7 +69,7 @@ class RouteSorterByNameTest extends TestCase
         $this->assertCount(6, $this->routes);
     }
 
-    public function testCanSortRoutesByNameInAscendingOrderOfName()
+    public function testCanSortRoutesByNameInAscendingOrderOfName(): void
     {
         $sorter = new RouteSorterByName();
         usort($this->routes, $sorter);
@@ -93,7 +93,7 @@ class RouteSorterByNameTest extends TestCase
         }
     }
 
-    public function testWillReturnAnEmptyArrayIfNoRoutesAreProvided()
+    public function testWillReturnAnEmptyArrayIfNoRoutesAreProvided(): void
     {
         $routes = [];
         $sorter = new RouteSorterByName();
