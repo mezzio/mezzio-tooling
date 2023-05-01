@@ -7,6 +7,7 @@ namespace Mezzio\Tooling\Routes;
 use ArrayIterator;
 use Mezzio\Router\Route;
 use Mezzio\Router\RouteCollector;
+use Mezzio\Tooling\Routes\Filter\RoutesFilter;
 use Mezzio\Tooling\Routes\Sorter\RouteSorterByName;
 use Mezzio\Tooling\Routes\Sorter\RouteSorterByPath;
 use Symfony\Component\Console\Command\Command;
@@ -22,7 +23,7 @@ use function json_encode;
 use function strtolower;
 use function usort;
 
-final class ListRoutesCommand extends Command
+class ListRoutesCommand extends Command
 {
     /** @var array<int, Route>  */
     private array $routes;

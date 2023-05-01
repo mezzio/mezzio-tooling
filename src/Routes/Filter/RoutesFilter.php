@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mezzio\Tooling\Routes;
+namespace Mezzio\Tooling\Routes\Filter;
 
 use ArrayIterator;
 use Exception;
@@ -42,9 +42,6 @@ final class RoutesFilter extends FilterIterator
      */
     private array $filterOptions;
 
-    /**
-     * @param ArrayIterator<array-key,Route> $routes
-     */
     public function __construct(ArrayIterator $routes, array $filterOptions = [])
     {
         parent::__construct($routes);
@@ -100,7 +97,7 @@ final class RoutesFilter extends FilterIterator
      *
      * $matchType can be either "path" or "name".
      *
-     * @return false|int
+     * @return false|int|null
      */
     public function matchesByRegex(Route $route, string $routeAttribute)
     {
@@ -137,14 +134,20 @@ final class RoutesFilter extends FilterIterator
         }
 
         if (is_string($this->filterOptions['method'])) {
-            return in_array(strtoupper($this->filterOptions['method']), $route->getAllowedMethods());
+            return in_array(
+                strtoupper($this->filterOptions['method']),
+                $route->getAllowedMethods() ?? []
+            );
         }
 
         if (is_array($this->filterOptions['method'])) {
-            array_walk($this->filterOptions['method'], fn(&$value) => $value = strtoupper($value));
+            array_walk(
+                $this->filterOptions['method'],
+                fn(string &$value) => $value = strtoupper($value)
+            );
             return ! empty(array_intersect(
                 $this->filterOptions['method'],
-                $route->getAllowedMethods()
+                $route->getAllowedMethods() ?? []
             ));
         }
 
