@@ -14,28 +14,25 @@ use Psr\Container\ContainerInterface;
 
 class ListRoutesCommandFactoryTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @var RouteCollector|ObjectProphecy $routeCollection */
     private $routeCollection;
 
     public function testCanInstantiateListRoutesCommandObject()
     {
-        $this->routeCollection = $this->prophesize(RouteCollector::class);
+        $this->routeCollection = $this->createMock(RouteCollector::class);
         $this->routeCollection
-            ->getRoutes()
+            ->method('getRoutes')
             ->willReturn([]);
 
-        /** @var ContainerInterface|ObjectProphecy $container */
-        $container = $this->prophesize(ContainerInterface::class);
+        $container = $this->createMock(ContainerInterface::class);
         $container
-            ->get(RouteCollector::class)
-            ->willReturn($this->routeCollection->reveal());
+            ->method('get')
+            ->with(RouteCollector::class)
+            ->willReturn($this->routeCollection);
         $factory = new ListRoutesCommandFactory();
 
         $this->assertInstanceOf(
             ListRoutesCommand::class,
-            $factory->__invoke($container->reveal())
+            $factory->__invoke($container)
         );
     }
 }
