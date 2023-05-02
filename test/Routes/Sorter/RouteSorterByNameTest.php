@@ -17,7 +17,7 @@ use function usort;
 class RouteSorterByNameTest extends TestCase
 {
     /** @var Route[] */
-    private array $routes =[];
+    private array $routes = [];
 
     public function setUp(): void
     {
