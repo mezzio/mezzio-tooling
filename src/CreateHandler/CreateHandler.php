@@ -129,20 +129,19 @@ final class CreateHandler extends ClassSkeletons
         }
 
         try {
+            /** @var array{autoload: array{psr-4?: array<string, string>|string}} $composer */
             $composer = json_decode(file_get_contents($composerPath), true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $jsonException) {
             throw CreateHandlerException::invalidComposerJson($jsonException->getMessage());
         }
 
-        if (! is_array($composer) || ! isset($composer['autoload']['psr-4'])) {
+        if (! isset($composer['autoload']['psr-4'])) {
             throw CreateHandlerException::missingComposerAutoloaders();
         }
 
         if (! is_array($composer['autoload']['psr-4'])) {
             throw CreateHandlerException::missingComposerAutoloaders();
         }
-
-        /** @psalm-var array<string, string> Forcing the type because the composer spec is clear here */
 
         return $composer['autoload']['psr-4'];
     }

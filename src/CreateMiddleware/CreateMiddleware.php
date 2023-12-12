@@ -134,20 +134,19 @@ final class CreateMiddleware
         }
 
         try {
+            /** @var array{autoload: array{psr-4?: array<string, string>|string}} $composer */
             $composer = json_decode(file_get_contents($composerPath), true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $jsonException) {
             throw CreateMiddlewareException::invalidComposerJson($jsonException->getMessage());
         }
 
-        if (! is_array($composer) || ! isset($composer['autoload']['psr-4'])) {
+        if (! isset($composer['autoload']['psr-4'])) {
             throw CreateMiddlewareException::missingComposerAutoloaders();
         }
 
         if (! is_array($composer['autoload']['psr-4'])) {
             throw CreateMiddlewareException::missingComposerAutoloaders();
         }
-
-        /** @psalm-var array<string, string> Forcing this type because the composer spec is clear here */
 
         return $composer['autoload']['psr-4'];
     }
