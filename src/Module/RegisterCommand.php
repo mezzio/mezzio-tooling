@@ -14,7 +14,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use function assert;
 use function is_dir;
 use function sprintf;
 
@@ -86,7 +85,6 @@ final class RegisterCommand extends Command
         $exactPath   = $input->getOption('exact-path');
 
         $configProvider = sprintf('%s\ConfigProvider', $module);
-        assert($configProvider !== '');
         if (! $this->injector->isRegistered($configProvider)) {
             $this->injector->inject(
                 $configProvider,

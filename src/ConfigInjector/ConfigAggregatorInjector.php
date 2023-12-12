@@ -7,7 +7,6 @@ namespace Mezzio\Tooling\ConfigInjector;
 use Mezzio\Tooling\ConfigDiscovery\ConfigAggregator as ConfigAggregatorDiscovery;
 use Mezzio\Tooling\ConfigDiscovery\DiscoveryInterface;
 
-use function assert;
 use function preg_quote;
 use function sprintf;
 
@@ -88,7 +87,7 @@ final class ConfigAggregatorInjector extends AbstractInjector
             preg_quote('\\'),
             preg_quote('Laminas\ConfigAggregator\\')
         );
-        assert($pattern !== '');
+
         $this->injectionPatterns[self::TYPE_CONFIG_PROVIDER] = [
             'pattern'     => $pattern,
             'replacement' => "\$1\n\$2%s::class,\n\$2",

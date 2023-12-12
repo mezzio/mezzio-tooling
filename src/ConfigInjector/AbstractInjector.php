@@ -144,8 +144,7 @@ abstract class AbstractInjector implements InjectorInterface
     {
         if (trim($projectRoot) !== '') {
             $configFileWithProjectRootPrefix = sprintf('%s/%s', $projectRoot, $this->configFile);
-            assert($configFileWithProjectRootPrefix !== '');
-            $this->configFile = $configFileWithProjectRootPrefix;
+            $this->configFile                = $configFileWithProjectRootPrefix;
         }
     }
 
@@ -227,10 +226,11 @@ abstract class AbstractInjector implements InjectorInterface
             return false;
         }
 
-        $pattern     = sprintf(
+        $pattern = sprintf(
             $this->injectionPatterns[self::TYPE_DEPENDENCY]['pattern'],
             preg_quote($lastDependency, '/')
         );
+        assert($pattern !== '');
         $replacement = sprintf(
             $this->injectionPatterns[self::TYPE_DEPENDENCY]['replacement'],
             $package
@@ -256,7 +256,9 @@ abstract class AbstractInjector implements InjectorInterface
         $longLength = 0;
         $last       = null;
         foreach ($dependencies as $dependency) {
-            preg_match(sprintf($this->isRegisteredPattern, preg_quote($dependency, '/')), $config, $matches);
+            $pattern = sprintf($this->isRegisteredPattern, preg_quote($dependency, '/'));
+            assert($pattern !== '');
+            preg_match($pattern, $config, $matches);
 
             $length = strlen($matches[0]);
             if ($length > $longLength) {
@@ -281,10 +283,12 @@ abstract class AbstractInjector implements InjectorInterface
         string $config,
         string $firstApplicationModule
     ): bool {
-        $pattern     = sprintf(
+        $pattern = sprintf(
             $this->injectionPatterns[self::TYPE_BEFORE_APPLICATION]['pattern'],
             preg_quote($firstApplicationModule, '/')
         );
+        assert($pattern !== '');
+
         $replacement = sprintf(
             $this->injectionPatterns[self::TYPE_BEFORE_APPLICATION]['replacement'],
             $package
@@ -311,7 +315,9 @@ abstract class AbstractInjector implements InjectorInterface
                 continue;
             }
 
-            preg_match(sprintf($this->isRegisteredPattern, preg_quote($module, '/')), $config, $matches);
+            $pattern = sprintf($this->isRegisteredPattern, preg_quote($module, '/'));
+            assert($pattern !== '');
+            preg_match($pattern, $config, $matches);
 
             $length = strlen($matches[0]);
             if ($length < $shortest) {
@@ -351,8 +357,10 @@ abstract class AbstractInjector implements InjectorInterface
             return false;
         }
 
+        $pattern = sprintf($this->removalPatterns['pattern'], preg_quote($package));
+        assert($pattern !== '');
         $config = preg_replace(
-            sprintf($this->removalPatterns['pattern'], preg_quote($package)),
+            $pattern,
             $this->removalPatterns['replacement'],
             $config
         );
@@ -385,7 +393,11 @@ abstract class AbstractInjector implements InjectorInterface
      */
     protected function isRegisteredInConfig(string $package, string $config): bool
     {
-        return preg_match(sprintf($this->isRegisteredPattern, preg_quote($package, '/')), $config)
-            || preg_match(sprintf($this->isRegisteredPattern, preg_quote(addslashes($package), '/')), $config);
+        $pattern1 = sprintf($this->isRegisteredPattern, preg_quote($package, '/'));
+        $pattern2 = sprintf($this->isRegisteredPattern, preg_quote(addslashes($package), '/'));
+        assert($pattern1 !== '' && $pattern2 !== '');
+
+        return preg_match($pattern1, $config)
+            || preg_match($pattern2, $config);
     }
 }

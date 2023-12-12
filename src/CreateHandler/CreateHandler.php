@@ -116,7 +116,9 @@ final class CreateHandler extends ClassSkeletons
     }
 
     /**
-     * @return array Associative array of namespace/path pairs
+     * Return an associative array of namespace/path pairs
+     *
+     * @return array<string, string>
      * @throws CreateHandlerException
      */
     private function getComposerAutoloaders(): array
@@ -127,6 +129,7 @@ final class CreateHandler extends ClassSkeletons
         }
 
         try {
+            /** @var array{autoload: array{psr-4?: array<string, string>|string}} $composer */
             $composer = json_decode(file_get_contents($composerPath), true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $jsonException) {
             throw CreateHandlerException::invalidComposerJson($jsonException->getMessage());
@@ -144,7 +147,8 @@ final class CreateHandler extends ClassSkeletons
     }
 
     /**
-     * @return array [namespace, path]
+     * @param array<string, string> $autoloaders
+     * @return array{0: string, 1: string} Namespace and path
      * @throws CreateHandlerException
      */
     private function discoverNamespaceAndPath(string $class, array $autoloaders): array

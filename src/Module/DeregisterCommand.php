@@ -13,7 +13,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use function assert;
 use function sprintf;
 
 final class DeregisterCommand extends Command
@@ -75,7 +74,6 @@ final class DeregisterCommand extends Command
         $composer = $input->getOption('composer') ?: 'composer';
 
         $configProvider = sprintf('%s\ConfigProvider', $module);
-        assert($configProvider !== '');
 
         if ($this->injector->isRegistered($configProvider)) {
             $this->injector->remove($configProvider);

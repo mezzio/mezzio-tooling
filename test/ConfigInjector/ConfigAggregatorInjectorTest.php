@@ -142,9 +142,7 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
         ];
     }
 
-    /**
-     * @return array<string, array<string|bool>>
-     */
+    /** @inheritDoc */
     public function packagePopulatedInConfiguration(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong

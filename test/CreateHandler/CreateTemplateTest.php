@@ -121,7 +121,10 @@ class CreateTemplateTest extends TestCase
         file_put_contents($configFile, $contents);
     }
 
-    public function rendererTypes(): array
+    /**
+     * @return array<string, array{0: string, 1: string}>
+     */
+    public static function rendererTypes(): array
     {
         return [
             PlatesRenderer::class      => [PlatesRenderer::class, 'phtml'],
