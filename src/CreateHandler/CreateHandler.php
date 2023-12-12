@@ -116,7 +116,9 @@ final class CreateHandler extends ClassSkeletons
     }
 
     /**
-     * @return array Associative array of namespace/path pairs
+     * Return an associative array of namespace/path pairs
+     *
+     * @return array<string, string>
      * @throws CreateHandlerException
      */
     private function getComposerAutoloaders(): array
@@ -132,7 +134,7 @@ final class CreateHandler extends ClassSkeletons
             throw CreateHandlerException::invalidComposerJson($jsonException->getMessage());
         }
 
-        if (! isset($composer['autoload']['psr-4'])) {
+        if (! is_array($composer) || ! isset($composer['autoload']['psr-4'])) {
             throw CreateHandlerException::missingComposerAutoloaders();
         }
 
@@ -140,11 +142,14 @@ final class CreateHandler extends ClassSkeletons
             throw CreateHandlerException::missingComposerAutoloaders();
         }
 
+        /** @psalm-var array<string, string> Forcing the type because the composer spec is clear here */
+
         return $composer['autoload']['psr-4'];
     }
 
     /**
-     * @return array [namespace, path]
+     * @param array<string, string> $autoloaders
+     * @return array{0: string, 1: string} Namespace and path
      * @throws CreateHandlerException
      */
     private function discoverNamespaceAndPath(string $class, array $autoloaders): array

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\ConfigDiscovery;
 
+use function assert;
 use function file_get_contents;
 use function is_dir;
 use function is_file;
@@ -58,6 +59,8 @@ abstract class AbstractDiscovery implements DiscoveryInterface
         if (! is_file($this->configFile)) {
             return false;
         }
+
+        assert($this->expected !== '');
 
         $config = file_get_contents($this->configFile);
         return 1 === preg_match($this->expected, $config);

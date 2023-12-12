@@ -121,7 +121,9 @@ final class CreateMiddleware
     }
 
     /**
-     * @return array Associative array of namespace/path pairs
+     * Return an associative array of namespace/path pairs
+     *
+     * @return array<string, string>
      * @throws CreateMiddlewareException
      */
     private function getComposerAutoloaders(string $projectRoot): array
@@ -137,7 +139,7 @@ final class CreateMiddleware
             throw CreateMiddlewareException::invalidComposerJson($jsonException->getMessage());
         }
 
-        if (! isset($composer['autoload']['psr-4'])) {
+        if (! is_array($composer) || ! isset($composer['autoload']['psr-4'])) {
             throw CreateMiddlewareException::missingComposerAutoloaders();
         }
 
@@ -145,11 +147,14 @@ final class CreateMiddleware
             throw CreateMiddlewareException::missingComposerAutoloaders();
         }
 
+        /** @psalm-var array<string, string> Forcing this type because the composer spec is clear here */
+
         return $composer['autoload']['psr-4'];
     }
 
     /**
-     * @return array [namespace, path]
+     * @param array<string, string> $autoloaders
+     * @return array{0: string, 1: string} [namespace, path]
      * @throws CreateMiddlewareException
      */
     private function discoverNamespaceAndPath(string $class, array $autoloaders): array
