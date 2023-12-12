@@ -70,9 +70,7 @@ class DeregisterCommandTest extends TestCase
 
     private function reflectExecuteMethod(): ReflectionMethod
     {
-        $r = new ReflectionMethod($this->command, 'execute');
-        $r->setAccessible(true);
-        return $r;
+        return new ReflectionMethod($this->command, 'execute');
     }
 
     public function testConfigureSetsExpectedDescription(): void
