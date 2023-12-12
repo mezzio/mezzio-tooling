@@ -11,8 +11,8 @@ use org\bovigo\vfs\vfsStreamDirectory;
 use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 
+use function array_search;
 use function file_get_contents;
-use function in_array;
 use function preg_match;
 use function sprintf;
 
@@ -79,11 +79,11 @@ class CreateTest extends TestCase
         $mkdir
             ->expects(self::exactly(2))
             ->with(self::callback(static function (mixed $arg) use ($expectedArguments): bool {
-                self::assertTrue(in_array(
-                    $arg,
-                    $expectedArguments,
-                    true
-                ));
+                $index = array_search($arg, $expectedArguments, true);
+                self::assertIsInt($index);
+                self::assertArrayHasKey($index, $expectedArguments);
+                self::assertSame($expectedArguments[$index], $arg);
+                unset($expectedArguments[$index]);
 
                 return true;
             }))
@@ -110,12 +110,13 @@ class CreateTest extends TestCase
         $mkdir = $this->getFunctionMock('Mezzio\Tooling\Module', 'mkdir');
         $mkdir
             ->expects(self::exactly(3))
-            ->with(self::callback(static function (mixed $arg) use ($expectedArguments): bool {
-                self::assertTrue(in_array(
-                    $arg,
-                    $expectedArguments,
-                    true,
-                ));
+            ->with(self::callback(static function (mixed $arg) use (&$expectedArguments): bool {
+                $index = array_search($arg, $expectedArguments, true);
+                self::assertIsInt($index);
+                self::assertArrayHasKey($index, $expectedArguments);
+                /** @psalm-suppress PossiblyUndefinedArrayOffset */
+                self::assertSame($expectedArguments[$index], $arg);
+                unset($expectedArguments[$index]);
 
                 return true;
             }))
