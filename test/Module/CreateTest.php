@@ -12,6 +12,7 @@ use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 
 use function file_get_contents;
+use function in_array;
 use function preg_match;
 use function sprintf;
 
@@ -69,10 +70,23 @@ class CreateTest extends TestCase
     {
         $baseModulePath = sprintf('%s/my-modules/MyApp', $this->dir->url());
 
+        $expectedArguments = [
+            $baseModulePath,
+            $baseModulePath . '/src',
+        ];
+
         $mkdir = $this->getFunctionMock('Mezzio\Tooling\Module', 'mkdir');
         $mkdir
             ->expects(self::exactly(2))
-            ->withConsecutive([$baseModulePath], [$baseModulePath . '/src'])
+            ->with(self::callback(static function (mixed $arg) use ($expectedArguments): bool {
+                self::assertTrue(in_array(
+                    $arg,
+                    $expectedArguments,
+                    true
+                ));
+
+                return true;
+            }))
             ->willReturnOnConsecutiveCalls(true, false);
 
         $this->expectException(RuntimeException::class);
@@ -87,10 +101,24 @@ class CreateTest extends TestCase
     {
         $baseModulePath = sprintf('%s/my-modules/MyApp', $this->dir->url());
 
+        $expectedArguments = [
+            $baseModulePath,
+            $baseModulePath . '/src',
+            $baseModulePath . '/templates',
+        ];
+
         $mkdir = $this->getFunctionMock('Mezzio\Tooling\Module', 'mkdir');
         $mkdir
             ->expects(self::exactly(3))
-            ->withConsecutive([$baseModulePath], [$baseModulePath . '/src'], [$baseModulePath . '/templates'])
+            ->with(self::callback(static function (mixed $arg) use ($expectedArguments): bool {
+                self::assertTrue(in_array(
+                    $arg,
+                    $expectedArguments,
+                    true,
+                ));
+
+                return true;
+            }))
             ->willReturnOnConsecutiveCalls(true, true, false);
 
         $this->expectException(RuntimeException::class);
