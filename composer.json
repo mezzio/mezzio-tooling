@@ -26,7 +26,7 @@
             "composer/package-versions-deprecated": true
         },
         "platform": {
-            "php": "8.0.99"
+            "php": "8.1.99"
         }
     },
     "extra": {
@@ -35,7 +35,7 @@
         }
     },
     "require": {
-        "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
+        "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
         "ext-json": "*",
         "laminas/laminas-cli": "^1.7.0",
         "laminas/laminas-code": "^4.7.1",
@@ -47,15 +47,15 @@
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.5.0",
-        "laminas/laminas-diactoros": "^2.2.3",
+        "laminas/laminas-diactoros": "^3.3",
         "mikey179/vfsstream": "^1.6.11",
-        "mockery/mockery": "^1.5.1",
-        "php-mock/php-mock-phpunit": "^2.6.1",
+        "mockery/mockery": "^1.6.7",
+        "php-mock/php-mock-phpunit": "^2.9.0",
         "phpdocumentor/reflection-docblock": "^5.3.0",
-        "phpunit/phpunit": "^9.5.26",
+        "phpunit/phpunit": "^9.6.15",
         "psalm/plugin-mockery": "^0.11.0",
-        "psalm/plugin-phpunit": "^0.18.3",
-        "vimeo/psalm": "^5.0.0"
+        "psalm/plugin-phpunit": "^0.18.4",
+        "vimeo/psalm": "^5.17.0"
     },
     "autoload": {
         "psr-4": {
