@@ -10,15 +10,15 @@ use Mezzio\Tooling\Routes\Filter\RoutesFilter;
 use MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware;
 use MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 use function sprintf;
 use function var_export;
 
 class RoutesFilterTest extends TestCase
 {
-    use ProphecyTrait;
-
+    /**
+     * @var array<array-key,Route>
+     */
     private array $routes = [];
 
     public function setUp(): void
@@ -100,7 +100,7 @@ class RoutesFilterTest extends TestCase
     }
 
     /**
-     * @return array<int,array<int,array<>>>
+     * @return array<array-key, array>
      */
     public function validFilterDataProvider(): array
     {

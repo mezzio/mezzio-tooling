@@ -10,6 +10,7 @@ use Mezzio\Router\RouteCollector;
 use Mezzio\Tooling\Routes\Filter\RoutesFilter;
 use Mezzio\Tooling\Routes\Sorter\RouteSorterByName;
 use Mezzio\Tooling\Routes\Sorter\RouteSorterByPath;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,7 +27,11 @@ use function usort;
 class ListRoutesCommand extends Command
 {
     /** @var array<int, Route>  */
-    private array $routes;
+    private array $routes = [];
+
+    private ContainerInterface $container;
+
+    private ConfigLoaderInterface $configLoader;
 
     /** @var array<string,string|array> */
     private array $filterOptions = [];
@@ -74,12 +79,17 @@ class ListRoutesCommand extends Command
         list of one or more HTTP methods.
         EOT;
 
+    private const MSG_EMPTY_ROUTING_TABLE = "There are no routes in the application's routing table.";
+
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:routes:list';
 
-    public function __construct(RouteCollector $routeCollector)
-    {
-        $this->routes = $routeCollector->getRoutes();
+    public function __construct(
+        ContainerInterface $container,
+        ConfigLoaderInterface $configLoader
+    ) {
+        $this->container    = $container;
+        $this->configLoader = $configLoader;
 
         parent::__construct();
     }
@@ -139,8 +149,15 @@ class ListRoutesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $result = 0;
+
+        $this->configLoader->load();
+
+        /** @var RouteCollector */
+        $routeCollector = $this->container->get(RouteCollector::class);
+        $this->routes   = $routeCollector->getRoutes();
+
         if ([] === $this->routes) {
-            $output->writeln("There are no routes in the application's routing table.");
+            $output->writeln(self::MSG_EMPTY_ROUTING_TABLE);
             return $result;
         }
 

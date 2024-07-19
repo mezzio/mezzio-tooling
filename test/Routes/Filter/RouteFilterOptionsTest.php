@@ -38,22 +38,31 @@ class RouteFilterOptionsTest extends TestCase
     }
 
     /**
+     * @param array<array-key, mixed> $options
+     * @param array<array-key, mixed> $expectedResult
      * @dataProvider initDataProvider
      */
     public function testCanGetArrayRepresentation(array $options, array $expectedResult): void
     {
-        $routeFilterOptions = new RouteFilterOptions(
-            $options['middleware'] ?? '',
-            $options['name'] ?? '',
-            $options['path'] ?? '',
-            $options['methods'] ?? []
-        );
+        /** @var string */
+        $middleware = $options['middleware'] ?? '';
+
+        /** @var string */
+        $name = $options['name'] ?? '';
+
+        /** @var string */
+        $path = $options['path'] ?? '';
+
+        /** @var array<array-key, string> */
+        $methods = $options['methods'] ?? [];
+
+        $routeFilterOptions = new RouteFilterOptions($middleware, $name, $path, $methods);
 
         $this->assertSame($expectedResult, $routeFilterOptions->toArray());
     }
 
     /**
-     * @return array[]
+     * @return array<array-key, array<array-key,array<string,string|array<array-key,string>>>>
      */
     public function initDataProvider(): array
     {

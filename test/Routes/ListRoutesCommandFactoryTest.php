@@ -4,30 +4,25 @@ declare(strict_types=1);
 
 namespace MezzioTest\Tooling\Routes;
 
-use Mezzio\Router\RouteCollector;
+use Mezzio\Application;
+use Mezzio\MiddlewareFactory;
 use Mezzio\Tooling\Routes\ListRoutesCommand;
 use Mezzio\Tooling\Routes\ListRoutesCommandFactory;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 
 class ListRoutesCommandFactoryTest extends TestCase
 {
-    private $routeCollection;
-
-    public function testCanInstantiateListRoutesCommandObject()
+    public function testCanInstantiateListRoutesCommandObject(): void
     {
-        $this->routeCollection = $this->createMock(RouteCollector::class);
-        $this->routeCollection
-            ->method('getRoutes')
-            ->willReturn([]);
-
         $container = $this->createMock(ContainerInterface::class);
         $container
+            ->expects($this->atMost(2))
             ->method('get')
-            ->with(RouteCollector::class)
-            ->willReturn($this->routeCollection);
+            ->willReturnOnConsecutiveCalls(
+                $this->createMock(Application::class),
+                $this->createMock(MiddlewareFactory::class),
+            );
         $factory = new ListRoutesCommandFactory();
 
         $this->assertInstanceOf(

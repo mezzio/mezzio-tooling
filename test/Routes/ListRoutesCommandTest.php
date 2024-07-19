@@ -6,11 +6,13 @@ namespace MezzioTest\Tooling\Routes;
 
 use Mezzio\Router\Route;
 use Mezzio\Router\RouteCollector;
+use Mezzio\Tooling\Routes\ConfigLoaderInterface;
 use Mezzio\Tooling\Routes\ListRoutesCommand;
 use MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware;
 use MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -32,25 +34,20 @@ class ListRoutesCommandTest extends TestCase
     /** @var (RouteCollector&MockObject) */
     private $routeCollection;
 
+    /** @var (ContainerInterface&MockObject) */
+    private $container;
+
     private ListRoutesCommand $command;
 
     protected function setUp(): void
     {
-        $this->input  = $this->createMock(InputInterface::class);
-        $this->output = $this->createMock(ConsoleOutputInterface::class);
-
-        $routes = [
-            new Route("/", new SimpleMiddleware(), ['GET'], 'home'),
-            new Route("/", new ExpressMiddleware(), ['GET'], 'home'),
-        ];
-
+        $this->input           = $this->createMock(InputInterface::class);
+        $this->output          = $this->createMock(ConsoleOutputInterface::class);
         $this->routeCollection = $this->createMock(RouteCollector::class);
-        $this->routeCollection
-            ->expects($this->once())
-            ->method('getRoutes')
-            ->willReturn($routes);
-
-        $this->command = new ListRoutesCommand($this->routeCollection);
+        $this->command         = new ListRoutesCommand(
+            $this->createMock(ContainerInterface::class),
+            $this->createMock(ConfigLoaderInterface::class)
+        );
     }
 
     /**
@@ -120,6 +117,26 @@ class ListRoutesCommandTest extends TestCase
      */
     public function testSuccessfulExecutionEmitsExpectedOutput(): void
     {
+        $routes    = [
+            new Route("/", new SimpleMiddleware(), ['GET'], 'home'),
+            new Route("/", new ExpressMiddleware(), ['GET'], 'home'),
+        ];
+        $collector = $this->createMock(RouteCollector::class);
+        $collector
+            ->expects($this->once())
+            ->method('getRoutes')
+            ->willReturn($routes);
+
+        $container = $this->createMock(ContainerInterface::class);
+        $container
+            ->expects($this->once())
+            ->method('get')
+            ->with(RouteCollector::class)
+            ->willReturn($collector);
+
+        $configLoader  = $this->createMock(ConfigLoaderInterface::class);
+        $this->command = new ListRoutesCommand($container, $configLoader);
+
         $outputFormatter = new OutputFormatter(false);
 
         $this->output
@@ -163,13 +180,21 @@ class ListRoutesCommandTest extends TestCase
 
     public function testRendersAnEmptyResultWhenNoRoutesArePresent(): void
     {
-        $this->routeCollection = $this->createMock(RouteCollector::class);
-        $this->routeCollection
-            ->expects($this->once())
-            ->method('getRoutes')
-            ->willReturn([]);
+        $collector = $this->createMock(RouteCollector::class);
 
-        $this->command = new ListRoutesCommand($this->routeCollection);
+        $container = $this->createMock(ContainerInterface::class);
+        $container
+            ->expects($this->once())
+            ->method('get')
+            ->with(RouteCollector::class)
+            ->willReturn($collector);
+
+        $configLoader = $this->createMock(ConfigLoaderInterface::class);
+        $configLoader
+            ->expects($this->once())
+            ->method('load');
+
+        $this->command = new ListRoutesCommand($container, $configLoader);
 
         $this->input
             ->method('getOption')
@@ -196,6 +221,30 @@ class ListRoutesCommandTest extends TestCase
 
     public function testRendersRoutesAsJsonWhenFormatSetToJson(): void
     {
+        $routes    = [
+            new Route("/", new SimpleMiddleware(), ['GET'], 'home'),
+            new Route("/", new ExpressMiddleware(), ['GET'], 'home'),
+        ];
+        $collector = $this->createMock(RouteCollector::class);
+        $collector
+            ->expects($this->once())
+            ->method('getRoutes')
+            ->willReturn($routes);
+
+        $container = $this->createMock(ContainerInterface::class);
+        $container
+            ->expects($this->once())
+            ->method('get')
+            ->with(RouteCollector::class)
+            ->willReturn($collector);
+
+        $configLoader = $this->createMock(ConfigLoaderInterface::class);
+        $configLoader
+            ->expects($this->once())
+            ->method('load');
+
+        $this->command = new ListRoutesCommand($container, $configLoader);
+
         $this->input
             ->method('getOption')
             ->willReturnOnConsecutiveCalls(
@@ -235,15 +284,35 @@ class ListRoutesCommandTest extends TestCase
      */
     public function testThatOnlyAllowedFormatsCanBeSupplied(string $format): void
     {
+        $routes    = [
+            new Route("/", new SimpleMiddleware(), ['GET'], 'home'),
+            new Route("/", new ExpressMiddleware(), ['GET'], 'home'),
+        ];
+        $collector = $this->createMock(RouteCollector::class);
+        $collector
+            ->expects($this->once())
+            ->method('getRoutes')
+            ->willReturn($routes);
+
+        $container = $this->createMock(ContainerInterface::class);
+        $container
+            ->expects($this->once())
+            ->method('get')
+            ->with(RouteCollector::class)
+            ->willReturn($collector);
+
+        $configLoader  = $this->createMock(ConfigLoaderInterface::class);
+        $this->command = new ListRoutesCommand($container, $configLoader);
+
         $this->input
             ->method('getOption')
             ->willReturnOnConsecutiveCalls(
                 $format, // format
-                false, // has-middleware
-                false, // supports-method
-                false, // has-name
-                false, // has-path
-                false   // sort
+                false,   // has-middleware
+                false,   // supports-method
+                false,   // has-name
+                false,   // has-path
+                false    // sort
             );
         $this->output
             ->expects($this->once())
@@ -265,7 +334,7 @@ class ListRoutesCommandTest extends TestCase
     }
 
     /**
-     * @return array[]
+     * @return array<array-key,array<array-key,string>>
      */
     public function invalidFormatDataProvider(): array
     {
@@ -297,10 +366,19 @@ class ListRoutesCommandTest extends TestCase
         ];
         $this->routeCollection = $this->createMock(RouteCollector::class);
         $this->routeCollection
+            ->expects($this->once())
             ->method('getRoutes')
             ->willReturn($routes);
 
-        $this->command = new ListRoutesCommand($this->routeCollection);
+        $this->container = $this->createMock(ContainerInterface::class);
+        $this->container
+            ->expects($this->once())
+            ->method('get')
+            ->willReturn(
+                $this->routeCollection,
+            );
+
+        $this->command = new ListRoutesCommand($this->container, $this->createMock(ConfigLoaderInterface::class));
 
         $this->input
             ->method('getOption')
@@ -332,7 +410,7 @@ class ListRoutesCommandTest extends TestCase
     }
 
     /**
-     * @return array[]
+     * @return array<array-key, array<array-key,string>>
      */
     public function sortRoutingTableDataProvider(): array
     {
@@ -362,28 +440,28 @@ class ListRoutesCommandTest extends TestCase
 
         $routeCollection = $this->createMock(RouteCollector::class);
         $routeCollection
+            ->expects($this->once())
             ->method('getRoutes')
             ->willReturn($routes);
 
-        $this->command = new ListRoutesCommand($routeCollection);
+        $container = $this->createMock(ContainerInterface::class);
+        $container
+            ->expects($this->once())
+            ->method('get')
+            ->with(RouteCollector::class)
+            ->willReturn($routeCollection);
 
-        /*if (! empty($filterOptions['middleware'])) {
-            $this->input
-                ->expects($this->once())
-                ->method('getOption')
-                ->with('has-middleware')
-                ->willReturn($filterOptions['middleware']);
-        }*/
+        $this->command = new ListRoutesCommand($container, $this->createMock(ConfigLoaderInterface::class));
 
         $this->input
             ->method('getOption')
             ->willReturnOnConsecutiveCalls(
-                'json', // format
-                false, // sort
-                false, // supports-method
-                $filterOptions['middleware'], // has-middleware
-                false, // has-name
-                false  // has-path
+                'json',                         // format
+                false,                          // sort
+                false,                          // supports-method
+                $filterOptions['middleware'],   // has-middleware
+                false,                          // has-name
+                false                           // has-path
             );
 
         $this->output
@@ -406,7 +484,7 @@ class ListRoutesCommandTest extends TestCase
     }
 
     /**
-     * @return array[]
+     * @return array<array-key,array<array-key,string|array<string,string>>>
      */
     public static function filterRoutingTableDataProvider(): array
     {

@@ -42,6 +42,9 @@ final class RoutesFilter extends FilterIterator
      */
     private array $filterOptions;
 
+    /**
+     * @param ArrayIterator<array-key, \Mezzio\Router\Route> $routes
+     */
     public function __construct(ArrayIterator $routes, array $filterOptions = [])
     {
         parent::__construct($routes);
@@ -52,7 +55,7 @@ final class RoutesFilter extends FilterIterator
         $this->filterOptions = array_filter(
             $this->filterOptions,
             function ($value) {
-                return ! empty($value);
+                return !empty($value);
             }
         );
     }
@@ -71,21 +74,21 @@ final class RoutesFilter extends FilterIterator
             return true;
         }
 
-        if (! empty($this->filterOptions['name'])) {
+        if (!empty($this->filterOptions['name'])) {
             return $route->getName() === $this->filterOptions['name']
                 || $this->matchesByRegex($route, 'name');
         }
 
-        if (! empty($this->filterOptions['path'])) {
+        if (!empty($this->filterOptions['path'])) {
             return $route->getPath() === $this->filterOptions['path']
                 || $this->matchesByRegex($route, 'path');
         }
 
-        if (! empty($this->filterOptions['method'])) {
+        if (!empty($this->filterOptions['method'])) {
             return $this->matchesByMethod($route);
         }
 
-        if (! empty($this->filterOptions['middleware'])) {
+        if (!empty($this->filterOptions['middleware'])) {
             return $this->matchesByMiddleware($route);
         }
 
@@ -143,9 +146,9 @@ final class RoutesFilter extends FilterIterator
         if (is_array($this->filterOptions['method'])) {
             array_walk(
                 $this->filterOptions['method'],
-                fn(string &$value) => $value = strtoupper($value)
+                fn (string &$value) => $value = strtoupper($value)
             );
-            return ! empty(array_intersect(
+            return !empty(array_intersect(
                 $this->filterOptions['method'],
                 $route->getAllowedMethods() ?? []
             ));
