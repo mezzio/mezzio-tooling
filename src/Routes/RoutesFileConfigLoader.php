@@ -24,10 +24,10 @@ final class RoutesFileConfigLoader implements ConfigLoaderInterface
         MiddlewareFactory $middlewareFactory,
         ContainerInterface $container,
     ) {
-        $this->configFilePath = $configFilePath;
-        $this->app = $app;
+        $this->configFilePath    = $configFilePath;
+        $this->app               = $app;
         $this->middlewareFactory = $middlewareFactory;
-        $this->container = $container;
+        $this->container         = $container;
     }
 
     public function load(): void

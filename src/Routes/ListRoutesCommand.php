@@ -152,7 +152,7 @@ class ListRoutesCommand extends Command
 
         $this->configLoader->load();
 
-        /** @var RouteCollector */
+        /** @var RouteCollector $routeCollector */
         $routeCollector = $this->container->get(RouteCollector::class);
         $this->routes   = $routeCollector->getRoutes();
 

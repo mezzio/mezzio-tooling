@@ -16,9 +16,7 @@ use function var_export;
 
 class RoutesFilterTest extends TestCase
 {
-    /**
-     * @var array<array-key,Route>
-     */
+    /** @var array<array-key,Route> */
     private array $routes = [];
 
     public function setUp(): void

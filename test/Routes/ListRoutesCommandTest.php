@@ -308,10 +308,10 @@ class ListRoutesCommandTest extends TestCase
             ->method('getOption')
             ->willReturnOnConsecutiveCalls(
                 $format, // format
-                false,   // has-middleware
-                false,   // supports-method
-                false,   // has-name
-                false,   // has-path
+                false, // has-middleware
+                false, // supports-method
+                false, // has-name
+                false, // has-path
                 false    // sort
             );
         $this->output
@@ -456,11 +456,11 @@ class ListRoutesCommandTest extends TestCase
         $this->input
             ->method('getOption')
             ->willReturnOnConsecutiveCalls(
-                'json',                         // format
-                false,                          // sort
-                false,                          // supports-method
-                $filterOptions['middleware'],   // has-middleware
-                false,                          // has-name
+                'json', // format
+                false, // sort
+                false, // supports-method
+                $filterOptions['middleware'], // has-middleware
+                false, // has-name
                 false                           // has-path
             );
 

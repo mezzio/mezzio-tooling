@@ -44,16 +44,16 @@ class RouteFilterOptionsTest extends TestCase
      */
     public function testCanGetArrayRepresentation(array $options, array $expectedResult): void
     {
-        /** @var string */
+        /** @var string $middleware */
         $middleware = $options['middleware'] ?? '';
 
-        /** @var string */
+        /** @var string $name */
         $name = $options['name'] ?? '';
 
-        /** @var string */
+        /** @var string $path */
         $path = $options['path'] ?? '';
 
-        /** @var array<array-key, string> */
+        /** @var array<array-key, string> $methods */
         $methods = $options['methods'] ?? [];
 
         $routeFilterOptions = new RouteFilterOptions($middleware, $name, $path, $methods);
