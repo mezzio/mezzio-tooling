@@ -99,21 +99,19 @@ final class RoutesFilter extends FilterIterator
      * Match the route against a regular expression based on the field in $matchType.
      *
      * $matchType can be either "path" or "name".
-     *
-     * @return false|int|null
      */
-    public function matchesByRegex(Route $route, string $routeAttribute)
+    public function matchesByRegex(Route $route, string $routeAttribute): bool
     {
         if ($routeAttribute === 'path') {
             $path = (string) $this->filterOptions['path'];
-            return preg_match(
+            return (bool) preg_match(
                 sprintf("/^%s/", str_replace('/', '\/', $path)),
                 $route->getPath()
             );
         }
 
         if ($routeAttribute === 'name') {
-            return preg_match(
+            return (bool) preg_match(
                 sprintf(
                     "/%s/",
                     (string) $this->filterOptions['name']
@@ -121,6 +119,8 @@ final class RoutesFilter extends FilterIterator
                 $route->getName()
             );
         }
+
+        return false;
     }
 
     /**
