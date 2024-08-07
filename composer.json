@@ -23,7 +23,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "composer/package-versions-deprecated": true
+            "composer/package-versions-deprecated": true,
+            "laminas/laminas-component-installer": true
         },
         "platform": {
             "php": "7.4.99"
@@ -39,6 +40,7 @@
         "ext-json": "*",
         "laminas/laminas-cli": "^1.2",
         "laminas/laminas-code": "^4.5",
+        "laminas/laminas-component-installer": "^2.0 || ^3.0",
         "laminas/laminas-stdlib": "^3.1",
         "laminas/laminas-stratigility": "^3.0",
         "mezzio/mezzio": "^3.0",
