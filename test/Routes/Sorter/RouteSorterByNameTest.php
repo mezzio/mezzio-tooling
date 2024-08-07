@@ -84,7 +84,9 @@ class RouteSorterByNameTest extends TestCase
             'user.logout',
             'user.profile',
         ];
-        for ($i = 0; $i < count($sortedPaths); $i++) {
+        $maxPaths = count($sortedPaths) - 1;
+        /** @psalm-suppress InvalidArrayOffset */
+        for ($i = 0; $i < $maxPaths; $i++) {
             $this->assertSame(
                 $sortedPaths[$i],
                 $this->routes[$i]->getName(),

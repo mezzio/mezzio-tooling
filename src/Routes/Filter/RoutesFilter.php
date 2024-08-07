@@ -43,7 +43,7 @@ final class RoutesFilter extends FilterIterator
     private array $filterOptions;
 
     /**
-     * @param ArrayIterator<array-key, Route> $routes
+     * @param ArrayIterator<int, Route> $routes
      */
     public function __construct(ArrayIterator $routes, array $filterOptions = [])
     {
@@ -173,8 +173,8 @@ final class RoutesFilter extends FilterIterator
 
         try {
             return $middlewareClass === $matchesMiddleware
-                || stripos($middlewareClass, $matchesMiddleware)
-                || preg_match(
+                || (bool) stripos($middlewareClass, $matchesMiddleware)
+                || (bool) preg_match(
                     sprintf('/%s/', $matchesMiddleware),
                     $middlewareClass
                 );
