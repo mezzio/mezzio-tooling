@@ -82,7 +82,7 @@ class FileSystemBasedComposerPackageTest extends TestCase
         $key       = $isDev ? 'autoload-dev' : 'autoload';
 
         $value   = $package[$key]['psr-4'][$namespace] ?? null;
-        $message = $message ?: sprintf(
+        $message = $message ?? sprintf(
             'Expected to find path "%s" registered for namespace "%s"; received "%s"',
             $path,
             $namespace,
@@ -107,7 +107,7 @@ class FileSystemBasedComposerPackageTest extends TestCase
         $package   = $this->getComposerJson($composerJsonFile);
         $key       = $isDev ? 'autoload-dev' : 'autoload';
 
-        $message = $message ?: sprintf(
+        $message = $message ?? sprintf(
             'Did NOT expect to find "%s" rule registered for namespace "%s"; received "%s"',
             $key,
             $namespace,
@@ -125,6 +125,7 @@ class FileSystemBasedComposerPackageTest extends TestCase
         self::assertArrayNotHasKey($namespace, $package[$key]['psr-4'], $message);
     }
 
+    /** @return array<string, array{0: bool, 1: string, 2: string}> */
     public function addRuleProvider(): array
     {
         return [
@@ -145,6 +146,7 @@ class FileSystemBasedComposerPackageTest extends TestCase
         $this->assertAutoloadRuleExists($module, $moduleSourcePath, $isDev, $projectRoot . '/composer.json');
     }
 
+    /** @return array<string, array{0: bool, 1: string, 2: string, 3: string}> */
     public function removeRuleProvider(): array
     {
         return [

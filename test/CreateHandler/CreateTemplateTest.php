@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace MezzioTest\Tooling\CreateHandler;
 
 use ArrayObject;
-use Generator;
 use Mezzio\LaminasView\LaminasViewRenderer;
 use Mezzio\Plates\PlatesRenderer;
 use Mezzio\Template\TemplateRendererInterface;
@@ -97,7 +96,8 @@ class CreateTemplateTest extends TestCase
         $this->services['config'] = $config;
     }
 
-    public function configType(): Generator
+    /** @return iterable<string, array{0: bool}> */
+    public function configType(): iterable
     {
         yield 'array'       => [false];
         yield ArrayObject::class => [true];
@@ -305,6 +305,7 @@ class CreateTemplateTest extends TestCase
         $generator->forHandler(TestHandler::class);
     }
 
+    /** @return iterable<string, array<int, string>> */
     public function rendererTypesWithInvalidPathCounts(): iterable
     {
         foreach (['empty-paths'] as $config) {

@@ -129,7 +129,7 @@ class RegisterCommandTest extends TestCase
         $composer              = 'composer.phar';
         $configProvider        = $module . '\ConfigProvider';
         $normalizedModulesPath = $modulesPath === null ? 'src' : preg_replace('#^./#', '', $modulesPath);
-        $expectedAutoloadPath  = $exactPath ?: sprintf(
+        $expectedAutoloadPath  = $exactPath ?? sprintf(
             '%s/%s%s',
             $normalizedModulesPath,
             $module,

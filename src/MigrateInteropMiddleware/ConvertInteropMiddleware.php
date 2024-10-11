@@ -102,7 +102,7 @@ final class ConvertInteropMiddleware
 
         // if delegate, class implements delegate interface and has process method
         if (
-            $delegate
+            $delegate !== null
             && preg_match('#class\s+[^{]+?implements\s*([^{]+?,\s*)*' . $delegate . '(\s|,|{)#i', $contents)
             && preg_match('#public\s+function\s+process\s*\([^\)]+?\)\s*(:?)#', $contents, $matches)
         ) {
@@ -117,7 +117,7 @@ final class ConvertInteropMiddleware
 
         // is middleware, class implements middleware interface and has process method
         if (
-            $middleware
+            $middleware !== null
             && preg_match('#class\s+[^{]+?implements\s*([^{]+?,\s*)*' . $middleware . '(\s|,|{)#i', $contents)
             && preg_match('#public\s+function\s+process\(\s*.+?,\s*.+?\s+(\$.+?)\s*\)\s*{#', $contents, $matches)
         ) {
