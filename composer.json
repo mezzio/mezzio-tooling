@@ -80,5 +80,8 @@
         "static-analysis": "psalm --shepherd --stats",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
         "license-check": "docheader check src/"
+    },
+    "conflict": {
+        "amphp/amp": "<2.6.4"
     }
 }
