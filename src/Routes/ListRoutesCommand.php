@@ -213,6 +213,7 @@ class ListRoutesCommand extends Command
             $this->filterOptions
         );
 
+        /** @var Route $route */
         foreach ($routesIterator as $route) {
             $routeMethods = implode(',', $route->getAllowedMethods() ?? []);
             if ($requireNames) {

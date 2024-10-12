@@ -99,9 +99,6 @@ class RoutesFilterTest extends TestCase
         );
     }
 
-    /**
-     * @psalm-suppress MixedInferredReturnType
-     */
     public function validFilterDataProvider(): array
     {
         return [
