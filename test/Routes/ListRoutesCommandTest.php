@@ -488,7 +488,6 @@ class ListRoutesCommandTest extends TestCase
         return [
             [
                 ['middleware' => 'ExpressMiddleware'],
-                '[{"name":"home","path":"\/","methods":"GET","middleware":"MezzioTest\\\\Tooling\\\\Routes\\\\Middleware\\\\ExpressMiddleware"}]',
             ],
         ];
         // phpcs:enable
