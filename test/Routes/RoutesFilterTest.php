@@ -99,6 +99,9 @@ class RoutesFilterTest extends TestCase
         );
     }
 
+    /**
+     * @psalm-return array<array-key, array{0: int, 1: array<string, mixed>}>
+     */
     public function validFilterDataProvider(): array
     {
         return [
