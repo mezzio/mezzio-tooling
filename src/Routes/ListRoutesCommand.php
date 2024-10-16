@@ -178,9 +178,6 @@ class ListRoutesCommand extends Command
         switch ($format) {
             case 'json':
                 $output->writeln(json_encode($this->getRows(true)));
-                $output->writeln(
-                    "Listing the application's routing table in JSON format."
-                );
                 break;
             case 'table':
             case '':
@@ -189,9 +186,6 @@ class ListRoutesCommand extends Command
                     ->setHeaders(['Name', 'Path', 'Methods', 'Middleware'])
                     ->setRows($this->getRows(false));
                 $table->render();
-                $output->writeln(
-                    "Listing the application's routing table in table format."
-                );
                 break;
             case 'format':
             default:
