@@ -79,6 +79,7 @@ class RoutesFilterTest extends TestCase
     }
 
     /**
+     * @param array<string, mixed> $filterOptions
      * @dataProvider validFilterDataProvider
      */
     public function testCanFilterRoutesWithStringSearchExpression(
