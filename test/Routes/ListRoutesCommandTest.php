@@ -480,7 +480,7 @@ class ListRoutesCommandTest extends TestCase
     }
 
     /**
-     * @return array<array-key, array<array-key, mixed>>
+     * @psalm-return array<array-key, array<array<string, string>>>
      */
     public static function filterRoutingTableDataProvider(): array
     {
