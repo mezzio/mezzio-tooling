@@ -73,24 +73,33 @@ Here is an example of what you can expect from running the command.
 ```bash
 $ mezzio:routes:list
 
-| Name | Path | Middleware | Options |
-|---|---|---|---|
-| home | / | App/Handler/HomePageHandler | none |
++----------+-----------+---------+ Routes ---------------------------------+
+| Name     | Path      | Methods | Middleware                              |
++----------+-----------+---------+-----------------------------------------+
+| api.ping | /api/ping | GET     | Mezzio\Middleware\LazyLoadingMiddleware |
+| home     | /         | GET     | Mezzio\Middleware\LazyLoadingMiddleware |
++----------+-----------+---------+-----------------------------------------+
 ```
 
-Here is an example of what you can expect from running the command and setting the format to `json`.
+Here is an example of what you can expect from running the command and setting the format to `json` (formatted with [jq][jq_url]).
 
-```json
-{
-  "routes": [
-    {
-      "name": "home",
-      "path": "/",
-      "middleware": "\\App\\Handler\\HomePageHandler",
-      "options": ""
-    }
-  ]
-}
+```bash
+$ mezzio:routes:list --format=json | jq
+
+[
+  {
+    "name": "api.ping",
+    "path": "/api/ping",
+    "methods": "GET",
+    "middleware": "Mezzio\\Middleware\\LazyLoadingMiddleware"
+  },
+  {
+    "name": "home",
+    "path": "/",
+    "methods": "GET",
+    "middleware": "Mezzio\\Middleware\\LazyLoadingMiddleware"
+  }
+]
 ```
 
 > ### Previous versions
@@ -121,3 +130,5 @@ return [
     ],
 ];
 ```
+
+[jq_url]: https://jqlang.github.io/jq/
