@@ -7,6 +7,7 @@ namespace Mezzio\Tooling\Routes\Filter;
 use ArrayIterator;
 use Exception;
 use FilterIterator;
+use Iterator;
 use Mezzio\Router\Route;
 
 use function array_filter;
