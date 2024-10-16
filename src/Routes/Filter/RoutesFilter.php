@@ -28,6 +28,7 @@ use function strtoupper;
 
  * @template TKey
  * @template-covariant TValue
+ * @template TIterator as Iterator<TKey, TValue>
  * @template-extends FilterIterator<TKey, TValue>
  */
 final class RoutesFilter extends FilterIterator
