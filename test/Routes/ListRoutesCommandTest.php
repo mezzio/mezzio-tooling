@@ -427,7 +427,7 @@ class ListRoutesCommandTest extends TestCase
     /**
      * @dataProvider filterRoutingTableDataProvider
      */
-    public function testCanFilterRoutingTable(array $filterOptions, string $expectedOutput): void
+    public function testCanFilterRoutingTable(array $filterOptions): void
     {
         $routes = [
             new Route("/", new SimpleMiddleware(), ['GET'], 'home'),
