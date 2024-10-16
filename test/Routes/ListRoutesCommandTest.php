@@ -355,7 +355,7 @@ class ListRoutesCommandTest extends TestCase
      * @dataProvider sortRoutingTableDataProvider
      * @throws ReflectionException
      */
-    public function testCanSortResults(string $sortOrder, string $expectedOutput): void
+    public function testCanSortResults(string $sortOrder): void
     {
         $routes                = [
             new Route("/contact", new SimpleMiddleware(), ['GET'], 'contact'),
