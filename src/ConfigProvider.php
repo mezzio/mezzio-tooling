@@ -25,6 +25,8 @@ use Mezzio\Tooling\Module\DeregisterCommand;
 use Mezzio\Tooling\Module\DeregisterCommandFactory;
 use Mezzio\Tooling\Module\RegisterCommand;
 use Mezzio\Tooling\Module\RegisterCommandFactory;
+use Mezzio\Tooling\Routes\ListRoutesCommand;
+use Mezzio\Tooling\Routes\ListRoutesCommandFactory;
 
 final class ConfigProvider
 {
@@ -52,6 +54,7 @@ final class ConfigProvider
                 'mezzio:module:create'                   => CreateCommand::class,
                 'mezzio:module:deregister'               => DeregisterCommand::class,
                 'mezzio:module:register'                 => RegisterCommand::class,
+                'mezzio:routes:list'                     => ListRoutesCommand::class,
             ],
         ];
     }
@@ -70,6 +73,7 @@ final class ConfigProvider
                 CreateHandlerCommand::class                     => CreateHandlerCommandFactory::class,
                 CreateMiddlewareCommand::class                  => CreateMiddlewareCommandFactory::class,
                 DeregisterCommand::class                        => DeregisterCommandFactory::class,
+                ListRoutesCommand::class                        => ListRoutesCommandFactory::class,
                 MigrateInteropMiddlewareCommand::class          => MigrateInteropMiddlewareCommandFactory::class,
                 MigrateMiddlewareToRequestHandlerCommand::class => MigrateMiddlewareToRequestHandlerCommandFactory::class,
                 RegisterCommand::class                          => RegisterCommandFactory::class,
