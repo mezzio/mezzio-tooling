@@ -58,8 +58,7 @@ class ListRoutesCommandTest extends TestCase
      */
     private function reflectExecuteMethod(): ReflectionMethod
     {
-        $r = new ReflectionMethod($this->command, 'execute');
-        return $r;
+        return new ReflectionMethod($this->command, 'execute');
     }
 
     public function testConfigureSetsExpectedDescription(): void
