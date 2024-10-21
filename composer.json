@@ -40,13 +40,13 @@
         "laminas/laminas-cli": "^1.7.0",
         "laminas/laminas-code": "^4.7.1",
         "laminas/laminas-stdlib": "^3.15.0",
-        "laminas/laminas-stratigility": "^3.9.0",
+        "laminas/laminas-stratigility": "^3.9.0 || ^4.0.0",
         "mezzio/mezzio": "^3.13.0",
         "mezzio/mezzio-router": "^3.9.0",
         "symfony/process": "^6.0.11"
     },
     "require-dev": {
-        "laminas/laminas-coding-standard": "~2.5.0",
+        "laminas/laminas-coding-standard": "~3.0.0",
         "laminas/laminas-diactoros": "^3.3",
         "mikey179/vfsstream": "^1.6.11",
         "mockery/mockery": "^1.6.7",
