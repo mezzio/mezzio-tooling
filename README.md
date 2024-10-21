@@ -44,8 +44,7 @@ This package exposes commands for [laminas-cli](https://docs.laminas.dev/laminas
 - `mezzio:module:deregister`: Deregister a middleware module from the application.
 - `mezzio:module:register`: Register a middleware module with the application.
 
-> ### Previous versions
->
+> [!NOTE]
 > Versions of mezzio/mezzio-tooling prior to v2.0 exposed a `vendor/bin/mezzio` binary, and the various commands exposed all lacked the `mezzio:` prefix, with the following more specific changes:
 >
 > - `mezzio:middleware:migrate-from-interop` was previously `migrate:interop-middleware`
