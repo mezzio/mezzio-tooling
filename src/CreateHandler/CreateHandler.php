@@ -46,7 +46,7 @@ final class CreateHandler extends ClassSkeletons
         private string $skeleton = self::CLASS_SKELETON,
         ?string $projectRoot = null
     ) {
-        $this->projectRoot = $projectRoot ?: realpath(getcwd());
+        $this->projectRoot = $projectRoot ?? realpath(getcwd());
     }
 
     /**

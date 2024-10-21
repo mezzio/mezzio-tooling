@@ -182,9 +182,10 @@ abstract class AbstractInjector implements InjectorInterface
             return $this->injectAfterDependencies($package, $config);
         }
 
+        $firstApplicationModule = $this->findFirstEnabledApplicationModule($this->applicationModules, $config);
         if (
             $type === self::TYPE_MODULE
-            && ($firstApplicationModule = $this->findFirstEnabledApplicationModule($this->applicationModules, $config))
+            && ($firstApplicationModule !== null)
         ) {
             return $this->injectBeforeApplicationModules($package, $config, $firstApplicationModule);
         }
@@ -305,6 +306,7 @@ abstract class AbstractInjector implements InjectorInterface
      * If any module is not found method will return null.
      *
      * @param list<non-empty-string> $modules
+     * @return non-empty-string|null
      */
     private function findFirstEnabledApplicationModule(array $modules, string $config): ?string
     {
