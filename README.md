@@ -102,8 +102,7 @@ $ mezzio:routes:list --format=json | jq
 ]
 ```
 
-> ### Previous versions
->
+> [!NOTE]
 > Versions of mezzio/mezzio-tooling prior to v2.0 exposed a `vendor/bin/mezzio` binary, and the various commands exposed all lacked the `mezzio:` prefix, with the following more specific changes:
 >
 > - `mezzio:middleware:migrate-from-interop` was previously `migrate:interop-middleware`
