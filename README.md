@@ -130,6 +130,4 @@ return [
     ],
 ];
 ```
-
 [jq_url]: https://jqlang.github.io/jq/
-
