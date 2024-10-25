@@ -15,6 +15,7 @@ final class RouteFilterOptions implements RouteFilterOptionsInterface
 {
     /** @var array<array-key,string> */
     private array $methods = [];
+    private array $allowedFilterOptions = ['methods', 'middleware', 'name', 'path'];
 
     /** @param string|null|array<array-key,string> $methods */
     public function __construct(
@@ -33,13 +34,18 @@ final class RouteFilterOptions implements RouteFilterOptionsInterface
         }
     }
 
+    private function getFilterOptionsMinusMethods(): array
+    {
+        return array_filter($this->allowedFilterOptions, fn($value) => $value !== "methods");
+    }
+
     public function has(string $filterOption): bool
     {
-        if (! in_array($filterOption, ['methods', 'middleware', 'name', 'path'])) {
+        if (! in_array($filterOption, $this->allowedFilterOptions)) {
             return false;
         }
 
-        if (in_array($filterOption, ['middleware', 'name', 'path'])) {
+        if (in_array($filterOption, $this->getFilterOptionsMinusMethods())) {
             return $this->$filterOption !== "";
         }
 
@@ -70,10 +76,11 @@ final class RouteFilterOptions implements RouteFilterOptionsInterface
     {
         $values = [];
         foreach (get_object_vars($this) as $key => $value) {
-            if (is_string($value) && $value !== "") {
+            if (in_array($key, $this->getFilterOptionsMinusMethods()) && $value !== "") {
                 $values[$key] = $value;
             }
-            if (is_array($value) && ! empty($value)) {
+
+            if ($key === "methods" && ! empty($value)) {
                 $values[$key] = $value;
             }
         }
