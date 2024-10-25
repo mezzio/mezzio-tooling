@@ -6,6 +6,8 @@ namespace MezzioTest\Tooling\Routes;
 
 use ArrayIterator;
 use Mezzio\Router\Route;
+use Mezzio\Tooling\Routes\Filter\RouteFilterOptions;
+use Mezzio\Tooling\Routes\Filter\RouteFilterOptionsInterface;
 use Mezzio\Tooling\Routes\Filter\RoutesFilter;
 use MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware;
 use MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware;
@@ -61,30 +63,12 @@ class RoutesFilterTest extends TestCase
         ];
     }
 
-    public function testFiltersOutEmptyOptions(): void
-    {
-        $routeFilter = new RoutesFilter(
-            new ArrayIterator($this->routes),
-            [
-                'middleware' => null,
-                'name'       => '',
-                'path'       => '/user',
-            ]
-        );
-
-        $this->assertSame(
-            ['path' => '/user'],
-            $routeFilter->getFilterOptions()
-        );
-    }
-
     /**
-     * @param array<string, mixed> $filterOptions
      * @dataProvider validFilterDataProvider
      */
     public function testCanFilterRoutesWithStringSearchExpression(
         int $expectedNumberOfRoutes,
-        array $filterOptions = []
+        RouteFilterOptionsInterface $filterOptions
     ): void {
         $this->setUp();
 
@@ -93,139 +77,136 @@ class RoutesFilterTest extends TestCase
         $this->assertCount(
             $expectedNumberOfRoutes,
             $routeFilter,
-            sprintf(
-                'Filtered with %s',
-                var_export($filterOptions, true)
-            )
+            sprintf('Filtered with %s', var_export($filterOptions, true))
         );
     }
 
     /**
-     * @psalm-return array<array-key, array{0: int, 1: array<string, mixed>}>
+     * @psalm-return array<array-key, array{0: int, 1: RouteFilterOptionsInterface}>
      */
     public static function validFilterDataProvider(): array
     {
         return [
             'middleware-simple-compound-name' => [
                 5,
-                [
-                    'middleware' => 'ExpressMiddleware',
-                ],
+                new RouteFilterOptions(
+                    middleware: 'ExpressMiddleware',
+                ),
             ],
             'middleware-simple-class-name'    => [
                 6,
-                [
-                    'middleware' => 'Tooling',
-                ],
+                new RouteFilterOptions(
+                    middleware: 'Tooling',
+                ),
             ],
             'middleware-regex'                => [
                 6,
-                [
-                    'middleware' => 'Tooling.*Middleware',
-                ],
+                new RouteFilterOptions(
+                    middleware: 'Tooling.*Middleware',
+                ),
             ],
             'middleware-fqcn'                 => [
                 5,
-                [
-                    'middleware' => ExpressMiddleware::class,
-                ],
+                new RouteFilterOptions(
+                    middleware: ExpressMiddleware::class,
+                ),
             ],
             'name-bare'                       => [
                 1,
-                [
-                    'name' => 'home',
-                ],
+                new RouteFilterOptions(
+                    name: 'home',
+                ),
             ],
             'name-regex'                      => [
                 5,
-                [
-                    'name' => 'user.*',
-                ],
+                new RouteFilterOptions(
+                    name: 'user.*',
+                ),
             ],
             'path-fq'                         => [
                 1,
-                [
-                    'path' => '/user',
-                ],
+                new RouteFilterOptions(
+                    path: '/user',
+                ),
             ],
             'path-fq-regex'                   => [
                 4,
-                [
-                    'path' => '/log.*',
-                ],
+                new RouteFilterOptions(
+                    path: '/log.*',
+                ),
             ],
             'path-root'                       => [
                 6,
-                [
-                    'path' => '/',
-                ],
+                new RouteFilterOptions(
+                    path: '/',
+                ),
             ],
             'method-get'                      => [
                 6,
-                [
-                    'method' => 'GET',
-                ],
+                new RouteFilterOptions(
+                    methods: ['get'],
+                ),
             ],
             'method-any'                      => [
                 6,
-                [
-                    'method' => Route::HTTP_METHOD_ANY,
-                ],
+                new RouteFilterOptions(
+                    methods: Route::HTTP_METHOD_ANY,
+                ),
             ],
             'method-get-lc'                   => [
                 6,
-                [
-                    'method' => 'get',
-                ],
+                new RouteFilterOptions(
+                    methods: 'get',
+                ),
             ],
             'method-post-lc'                  => [
                 2,
-                [
-                    'method' => 'post',
-                ],
-            ],
-            /*[
-                6,
-                [
-                    'method' => ['POST', 'GET'],
-                ],
-            ],
-            [
-                2,
-                [
-                    'method' => ['POST'],
-                ],
+                new RouteFilterOptions(
+                    methods: 'post',
+                ),
             ],
             [
                 6,
-                [
-                    'method' => ['GET'],
-                ],
-            ],
-            [
-                1,
-                [
-                    'method' => ['PATCH'],
-                ],
+                new RouteFilterOptions(
+                    methods: ['POST', 'GET'],
+                ),
             ],
             [
                 2,
-                [
-                    'method' => ['PATCH', 'POST'],
-                ],
+                new RouteFilterOptions(
+                    methods: ['POST'],
+                ),
             ],
             [
-                2,
-                [
-                    'method' => ['patch', 'post'],
-                ],
+                6,
+                new RouteFilterOptions(
+                    methods: ['GET'],
+                ),
             ],
             [
                 1,
-                [
-                    'method' => ['patch'],
-                ],
-            ],*/
+                new RouteFilterOptions(
+                    methods: ['PATCH'],
+                ),
+            ],
+            [
+                2,
+                new RouteFilterOptions(
+                    methods: ['PATCH', 'POST'],
+                ),
+            ],
+            [
+                2,
+                new RouteFilterOptions(
+                    methods: ['patch', 'post'],
+                ),
+            ],
+            [
+                1,
+                new RouteFilterOptions(
+                    methods: ['patch'],
+                ),
+            ],
         ];
     }
 }

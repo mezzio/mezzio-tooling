@@ -7,6 +7,8 @@ namespace Mezzio\Tooling\Routes;
 use ArrayIterator;
 use Mezzio\Router\Route;
 use Mezzio\Router\RouteCollector;
+use Mezzio\Tooling\Routes\Filter\RouteFilterOptions;
+use Mezzio\Tooling\Routes\Filter\RouteFilterOptionsInterface;
 use Mezzio\Tooling\Routes\Filter\RoutesFilter;
 use Mezzio\Tooling\Routes\Sorter\RouteSorterByName;
 use Mezzio\Tooling\Routes\Sorter\RouteSorterByPath;
@@ -27,9 +29,6 @@ class ListRoutesCommand extends Command
 {
     /** @var array<int, Route>  */
     private array $routes = [];
-
-    /** @var array<string,string|array> */
-    private array $filterOptions = [];
 
     private const HELP = <<<'EOT'
         Prints the application's routing table.
@@ -80,8 +79,9 @@ class ListRoutesCommand extends Command
     public static $defaultName = 'mezzio:routes:list';
 
     public function __construct(
-        private readonly ContainerInterface $container,
-        private readonly ConfigLoaderInterface $configLoader
+        private ContainerInterface $container,
+        private ConfigLoaderInterface $configLoader,
+        private RouteFilterOptionsInterface $filterOptions
     ) {
         parent::__construct();
     }
@@ -160,12 +160,12 @@ class ListRoutesCommand extends Command
             : new RouteSorterByPath();
         usort($this->routes, $sorter);
 
-        $this->filterOptions = [
-            'method'     => strtolower((string) $input->getOption('supports-method')),
-            'middleware' => strtolower((string) $input->getOption('has-middleware')),
-            'name'       => strtolower((string) $input->getOption('has-name')),
-            'path'       => strtolower((string) $input->getOption('has-path')),
-        ];
+        $this->filterOptions = new RouteFilterOptions(
+            strtolower((string) $input->getOption('has-middleware')),
+            strtolower((string) $input->getOption('has-name')),
+            strtolower((string) $input->getOption('has-path')),
+            [strtolower((string) $input->getOption('supports-method'))],
+        );
 
         switch ($format) {
             case 'json':

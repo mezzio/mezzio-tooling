@@ -4,51 +4,46 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Routes\Filter;
 
+use function array_walk;
 use function get_object_vars;
 use function in_array;
 use function is_array;
 use function is_string;
+use function strtoupper;
 
-final class RouteFilterOptions
+final class RouteFilterOptions implements RouteFilterOptionsInterface
 {
-    private string $middleware;
-    private string $name;
-    private string $path;
-
     /** @var array<array-key,string> */
     private array $methods = [];
 
-    /**
-     * @param string|array<array-key,string> $methods
-     */
+    /** @param string|null|array<array-key,string> $methods */
     public function __construct(
-        string $middleware = '',
-        string $name = '',
-        string $path = '',
-        $methods = []
+        private string $middleware = "",
+        private string $name = "",
+        private string $path = "",
+        $methods = ""
     ) {
         if (is_string($methods)) {
-            $this->methods = [$methods];
+            $this->methods = [strtoupper($methods)];
         }
+
         if (is_array($methods)) {
+            array_walk($methods, fn(string &$value) => $value = strtoupper($value));
             $this->methods = $methods;
         }
-        $this->middleware = $middleware;
-        $this->name       = $name;
-        $this->path       = $path;
     }
 
     public function has(string $filterOption): bool
     {
+        if (! in_array($filterOption, ['methods', 'middleware', 'name', 'path'])) {
+            return false;
+        }
+
         if (in_array($filterOption, ['middleware', 'name', 'path'])) {
-            return $this->$filterOption !== null;
+            return $this->$filterOption !== "";
         }
 
-        if ($filterOption === 'methods') {
-            return [] !== $this->methods;
-        }
-
-        return false;
+        return $this->methods !== [];
     }
 
     public function getMiddleware(): string
@@ -66,9 +61,6 @@ final class RouteFilterOptions
         return $this->path;
     }
 
-    /**
-     * @return array<array-key,string>
-     */
     public function getMethods(): array
     {
         return $this->methods;
@@ -78,7 +70,10 @@ final class RouteFilterOptions
     {
         $values = [];
         foreach (get_object_vars($this) as $key => $value) {
-            if (! empty($value)) {
+            if (is_string($value) && $value !== "") {
+                $values[$key] = $value;
+            }
+            if (is_array($value) && ! empty($value)) {
                 $values[$key] = $value;
             }
         }

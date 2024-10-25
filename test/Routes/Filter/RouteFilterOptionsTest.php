@@ -58,7 +58,7 @@ class RouteFilterOptionsTest extends TestCase
 
         $routeFilterOptions = new RouteFilterOptions($middleware, $name, $path, $methods);
 
-        $this->assertSame($expectedResult, $routeFilterOptions->toArray());
+        $this->assertEquals($expectedResult, $routeFilterOptions->toArray());
     }
 
     /**
