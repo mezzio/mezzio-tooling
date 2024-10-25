@@ -7,6 +7,7 @@ namespace MezzioTest\Tooling\Routes;
 use Mezzio\Router\Route;
 use Mezzio\Router\RouteCollector;
 use Mezzio\Tooling\Routes\ConfigLoaderInterface;
+use Mezzio\Tooling\Routes\Filter\EmptyRouteFilterOptions;
 use Mezzio\Tooling\Routes\ListRoutesCommand;
 use MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware;
 use MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware;
@@ -50,7 +51,7 @@ class ListRoutesCommandTest extends TestCase
         $this->input           = $this->createMock(InputInterface::class);
         $this->output          = $this->createMock(ConsoleOutputInterface::class);
         $this->routeCollection = $this->createMock(RouteCollector::class);
-        $this->command         = new ListRoutesCommand($container, $configLoader);
+        $this->command         = new ListRoutesCommand($container, $configLoader, new EmptyRouteFilterOptions());
     }
 
     /**
@@ -139,7 +140,7 @@ class ListRoutesCommandTest extends TestCase
 
         /** @var ConfigLoaderInterface&MockObject $configLoader */
         $configLoader  = $this->createMock(ConfigLoaderInterface::class);
-        $this->command = new ListRoutesCommand($container, $configLoader);
+        $this->command = new ListRoutesCommand($container, $configLoader, new EmptyRouteFilterOptions());
 
         $outputFormatter = new OutputFormatter(false);
 
@@ -192,7 +193,7 @@ class ListRoutesCommandTest extends TestCase
             ->expects($this->once())
             ->method('load');
 
-        $this->command = new ListRoutesCommand($container, $configLoader);
+        $this->command = new ListRoutesCommand($container, $configLoader, new EmptyRouteFilterOptions());
 
         $this->input
             ->method('getOption')
@@ -243,7 +244,7 @@ class ListRoutesCommandTest extends TestCase
             ->expects($this->once())
             ->method('load');
 
-        $this->command = new ListRoutesCommand($container, $configLoader);
+        $this->command = new ListRoutesCommand($container, $configLoader, new EmptyRouteFilterOptions());
 
         $this->input
             ->method('getOption')
@@ -297,7 +298,7 @@ class ListRoutesCommandTest extends TestCase
 
         /** @var ConfigLoaderInterface $configLoader */
         $configLoader  = $this->createMock(ConfigLoaderInterface::class);
-        $this->command = new ListRoutesCommand($container, $configLoader);
+        $this->command = new ListRoutesCommand($container, $configLoader, new EmptyRouteFilterOptions());
 
         $this->input
             ->method('getOption')
@@ -375,7 +376,7 @@ class ListRoutesCommandTest extends TestCase
 
         /** @var ConfigLoaderInterface $configLoader */
         $configLoader  = $this->createMock(ConfigLoaderInterface::class);
-        $this->command = new ListRoutesCommand($this->container, $configLoader);
+        $this->command = new ListRoutesCommand($this->container, $configLoader, new EmptyRouteFilterOptions());
 
         $this->input
             ->method('getOption')
@@ -448,7 +449,7 @@ class ListRoutesCommandTest extends TestCase
 
         /** @var ConfigLoaderInterface $configLoader */
         $configLoader  = $this->createMock(ConfigLoaderInterface::class);
-        $this->command = new ListRoutesCommand($container, $configLoader);
+        $this->command = new ListRoutesCommand($container, $configLoader, new EmptyRouteFilterOptions());
 
         $this->input
             ->method('getOption')
