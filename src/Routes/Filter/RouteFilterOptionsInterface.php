@@ -6,15 +6,29 @@ namespace Mezzio\Tooling\Routes\Filter;
 
 interface RouteFilterOptionsInterface
 {
+    /**
+     * Determines if the specified filter ($filterOption) has been set
+     */
     public function has(string $filterOption): bool;
 
+    /**
+     * Retrieves a route middleware filter the available routing data by
+     */
     public function getMiddleware(): string;
 
+    /**
+     * Retrieves a route name filter the available routing data by
+     */
     public function getName(): string;
 
+    /**
+     * Retrieves a route path to filter the available routing data by
+     */
     public function getPath(): string;
 
     /**
+     * Returns any route methods to filter the available routing data by
+     *
      * @return array<array-key,string>
      */
     public function getMethods(): array;
