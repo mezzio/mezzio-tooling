@@ -13,21 +13,12 @@ use function file_exists;
 
 final class RoutesFileConfigLoader implements ConfigLoaderInterface
 {
-    private string $configFilePath;
-    private Application $app;
-    private MiddlewareFactory $middlewareFactory;
-    private ContainerInterface $container;
-
     public function __construct(
-        string $configFilePath,
-        Application $app,
-        MiddlewareFactory $middlewareFactory,
-        ContainerInterface $container,
+        private readonly string $configFilePath,
+        private readonly Application $app,
+        private readonly MiddlewareFactory $middlewareFactory,
+        private readonly ContainerInterface $container
     ) {
-        $this->configFilePath    = $configFilePath;
-        $this->app               = $app;
-        $this->middlewareFactory = $middlewareFactory;
-        $this->container         = $container;
     }
 
     public function load(): void

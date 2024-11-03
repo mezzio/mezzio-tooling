@@ -19,7 +19,7 @@ use function substr;
 /** @internal */
 class Create
 {
-    public function __construct(private FactoryClassGenerator $generator)
+    public function __construct(private readonly FactoryClassGenerator $generator)
     {
     }
 

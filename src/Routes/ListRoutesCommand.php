@@ -17,7 +17,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use function get_class;
 use function implode;
 use function in_array;
 use function json_encode;
@@ -28,10 +27,6 @@ class ListRoutesCommand extends Command
 {
     /** @var array<int, Route>  */
     private array $routes = [];
-
-    private ContainerInterface $container;
-
-    private ConfigLoaderInterface $configLoader;
 
     /** @var array<string,string|array> */
     private array $filterOptions = [];
@@ -85,12 +80,9 @@ class ListRoutesCommand extends Command
     public static $defaultName = 'mezzio:routes:list';
 
     public function __construct(
-        ContainerInterface $container,
-        ConfigLoaderInterface $configLoader
+        private readonly ContainerInterface $container,
+        private readonly ConfigLoaderInterface $configLoader
     ) {
-        $this->container    = $container;
-        $this->configLoader = $configLoader;
-
         parent::__construct();
     }
 
@@ -215,14 +207,14 @@ class ListRoutesCommand extends Command
                     'name'       => $route->getName(),
                     'path'       => $route->getPath(),
                     'methods'    => $routeMethods,
-                    'middleware' => get_class($route->getMiddleware()),
+                    'middleware' => $route->getMiddleware()::class,
                 ];
             } else {
                 $rows[] = [
                     $route->getName(),
                     $route->getPath(),
                     $routeMethods,
-                    get_class($route->getMiddleware()),
+                    $route->getMiddleware()::class,
                 ];
             }
         }

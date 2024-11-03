@@ -73,9 +73,7 @@ class CreateTemplateTest extends TestCase
 
         $this->container
             ->method('has')
-            ->willReturnCallback(function (string $service): bool {
-                return array_key_exists($service, $this->services);
-            });
+            ->willReturnCallback(fn(string $service): bool => array_key_exists($service, $this->services));
     }
 
     public function prepareCommonAssets(): void

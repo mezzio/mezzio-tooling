@@ -44,14 +44,14 @@ final class RegisterCommand extends Command
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:module:register';
 
-    private ComposerPackageInterface $package;
+    private readonly ComposerPackageInterface $package;
 
-    private InjectorInterface $injector;
+    private readonly InjectorInterface $injector;
 
     public function __construct(
-        private string $projectRoot,
+        private readonly string $projectRoot,
         ComposerPackageFactoryInterface $packageFactory,
-        private ComposerProcessFactoryInterface $processFactory,
+        private readonly ComposerProcessFactoryInterface $processFactory,
         ?InjectorInterface $configInjector = null
     ) {
         $this->package  = $packageFactory->loadPackage($projectRoot);
