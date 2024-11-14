@@ -12,7 +12,6 @@ use Mezzio\Tooling\Routes\Filter\RouteFilterOptionsInterface;
 use Mezzio\Tooling\Routes\Filter\RoutesFilter;
 use Mezzio\Tooling\Routes\Sorter\RouteSorterByName;
 use Mezzio\Tooling\Routes\Sorter\RouteSorterByPath;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -79,7 +78,7 @@ class ListRoutesCommand extends Command
     public static $defaultName = 'mezzio:routes:list';
 
     public function __construct(
-        private ContainerInterface $container,
+        private RouteCollector $routeCollector,
         private ConfigLoaderInterface $configLoader,
         private RouteFilterOptionsInterface $filterOptions
     ) {
@@ -144,10 +143,7 @@ class ListRoutesCommand extends Command
 
         $this->configLoader->load();
 
-        /** @var RouteCollector $routeCollector */
-        $routeCollector = $this->container->get(RouteCollector::class);
-        $this->routes   = $routeCollector->getRoutes();
-
+        $this->routes = $this->routeCollector->getRoutes();
         if ([] === $this->routes) {
             $output->writeln(self::MSG_EMPTY_ROUTING_TABLE);
             return $result;

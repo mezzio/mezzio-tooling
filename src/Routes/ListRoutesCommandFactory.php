@@ -6,6 +6,7 @@ namespace Mezzio\Tooling\Routes;
 
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
+use Mezzio\Router\RouteCollector;
 use Mezzio\Tooling\Routes\Filter\EmptyRouteFilterOptions;
 use Mezzio\Tooling\Routes\RoutesFileConfigLoader;
 use Psr\Container\ContainerInterface;
@@ -20,8 +21,16 @@ final class ListRoutesCommandFactory
         /** @var MiddlewareFactory $factory */
         $factory = $container->get(MiddlewareFactory::class);
 
-        $configLoader = new RoutesFileConfigLoader('config/routes.php', $application, $factory, $container);
+        $configLoader = new RoutesFileConfigLoader(
+            'config/routes.php',
+            $application,
+            $factory,
+            $container
+        );
 
-        return new ListRoutesCommand($container, $configLoader, new EmptyRouteFilterOptions());
+        /** @var RouteCollector $routeCollector */
+        $routeCollector = $container->get(RouteCollector::class);
+
+        return new ListRoutesCommand($routeCollector, $configLoader, new EmptyRouteFilterOptions());
     }
 }
