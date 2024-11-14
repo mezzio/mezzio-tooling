@@ -91,120 +91,180 @@ class RoutesFilterTest extends TestCase
                 5,
                 new RouteFilterOptions(
                     middleware: 'ExpressMiddleware',
+                    name: null,
+                    path: null,
+                    methods: null,
                 ),
             ],
             [
                 6,
                 new RouteFilterOptions(
                     middleware: 'Tooling',
+                    name: null,
+                    path: null,
+                    methods: null,
                 ),
             ],
             [
                 6,
                 new RouteFilterOptions(
                     middleware: 'Tooling.*Middleware',
+                    name: null,
+                    path: null,
+                    methods: null,
                 ),
             ],
             [
                 5,
                 new RouteFilterOptions(
                     middleware: ExpressMiddleware::class,
+                    name: null,
+                    path: null,
+                    methods: null,
                 ),
             ],
             [
                 1,
                 new RouteFilterOptions(
                     name: 'home',
+                    middleware: null,
+                    path: null,
+                    methods: null,
                 ),
             ],
             [
                 5,
                 new RouteFilterOptions(
                     name: 'user.*',
+                    middleware: null,
+                    path: null,
+                    methods: null,
                 ),
             ],
             [
                 1,
                 new RouteFilterOptions(
                     path: '/user',
+                    middleware: null,
+                    name: null,
+                    methods: null,
                 ),
             ],
             [
                 4,
                 new RouteFilterOptions(
                     path: '/log.*',
+                    middleware: null,
+                    name: null,
+                    methods: null,
                 ),
             ],
             [
                 6,
                 new RouteFilterOptions(
                     path: '/',
+                    middleware: null,
+                    name: null,
+                    methods: null,
                 ),
             ],
             [
                 6,
                 new RouteFilterOptions(
                     methods: ['get'],
+                    middleware: null,
+                    name: null,
+                    path: null,
                 ),
             ],
             [
                 6,
                 new RouteFilterOptions(
                     methods: Route::HTTP_METHOD_ANY,
+                    middleware: null,
+                    name: null,
+                    path: null,
                 ),
             ],
             [
                 6,
                 new RouteFilterOptions(
                     methods: 'get',
+                    middleware: null,
+                    name: null,
+                    path: null,
                 ),
             ],
             [
                 2,
                 new RouteFilterOptions(
                     methods: 'post',
+                    middleware: null,
+                    name: null,
+                    path: null,
                 ),
             ],
             [
                 6,
                 new RouteFilterOptions(
                     methods: ['POST', 'GET'],
+                    middleware: null,
+                    name: null,
+                    path: null,
                 ),
             ],
             [
                 2,
                 new RouteFilterOptions(
                     methods: ['POST'],
+                    middleware: null,
+                    name: null,
+                    path: null,
                 ),
             ],
             [
                 6,
                 new RouteFilterOptions(
                     methods: ['GET'],
+                    middleware: null,
+                    name: null,
+                    path: null,
                 ),
             ],
             [
                 1,
                 new RouteFilterOptions(
                     methods: ['PATCH'],
+                    middleware: null,
+                    name: null,
+                    path: null,
                 ),
             ],
             [
                 2,
                 new RouteFilterOptions(
                     methods: ['PATCH', 'POST'],
+                    middleware: null,
+                    name: null,
+                    path: null,
                 ),
             ],
             [
                 2,
                 new RouteFilterOptions(
                     methods: ['patch', 'post'],
+                    middleware: null,
+                    name: null,
+                    path: null,
                 ),
             ],
             [
                 1,
                 new RouteFilterOptions(
                     methods: ['patch'],
+                    middleware: null,
+                    name: null,
+                    path: null,
                 ),
             ],
         ];

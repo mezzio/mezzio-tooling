@@ -14,24 +14,22 @@ interface RouteFilterOptionsInterface
     /**
      * Retrieves a route middleware filter the available routing data by
      */
-    public function getMiddleware(): string;
+    public function getMiddleware(): string|null;
 
     /**
      * Retrieves a route name filter the available routing data by
      */
-    public function getName(): string;
+    public function getName(): string|null;
 
     /**
      * Retrieves a route path to filter the available routing data by
      */
-    public function getPath(): string;
+    public function getPath(): string|null;
 
     /**
      * Returns any route methods to filter the available routing data by
-     *
-     * @return array<array-key,string>
      */
-    public function getMethods(): array;
+    public function getMethods(): array|string|null;
 
     public function toArray(): array;
 }
