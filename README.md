@@ -66,6 +66,19 @@ The command supports several options, listed in the table below.
 | `--has-middleware`  | `-w`          | Accepts a comma-separated list of one or more middleware classes, and filters out routes that do not require those classes. The classes can be fully-qualified, unqualified, or a regular expression, supported by the preg_* functions. For example, "\Mezzio\Middleware\LazyLoadingMiddleware,LazyLoadingMiddleware,\Mezzio*". |
 <!-- markdownlint-enable MD037 -->
 
+##### Configuration
+
+By default, `Mezzio\Tooling\Routes\DefaultRoutesConfigLoaderFactory` registers a `ConfigLoaderInterface` service with the application's DI container, which retrieves the application's routes from two sources:
+
+- _config/routes.php_
+- Routes registered by any loaded `ConfigProvider` class
+
+However, this is a default/fallback implementation.
+If you don't store any routes in _config/routes.php_ or need a custom implementation, then you need to do two things:
+
+1. Write a custom loader implementation that implements `Mezzio\Tooling\Routes\ConfigLoaderInterface`
+2. Register it with the application's DI container as an alias for `Mezzio\Tooling\Routes\ConfigLoaderInterface`
+
 ##### Usage Example
 
 Here is an example of what you can expect from running the command.
