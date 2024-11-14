@@ -279,7 +279,7 @@ class ListRoutesCommandTest extends TestCase
                 false, // supports-method
                 false, // has-name
                 false, // has-path
-                false    // sort
+                false  // sort
             );
         $this->output
             ->expects($this->once())

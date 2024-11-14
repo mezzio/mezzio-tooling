@@ -186,7 +186,7 @@ class ListRoutesCommand extends Command
         return $result;
     }
 
-    public function getRows(bool $requireNames = false): array
+    private function getRows(bool $requireNames = false): array
     {
         $rows = [];
 
@@ -218,7 +218,7 @@ class ListRoutesCommand extends Command
         return $rows;
     }
 
-    public function getSortOrder(InputInterface $input): string
+    private function getSortOrder(InputInterface $input): string
     {
         $sortOrder = strtolower((string) $input->getOption('sort'));
         return ! in_array($sortOrder, ['name', 'path'])
