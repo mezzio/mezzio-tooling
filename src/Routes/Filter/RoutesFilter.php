@@ -13,6 +13,7 @@ use Mezzio\Router\Route;
 use function array_intersect;
 use function get_class;
 use function in_array;
+use function is_string;
 use function preg_match;
 use function sprintf;
 use function str_replace;
@@ -112,8 +113,9 @@ final class RoutesFilter extends FilterIterator
             return true;
         }
 
+        $methods = $this->filterOptions->getMethods() ?? [];
         return array_intersect(
-            $this->filterOptions->getMethods(),
+            is_string($methods) ? [$methods] : $methods,
             $route->getAllowedMethods() ?? []
         ) !== [];
     }
@@ -130,7 +132,7 @@ final class RoutesFilter extends FilterIterator
     private function matchesByMiddleware(Route $route): bool
     {
         $middlewareClass   = $route->getMiddleware()::class;
-        $matchesMiddleware = $this->filterOptions->getMiddleware();
+        $matchesMiddleware = $this->filterOptions->getMiddleware() ?? "";
 
         try {
             return $middlewareClass === $matchesMiddleware

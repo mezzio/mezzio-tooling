@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Routes\Filter;
 
+use function array_filter;
 use function array_walk;
 use function get_object_vars;
 use function in_array;
@@ -13,16 +14,14 @@ use function strtoupper;
 
 final class RouteFilterOptions implements RouteFilterOptionsInterface
 {
-    /** @var array<array-key,string> */
-    private array $methods = [];
     private array $allowedFilterOptions = ['methods', 'middleware', 'name', 'path'];
 
     /** @param string|null|array<array-key,string> $methods */
     public function __construct(
-        private string $middleware = "",
-        private string $name = "",
-        private string $path = "",
-        $methods = ""
+        private string|null $middleware,
+        private string|null $name,
+        private string|null $path,
+        private array|string|null $methods
     ) {
         if (is_string($methods)) {
             $this->methods = [strtoupper($methods)];
@@ -46,28 +45,28 @@ final class RouteFilterOptions implements RouteFilterOptionsInterface
         }
 
         if (in_array($filterOption, $this->getFilterOptionsMinusMethods())) {
-            return $this->$filterOption !== "";
+            return $this->$filterOption !== null;
         }
 
-        return $this->methods !== [];
+        return $this->methods !== [] && $this->methods !== null;
     }
 
-    public function getMiddleware(): string
+    public function getMiddleware(): string|null
     {
         return $this->middleware;
     }
 
-    public function getName(): string
+    public function getName(): string|null
     {
         return $this->name;
     }
 
-    public function getPath(): string
+    public function getPath(): string|null
     {
         return $this->path;
     }
 
-    public function getMethods(): array
+    public function getMethods(): array|string|null
     {
         return $this->methods;
     }
