@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Mezzio\Tooling\Routes\Filter;
 
 use ArrayIterator;
-use Exception;
 use FilterIterator;
 use Iterator;
 use Mezzio\Router\Route;
+use Throwable;
 
 use function array_intersect;
 use function get_class;
@@ -141,7 +141,7 @@ final class RoutesFilter extends FilterIterator
                     sprintf('/%s/', $this->escapeNamespaceSeparatorForRegex($matchesMiddleware)),
                     $middlewareClass
                 );
-        } catch (Exception) {
+        } catch (Throwable) {
             return false;
         }
     }
