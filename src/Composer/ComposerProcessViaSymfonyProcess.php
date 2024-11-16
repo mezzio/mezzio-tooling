@@ -9,7 +9,7 @@ use Symfony\Component\Process\Process;
 /** @internal */
 class ComposerProcessViaSymfonyProcess implements ComposerProcessInterface
 {
-    public function __construct(private Process $process)
+    public function __construct(private readonly Process $process)
     {
     }
 

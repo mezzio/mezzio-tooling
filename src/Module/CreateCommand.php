@@ -38,7 +38,7 @@ final class CreateCommand extends Command
     public static $defaultName = 'mezzio:module:create';
 
     /** @param array|ArrayAccess $config */
-    public function __construct(private $config, private string $projectRoot)
+    public function __construct(private $config, private readonly string $projectRoot)
     {
         parent::__construct();
     }

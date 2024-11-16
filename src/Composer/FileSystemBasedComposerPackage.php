@@ -23,7 +23,7 @@ use const JSON_UNESCAPED_UNICODE;
 
 final class FileSystemBasedComposerPackage implements ComposerPackageInterface
 {
-    private string $composerFile;
+    private readonly string $composerFile;
 
     public function __construct(string $projectRoot)
     {

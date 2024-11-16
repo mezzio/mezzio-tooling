@@ -40,10 +40,10 @@ final class CreateHandler extends ClassSkeletons
     /**
      * Path to root of project.
      */
-    private string $projectRoot;
+    private readonly string $projectRoot;
 
     public function __construct(
-        private string $skeleton = self::CLASS_SKELETON,
+        private readonly string $skeleton = self::CLASS_SKELETON,
         ?string $projectRoot = null
     ) {
         $this->projectRoot = $projectRoot ?: realpath(getcwd());

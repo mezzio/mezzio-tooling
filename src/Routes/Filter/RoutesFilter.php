@@ -13,7 +13,6 @@ use Mezzio\Router\Route;
 use function array_filter;
 use function array_intersect;
 use function array_walk;
-use function get_class;
 use function in_array;
 use function is_array;
 use function is_string;
@@ -35,32 +34,26 @@ use function strtoupper;
 final class RoutesFilter extends FilterIterator
 {
     /**
-     * An array storing the list of route options to filter a route on along with their respective values.
-     *
-     * The four allowed route options are: name, path, method, and middleware.
-     * Name and path can be a fixed string, such as user.profile, or a regular expression, such as user.*.
-     * Middleware can only contain a class name. Method can be either a string which contains one of the
-     * allowed HTTP methods, or an array of HTTP methods.
-     *
-     * @var array
-     */
-    private array $filterOptions;
-
-    /**
      * @param ArrayIterator<int, Route> $routes
      */
-    public function __construct(ArrayIterator $routes, array $filterOptions = [])
-    {
+    public function __construct(
+        ArrayIterator $routes,
+        /**
+         * An array storing the list of route options to filter a route on along with their respective values.
+         *
+         * The four allowed route options are: name, path, method, and middleware.
+         * Name and path can be a fixed string, such as user.profile, or a regular expression, such as user.*.
+         * Middleware can only contain a class name. Method can be either a string which contains one of the
+         * allowed HTTP methods, or an array of HTTP methods.
+         */
+        private array $filterOptions = []
+    ) {
         parent::__construct($routes);
-
-        $this->filterOptions = $filterOptions;
 
         // Filter out any options that are, effectively, "empty".
         $this->filterOptions = array_filter(
             $this->filterOptions,
-            function ($value) {
-                return ! empty($value);
-            }
+            fn($value) => ! empty($value)
         );
     }
 
@@ -172,7 +165,7 @@ final class RoutesFilter extends FilterIterator
      */
     public function matchesByMiddleware(Route $route): bool
     {
-        $middlewareClass   = get_class($route->getMiddleware());
+        $middlewareClass   = $route->getMiddleware()::class;
         $matchesMiddleware = (string) $this->filterOptions['middleware'];
 
         try {
@@ -182,7 +175,7 @@ final class RoutesFilter extends FilterIterator
                     sprintf('/%s/', $matchesMiddleware),
                     $middlewareClass
                 );
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }

@@ -45,7 +45,7 @@ final class MigrateInteropMiddlewareCommand extends Command
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:middleware:migrate-from-interop';
 
-    public function __construct(private ?string $projectRoot)
+    public function __construct(private readonly ?string $projectRoot)
     {
         parent::__construct();
     }

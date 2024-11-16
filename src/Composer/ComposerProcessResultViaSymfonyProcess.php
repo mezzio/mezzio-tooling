@@ -8,7 +8,7 @@ use Symfony\Component\Process\Process;
 
 final class ComposerProcessResultViaSymfonyProcess implements ComposerProcessResultInterface
 {
-    public function __construct(private Process $process)
+    public function __construct(private readonly Process $process)
     {
     }
 

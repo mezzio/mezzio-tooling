@@ -45,7 +45,7 @@ final class MigrateMiddlewareToRequestHandlerCommand extends Command
     /**
      * @var null|string Project root against which to scan.
      */
-    public function __construct(private string $projectRoot)
+    public function __construct(private readonly string $projectRoot)
     {
         parent::__construct();
     }

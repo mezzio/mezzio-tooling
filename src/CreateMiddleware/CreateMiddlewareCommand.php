@@ -66,7 +66,7 @@ final class CreateMiddlewareCommand extends Command
      */
     private bool $requireMiddlewareBeforeGeneratingFactory = true;
 
-    public function __construct(private string $projectRoot)
+    public function __construct(private readonly string $projectRoot)
     {
         parent::__construct();
     }

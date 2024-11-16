@@ -57,7 +57,7 @@ final class ConfigInjector
         
         EOT;
 
-    private string $configFile;
+    private readonly string $configFile;
 
     public function __construct(string $projectRoot)
     {

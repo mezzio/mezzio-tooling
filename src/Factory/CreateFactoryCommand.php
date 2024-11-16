@@ -49,7 +49,7 @@ final class CreateFactoryCommand extends Command
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:factory:create';
 
-    public function __construct(private Create $generator, private string $projectRoot)
+    public function __construct(private readonly Create $generator, private readonly string $projectRoot)
     {
         parent::__construct();
     }
