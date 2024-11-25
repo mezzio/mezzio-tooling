@@ -30,7 +30,7 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
         InjectorInterface::TYPE_CONFIG_PROVIDER,
     ];
 
-    public function convertToShortArraySyntax(string $contents): ?string
+    public static function convertToShortArraySyntax(string $contents): ?string
     {
         return preg_replace('#array\(([^)]+)\)#s', '[$1]', $contents);
     }
@@ -38,7 +38,7 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
     /**
      * @return array<string, mixed[]>
      */
-    public function allowedTypes(): array
+    public static function allowedTypes(): array
     {
         return [
             'config-provider' => [ConfigAggregatorInjector::TYPE_CONFIG_PROVIDER, true],
@@ -50,7 +50,7 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
     /**
      * @return array<string, array<string|bool|int>>
      */
-    public function injectComponentProvider(): array
+    public static function injectComponentProvider(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
         $baseContentsFqcnLongArray              = file_get_contents(__DIR__ . '/TestAsset/mezzio-application-fqcn.config.php');
@@ -58,20 +58,20 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
         $baseContentsImportLongArray            = file_get_contents(__DIR__ . '/TestAsset/mezzio-application-import.config.php');
         $baseContentsImportLongArrayAltIndent   = file_get_contents(__DIR__ . '/TestAsset/mezzio-application-import-alt-indent.config.php');
 
-        $baseContentsFqcnShortArray              = $this->convertToShortArraySyntax($baseContentsFqcnLongArray);
-        $baseContentsGloballyQualifiedShortArray = $this->convertToShortArraySyntax($baseContentsGloballyQualifiedLongArray);
-        $baseContentsImportShortArray            = $this->convertToShortArraySyntax($baseContentsImportLongArray);
-        $baseContentsImportShortArrayAltIndent   = $this->convertToShortArraySyntax($baseContentsImportLongArrayAltIndent);
+        $baseContentsFqcnShortArray              = self::convertToShortArraySyntax($baseContentsFqcnLongArray);
+        $baseContentsGloballyQualifiedShortArray = self::convertToShortArraySyntax($baseContentsGloballyQualifiedLongArray);
+        $baseContentsImportShortArray            = self::convertToShortArraySyntax($baseContentsImportLongArray);
+        $baseContentsImportShortArrayAltIndent   = self::convertToShortArraySyntax($baseContentsImportLongArrayAltIndent);
 
         $expectedContentsFqcnLongArray              = file_get_contents(__DIR__ . '/TestAsset/mezzio-populated-fqcn.config.php');
         $expectedContentsGloballyQualifiedLongArray = file_get_contents(__DIR__ . '/TestAsset/mezzio-populated-globally-qualified.config.php');
         $expectedContentsImportLongArray            = file_get_contents(__DIR__ . '/TestAsset/mezzio-populated-import.config.php');
         $expectedContentsImportLongArrayAltIndent   = file_get_contents(__DIR__ . '/TestAsset/mezzio-populated-import-alt-indent.config.php');
 
-        $expectedContentsFqcnShortArray              = $this->convertToShortArraySyntax($expectedContentsFqcnLongArray);
-        $expectedContentsGloballyQualifiedShortArray = $this->convertToShortArraySyntax($expectedContentsGloballyQualifiedLongArray);
-        $expectedContentsImportShortArray            = $this->convertToShortArraySyntax($expectedContentsImportLongArray);
-        $expectedContentsImportShortArrayAltIndent   = $this->convertToShortArraySyntax($expectedContentsImportLongArrayAltIndent);
+        $expectedContentsFqcnShortArray              = self::convertToShortArraySyntax($expectedContentsFqcnLongArray);
+        $expectedContentsGloballyQualifiedShortArray = self::convertToShortArraySyntax($expectedContentsGloballyQualifiedLongArray);
+        $expectedContentsImportShortArray            = self::convertToShortArraySyntax($expectedContentsImportLongArray);
+        $expectedContentsImportShortArrayAltIndent   = self::convertToShortArraySyntax($expectedContentsImportLongArrayAltIndent);
 
         $injectOnlyFirstOccurrenceInitial  = file_get_contents(__DIR__ . '/TestAsset/mezzio-with-postprocessor.config.php');
         $injectOnlyFirstOccurrenceExpected = file_get_contents(__DIR__ . '/TestAsset/mezzio-with-postprocessor-post-injection.config.php');
@@ -95,16 +95,16 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
     /**
      * @return array<string, array<string|bool|int>>
      */
-    public function packageAlreadyRegisteredProvider(): array
+    public static function packageAlreadyRegisteredProvider(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
         $fqcnLongArray              = file_get_contents(__DIR__ . '/TestAsset/mezzio-populated-fqcn.config.php');
         $globallyQualifiedLongArray = file_get_contents(__DIR__ . '/TestAsset/mezzio-populated-globally-qualified.config.php');
         $importLongArray            = file_get_contents(__DIR__ . '/TestAsset/mezzio-populated-import.config.php');
 
-        $fqcnShortArray              = $this->convertToShortArraySyntax($fqcnLongArray);
-        $globallyQualifiedShortArray = $this->convertToShortArraySyntax($globallyQualifiedLongArray);
-        $importShortArray            = $this->convertToShortArraySyntax($importLongArray);
+        $fqcnShortArray              = self::convertToShortArraySyntax($fqcnLongArray);
+        $globallyQualifiedShortArray = self::convertToShortArraySyntax($globallyQualifiedLongArray);
+        $importShortArray            = self::convertToShortArraySyntax($importLongArray);
 
         return [
             'fqcn-long-array'    => [$fqcnLongArray,               ConfigAggregatorInjector::TYPE_CONFIG_PROVIDER],
@@ -120,7 +120,7 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
     /**
      * @return array<string, array<string|bool>>
      */
-    public function emptyConfiguration(): array
+    public static function emptyConfiguration(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
         $fqcnLongArray              = file_get_contents(__DIR__ . '/TestAsset/mezzio-empty-fqcn.config.php');
@@ -128,9 +128,9 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
         $importLongArray            = file_get_contents(__DIR__ . '/TestAsset/mezzio-empty-import.config.php');
         // phpcs:enable
 
-        $fqcnShortArray              = $this->convertToShortArraySyntax($fqcnLongArray);
-        $globallyQualifiedShortArray = $this->convertToShortArraySyntax($globallyQualifiedLongArray);
-        $importShortArray            = $this->convertToShortArraySyntax($importLongArray);
+        $fqcnShortArray              = self::convertToShortArraySyntax($fqcnLongArray);
+        $globallyQualifiedShortArray = self::convertToShortArraySyntax($globallyQualifiedLongArray);
+        $importShortArray            = self::convertToShortArraySyntax($importLongArray);
 
         return [
             'fqcn-long-array'    => [$fqcnLongArray],
@@ -143,7 +143,7 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
     }
 
     /** @inheritDoc */
-    public function packagePopulatedInConfiguration(): array
+    public static function packagePopulatedInConfiguration(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
         $baseContentsFqcnLongArray              = file_get_contents(__DIR__ . '/TestAsset/mezzio-populated-fqcn.config.php');
@@ -151,20 +151,20 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
         $baseContentsImportLongArray            = file_get_contents(__DIR__ . '/TestAsset/mezzio-populated-import.config.php');
         $baseContentsImportLongArrayAltIndent   = file_get_contents(__DIR__ . '/TestAsset/mezzio-populated-import-alt-indent.config.php');
 
-        $baseContentsFqcnShortArray              = $this->convertToShortArraySyntax($baseContentsFqcnLongArray);
-        $baseContentsGloballyQualifiedShortArray = $this->convertToShortArraySyntax($baseContentsGloballyQualifiedLongArray);
-        $baseContentsImportShortArray            = $this->convertToShortArraySyntax($baseContentsImportLongArray);
-        $baseContentsImportShortArrayAltIndent   = $this->convertToShortArraySyntax($baseContentsImportLongArrayAltIndent);
+        $baseContentsFqcnShortArray              = self::convertToShortArraySyntax($baseContentsFqcnLongArray);
+        $baseContentsGloballyQualifiedShortArray = self::convertToShortArraySyntax($baseContentsGloballyQualifiedLongArray);
+        $baseContentsImportShortArray            = self::convertToShortArraySyntax($baseContentsImportLongArray);
+        $baseContentsImportShortArrayAltIndent   = self::convertToShortArraySyntax($baseContentsImportLongArrayAltIndent);
 
         $expectedContentsFqcnLongArray              = file_get_contents(__DIR__ . '/TestAsset/mezzio-application-fqcn.config.php');
         $expectedContentsGloballyQualifiedLongArray = file_get_contents(__DIR__ . '/TestAsset/mezzio-application-globally-qualified.config.php');
         $expectedContentsImportLongArray            = file_get_contents(__DIR__ . '/TestAsset/mezzio-application-import.config.php');
         $expectedContentsImportLongArrayAltIndent   = file_get_contents(__DIR__ . '/TestAsset/mezzio-application-import-alt-indent.config.php');
 
-        $expectedContentsFqcnShortArray              = $this->convertToShortArraySyntax($expectedContentsFqcnLongArray);
-        $expectedContentsGloballyQualifiedShortArray = $this->convertToShortArraySyntax($expectedContentsGloballyQualifiedLongArray);
-        $expectedContentsImportShortArray            = $this->convertToShortArraySyntax($expectedContentsImportLongArray);
-        $expectedContentsImportShortArrayAltIndent   = $this->convertToShortArraySyntax($expectedContentsImportLongArrayAltIndent);
+        $expectedContentsFqcnShortArray              = self::convertToShortArraySyntax($expectedContentsFqcnLongArray);
+        $expectedContentsGloballyQualifiedShortArray = self::convertToShortArraySyntax($expectedContentsGloballyQualifiedLongArray);
+        $expectedContentsImportShortArray            = self::convertToShortArraySyntax($expectedContentsImportLongArray);
+        $expectedContentsImportShortArrayAltIndent   = self::convertToShortArraySyntax($expectedContentsImportLongArrayAltIndent);
 
         return [
             'fqcn-long-array'               => [$baseContentsFqcnLongArray,               $expectedContentsFqcnLongArray],

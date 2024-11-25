@@ -95,7 +95,7 @@ class CreateTemplateTest extends TestCase
         $this->services['config'] = $config;
     }
 
-    public function configType(): Generator
+    public static function configType(): Generator
     {
         yield 'array'       => [false];
         yield ArrayObject::class => [true];
@@ -303,10 +303,10 @@ class CreateTemplateTest extends TestCase
         $generator->forHandler(TestHandler::class);
     }
 
-    public function rendererTypesWithInvalidPathCounts(): iterable
+    public static function rendererTypesWithInvalidPathCounts(): iterable
     {
         foreach (['empty-paths'] as $config) {
-            foreach ($this->rendererTypes() as $key => $arguments) {
+            foreach (self::rendererTypes() as $key => $arguments) {
                 $arguments[] = sprintf('config.php.%s', $config);
                 $name        = sprintf('%s-%s', $key, $config);
                 yield $name => $arguments;

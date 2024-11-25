@@ -52,7 +52,7 @@ abstract class AbstractInjectorTestCase extends TestCase
      *
      * @psalm-return array<non-empty-string, array{0: InjectorInterface::TYPE_*, 1: bool}>
      */
-    abstract public function allowedTypes(): array;
+    abstract public static function allowedTypes(): array;
 
     /**
      * @psalm-param InjectorInterface::TYPE_* $type
@@ -71,7 +71,7 @@ abstract class AbstractInjectorTestCase extends TestCase
     /**
      * @psalm-return array<non-empty-string, array{0: InjectorInterface::TYPE_*, 1: string, 2: string}>
      */
-    abstract public function injectComponentProvider(): array;
+    abstract public static function injectComponentProvider(): array;
 
     /**
      * @psalm-param InjectorInterface::TYPE_* $type
@@ -96,7 +96,7 @@ abstract class AbstractInjectorTestCase extends TestCase
     /**
      * @psalm-return array<non-empty-string, array{0: string, 1: int}>
      */
-    abstract public function packageAlreadyRegisteredProvider(): array;
+    abstract public static function packageAlreadyRegisteredProvider(): array;
 
     /**
      * @dataProvider packageAlreadyRegisteredProvider
@@ -117,7 +117,7 @@ abstract class AbstractInjectorTestCase extends TestCase
     /**
      * @psalm-return array<non-empty-string, array{0: string}>
      */
-    abstract public function emptyConfiguration(): array;
+    abstract public static function emptyConfiguration(): array;
 
     /**
      * @dataProvider emptyConfiguration
@@ -135,7 +135,7 @@ abstract class AbstractInjectorTestCase extends TestCase
     /**
      * @psalm-return array<non-empty-string, array{0: string, 1: string}>
      */
-    abstract public function packagePopulatedInConfiguration(): array;
+    abstract public static function packagePopulatedInConfiguration(): array;
 
     /**
      * @dataProvider packagePopulatedInConfiguration

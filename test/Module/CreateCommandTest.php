@@ -76,7 +76,7 @@ class CreateCommandTest extends TestCase
     }
 
     /** @psalm-return Generator<string, list<bool>> */
-    public function configType(): Generator
+    public static function configType(): Generator
     {
         yield 'array'       => [false];
         yield ArrayObject::class => [true];

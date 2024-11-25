@@ -64,7 +64,7 @@ class RouteFilterOptionsTest extends TestCase
     /**
      * @return array<array-key, array<array-key,array<string,string|array<array-key,string>>>>
      */
-    public function initDataProvider(): array
+    public static function initDataProvider(): array
     {
         return [
             [

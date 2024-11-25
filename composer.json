@@ -35,7 +35,7 @@
         }
     },
     "require": {
-        "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
+        "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.1",
         "ext-json": "*",
         "laminas/laminas-cli": "^1.7.0",
         "laminas/laminas-code": "^4.7.1",
@@ -52,7 +52,7 @@
         "mockery/mockery": "^1.6.7",
         "php-mock/php-mock-phpunit": "^2.9.0",
         "phpdocumentor/reflection-docblock": "^5.3.0",
-        "phpunit/phpunit": "^9.6.15",
+        "phpunit/phpunit": "^10.5.35",
         "psalm/plugin-mockery": "^0.11.0",
         "psalm/plugin-phpunit": "^0.18.4",
         "vimeo/psalm": "^5.17.0"

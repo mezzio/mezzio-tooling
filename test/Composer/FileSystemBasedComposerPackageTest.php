@@ -125,7 +125,7 @@ class FileSystemBasedComposerPackageTest extends TestCase
         self::assertArrayNotHasKey($namespace, $package[$key]['psr-4'], $message);
     }
 
-    public function addRuleProvider(): array
+    public static function addRuleProvider(): array
     {
         return [
             'production rule for recommended structure' => [false, 'TestModule', 'src/TestModule/src'],
@@ -145,7 +145,7 @@ class FileSystemBasedComposerPackageTest extends TestCase
         $this->assertAutoloadRuleExists($module, $moduleSourcePath, $isDev, $projectRoot . '/composer.json');
     }
 
-    public function removeRuleProvider(): array
+    public static function removeRuleProvider(): array
     {
         return [
             'production rule' => [false, 'TestModule', 'rule-exists', 'autoload'],
