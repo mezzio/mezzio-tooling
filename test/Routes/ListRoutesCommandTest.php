@@ -156,6 +156,7 @@ class ListRoutesCommandTest extends TestCase
             ->method('getOption')
             ->willReturnOnConsecutiveCalls(
                 'table',
+                'name',
                 false,
                 false,
                 false,
