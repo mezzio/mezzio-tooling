@@ -57,6 +57,9 @@
         "psalm/plugin-phpunit": "^0.18.4",
         "vimeo/psalm": "^5.17.0"
     },
+    "conflict": {
+        "amphp/amp": "<2.6.4"
+    },
     "autoload": {
         "psr-4": {
             "Mezzio\\Tooling\\": "src/"
