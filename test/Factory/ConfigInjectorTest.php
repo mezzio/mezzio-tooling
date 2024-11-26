@@ -64,15 +64,15 @@ class ConfigInjectorTest extends TestCase
     {
         $configFile = $this->projectRoot . '/' . ConfigInjector::CONFIG_FILE;
         $contents   = <<<'EOT'
-<?php
-return [
-    'dependencies' => [
-        'factories' => [
-            App\Handler\HelloWorldHandler::class => App\Handler\HelloWorldHandlerFactory::class,
-        ],
-    ],
-];
-EOT;
+            <?php
+            return [
+                'dependencies' => [
+                    'factories' => [
+                        App\Handler\HelloWorldHandler::class => App\Handler\HelloWorldHandlerFactory::class,
+                    ],
+                ],
+            ];
+            EOT;
         file_put_contents($configFile, $contents);
 
         $this->injector->injectFactoryForClass(self::class . 'Factory', self::class);
@@ -81,6 +81,7 @@ EOT;
         self::assertTrue(isset($config['dependencies']['factories']));
 
         $factories = $config['dependencies']['factories'];
+        self::assertIsArray($factories);
         self::assertCount(2, $factories);
 
         self::assertEquals('App\Handler\HelloWorldHandlerFactory', $factories['App\Handler\HelloWorldHandler']);

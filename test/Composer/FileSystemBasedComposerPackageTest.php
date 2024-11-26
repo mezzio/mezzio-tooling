@@ -82,7 +82,7 @@ class FileSystemBasedComposerPackageTest extends TestCase
         $key       = $isDev ? 'autoload-dev' : 'autoload';
 
         $value   = $package[$key]['psr-4'][$namespace] ?? null;
-        $message = $message ?: sprintf(
+        $message = $message ?? sprintf(
             'Expected to find path "%s" registered for namespace "%s"; received "%s"',
             $path,
             $namespace,
@@ -107,7 +107,7 @@ class FileSystemBasedComposerPackageTest extends TestCase
         $package   = $this->getComposerJson($composerJsonFile);
         $key       = $isDev ? 'autoload-dev' : 'autoload';
 
-        $message = $message ?: sprintf(
+        $message = $message ?? sprintf(
             'Did NOT expect to find "%s" rule registered for namespace "%s"; received "%s"',
             $key,
             $namespace,

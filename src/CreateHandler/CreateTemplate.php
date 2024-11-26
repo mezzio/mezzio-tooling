@@ -66,12 +66,13 @@ final class CreateTemplate
         string $templateName,
         ?string $templateSuffix = null
     ): Template {
+        /** @var array $config */
         $config       = $this->container->get('config');
         $rendererType = $this->resolveRendererType($templateSuffix);
         $handlerPath  = $this->getHandlerPath($handler);
 
         $templatePath = $this->getTemplatePathForNamespaceFromConfig($templateNamespace, $config)
-            ?: $this->getTemplatePathForNamespaceBasedOnHandlerPath(
+            ?? $this->getTemplatePathForNamespaceBasedOnHandlerPath(
                 $this->getNamespace($handler),
                 $templateNamespace,
                 $handlerPath
@@ -85,7 +86,7 @@ final class CreateTemplate
             '%s/%s.%s',
             $templatePath,
             $templateName,
-            $templateSuffix ?: $this->getTemplateSuffixFromConfig($rendererType, $config)
+            $templateSuffix ?? $this->getTemplateSuffixFromConfig($rendererType, $config)
         );
 
         file_put_contents($templateFile, sprintf('Template for %s', $handler));
