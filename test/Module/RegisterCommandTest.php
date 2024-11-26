@@ -93,7 +93,7 @@ class RegisterCommandTest extends TestCase
      *     non-empty-string, array{bool, bool, bool, non-empty-string|null, non-empty-string|null}
      * >
      */
-    public function injectedEnabled(): array
+    public static function injectedEnabled(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
         return [
@@ -129,7 +129,7 @@ class RegisterCommandTest extends TestCase
         $composer              = 'composer.phar';
         $configProvider        = $module . '\ConfigProvider';
         $normalizedModulesPath = $modulesPath === null ? 'src' : preg_replace('#^./#', '', $modulesPath);
-        $expectedAutoloadPath  = $exactPath ?: sprintf(
+        $expectedAutoloadPath  = $exactPath ?? sprintf(
             '%s/%s%s',
             $normalizedModulesPath,
             $module,

@@ -156,6 +156,7 @@ class ListRoutesCommandTest extends TestCase
             ->method('getOption')
             ->willReturnOnConsecutiveCalls(
                 'table',
+                'name',
                 false,
                 false,
                 false,
@@ -331,7 +332,7 @@ class ListRoutesCommandTest extends TestCase
     /**
      * @return array<array-key,array<array-key,string>>
      */
-    public function invalidFormatDataProvider(): array
+    public static function invalidFormatDataProvider(): array
     {
         return [
             [
@@ -406,7 +407,7 @@ class ListRoutesCommandTest extends TestCase
     /**
      * @return array<array-key, array<array-key,string>>
      */
-    public function sortRoutingTableDataProvider(): array
+    public static function sortRoutingTableDataProvider(): array
     {
         // phpcs:disable Generic.Files.LineLength
         return [

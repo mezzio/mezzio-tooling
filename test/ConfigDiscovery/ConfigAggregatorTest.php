@@ -42,7 +42,7 @@ return [];');
      *     0: string
      * }>
      */
-    public function validMezzioConfigContents(): array
+    public static function validMezzioConfigContents(): array
     {
         // @codingStandardsIgnoreStart
         return [

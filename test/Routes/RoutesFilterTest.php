@@ -103,82 +103,82 @@ class RoutesFilterTest extends TestCase
     /**
      * @psalm-return array<array-key, array{0: int, 1: array<string, mixed>}>
      */
-    public function validFilterDataProvider(): array
+    public static function validFilterDataProvider(): array
     {
         return [
-            [
+            'middleware-simple-compound-name' => [
                 5,
                 [
                     'middleware' => 'ExpressMiddleware',
                 ],
             ],
-            [
+            'middleware-simple-class-name'    => [
                 6,
                 [
                     'middleware' => 'Tooling',
                 ],
             ],
-            [
+            'middleware-regex'                => [
                 6,
                 [
                     'middleware' => 'Tooling.*Middleware',
                 ],
             ],
-            [
+            'middleware-fqcn'                 => [
                 5,
                 [
                     'middleware' => ExpressMiddleware::class,
                 ],
             ],
-            [
+            'name-bare'                       => [
                 1,
                 [
                     'name' => 'home',
                 ],
             ],
-            [
+            'name-regex'                      => [
                 5,
                 [
                     'name' => 'user.*',
                 ],
             ],
-            [
+            'path-fq'                         => [
                 1,
                 [
                     'path' => '/user',
                 ],
             ],
-            [
+            'path-fq-regex'                   => [
                 4,
                 [
                     'path' => '/log.*',
                 ],
             ],
-            [
+            'path-root'                       => [
                 6,
                 [
                     'path' => '/',
                 ],
             ],
-            [
+            'method-get'                      => [
                 6,
                 [
                     'method' => 'GET',
                 ],
             ],
-            [
+            'method-any'                      => [
                 6,
                 [
                     'method' => Route::HTTP_METHOD_ANY,
                 ],
             ],
-            [
+            'method-get-lc'                   => [
                 6,
                 [
                     'method' => 'get',
                 ],
             ],
-            [
+            'method-post-lc'                  => [
                 2,
                 [
                     'method' => 'post',

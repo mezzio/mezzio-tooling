@@ -84,7 +84,7 @@ class DeregisterCommandTest extends TestCase
     }
 
     /** @psalm-return array<string, array{0: bool, 1: bool}> */
-    public function removedDisabled(): array
+    public static function removedDisabled(): array
     {
         return [
             'removed and disabled'         => [true,  true],

@@ -172,11 +172,16 @@ final class RoutesFilter extends FilterIterator
             return $middlewareClass === $matchesMiddleware
                 || (bool) stripos($middlewareClass, $matchesMiddleware)
                 || (bool) preg_match(
-                    sprintf('/%s/', $matchesMiddleware),
+                    sprintf('/%s/', $this->escapeNamespaceSeparatorForRegex($matchesMiddleware)),
                     $middlewareClass
                 );
         } catch (Exception) {
             return false;
         }
+    }
+
+    private function escapeNamespaceSeparatorForRegex(string $toMatch): string
+    {
+        return str_replace('\\', '\\\\', $toMatch);
     }
 }
