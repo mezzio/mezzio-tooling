@@ -8,10 +8,7 @@ use ArrayIterator;
 use Mezzio\Router\Route;
 use Mezzio\Router\RouteCollector;
 use Mezzio\Tooling\Routes\Filter\RouteFilterOptions;
-use Mezzio\Tooling\Routes\Filter\RouteFilterOptionsInterface;
 use Mezzio\Tooling\Routes\Filter\RoutesFilter;
-use Mezzio\Tooling\Routes\Sorter\RouteSorterByName;
-use Mezzio\Tooling\Routes\Sorter\RouteSorterByPath;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,15 +17,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use function implode;
 use function in_array;
+use function is_string;
+use function iterator_to_array;
 use function json_encode;
 use function strtolower;
 use function usort;
 
-class ListRoutesCommand extends Command
-{
-    /** @var array<int, Route>  */
-    private array $routes = [];
+use const JSON_THROW_ON_ERROR;
 
+final class ListRoutesCommand extends Command
+{
     private const HELP = <<<'EOT'
         Prints the application's routing table.
         
@@ -68,7 +66,7 @@ class ListRoutesCommand extends Command
         EOT;
 
     private const HELP_OPT_SUPPORTS_METHOD = <<<'EOT'
-        Filters out routes by HTTP method.  This option accepts a comma-separated 
+        Filters out routes by HTTP method. This option accepts a comma-separated 
         list of one or more HTTP methods.
         EOT;
 
@@ -78,9 +76,8 @@ class ListRoutesCommand extends Command
     public static $defaultName = 'mezzio:routes:list';
 
     public function __construct(
-        private RouteCollector $routeCollector,
-        private ConfigLoaderInterface $configLoader,
-        private RouteFilterOptionsInterface $filterOptions
+        private readonly RouteCollector $routeCollector,
+        private readonly ConfigLoaderInterface $configLoader
     ) {
         parent::__construct();
     }
@@ -137,92 +134,106 @@ class ListRoutesCommand extends Command
         );
     }
 
+    /** @psalm-suppress MixedAssignment All inputs are mixed */
+    private function parseOptions(InputInterface $input): RouteFilterOptions
+    {
+        $middleware = $input->getOption('has-middleware');
+        $name       = $input->getOption('has-name');
+        $path       = $input->getOption('has-path');
+        $method     = $input->getOption('supports-method');
+
+        return new RouteFilterOptions(
+            is_string($middleware) && $middleware !== '' ? $middleware : null,
+            is_string($name) && $name !== '' ? $name : null,
+            is_string($path) && $path !== '' ? $path : null,
+            is_string($method) && $method !== '' ? [$method] : [],
+        );
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $result = 0;
-
         $this->configLoader->load();
 
-        $this->routes = $this->routeCollector->getRoutes();
-        if ([] === $this->routes) {
+        $routes = $this->routeCollector->getRoutes();
+        if ($routes === []) {
             $output->writeln(self::MSG_EMPTY_ROUTING_TABLE);
-            return $result;
+
+            return self::FAILURE;
         }
+
+        // Filter Routes
+        /** @psalm-var list<Route> $routes Forcing this type as null will not be present */
+        $routes = iterator_to_array(new RoutesFilter(
+            new ArrayIterator($routes),
+            $this->parseOptions($input),
+        ), false);
+
+        // Sort Routes
+        $routes = $this->sortRoutes($input, $routes);
 
         $format = strtolower((string) $input->getOption('format'));
 
-        $sorter = $this->getSortOrder($input) === 'name'
-            ? new RouteSorterByName()
-            : new RouteSorterByPath();
-        usort($this->routes, $sorter);
-
-        $this->filterOptions = new RouteFilterOptions(
-            strtolower((string) $input->getOption('has-middleware')),
-            strtolower((string) $input->getOption('has-name')),
-            strtolower((string) $input->getOption('has-path')),
-            [strtolower((string) $input->getOption('supports-method'))],
-        );
-
         switch ($format) {
             case 'json':
-                $output->writeln(json_encode($this->getRows(true)));
-                break;
+                $output->writeln(
+                    json_encode($this->getRows($routes), JSON_THROW_ON_ERROR),
+                    OutputInterface::OUTPUT_RAW,
+                );
+
+                return self::SUCCESS;
             case 'table':
             case '':
                 $table = new Table($output);
                 $table->setHeaderTitle('Routes')
                     ->setHeaders(['Name', 'Path', 'Methods', 'Middleware'])
-                    ->setRows($this->getRows(false));
+                    ->setRows($this->getRows($routes));
                 $table->render();
-                break;
-            case 'format':
+
+                return self::SUCCESS;
+
             default:
-                $result = -1;
                 $output->writeln(
                     "Invalid output format supplied. Valid options are 'table' and 'json'"
                 );
-        }
 
-        return $result;
+                return self::FAILURE;
+        }
     }
 
-    private function getRows(bool $requireNames = false): array
+    /** @param list<Route> $routes */
+    private function getRows(array $routes): array
     {
         $rows = [];
-
-        $routesIterator = new RoutesFilter(
-            new ArrayIterator($this->routes),
-            $this->filterOptions
-        );
-
-        /** @var Route $route */
-        foreach ($routesIterator as $route) {
+        foreach ($routes as $route) {
             $routeMethods = implode(',', $route->getAllowedMethods() ?? []);
-            if ($requireNames) {
-                $rows[] = [
-                    'name'       => $route->getName(),
-                    'path'       => $route->getPath(),
-                    'methods'    => $routeMethods,
-                    'middleware' => $route->getMiddleware()::class,
-                ];
-            } else {
-                $rows[] = [
-                    $route->getName(),
-                    $route->getPath(),
-                    $routeMethods,
-                    $route->getMiddleware()::class,
-                ];
-            }
+            $rows[]       = [
+                'name'       => $route->getName(),
+                'path'       => $route->getPath(),
+                'methods'    => $routeMethods,
+                'middleware' => $route->getMiddleware()::class,
+            ];
         }
 
         return $rows;
     }
 
-    private function getSortOrder(InputInterface $input): string
+    /**
+     * @param list<Route> $routes
+     * @return list<Route>
+     */
+    private function sortRoutes(InputInterface $input, array $routes): array
     {
         $sortOrder = strtolower((string) $input->getOption('sort'));
-        return ! in_array($sortOrder, ['name', 'path'])
+        $sortOrder = ! in_array($sortOrder, ['name', 'path'], true)
             ? 'name'
             : $sortOrder;
+
+        if ($sortOrder === 'name') {
+            usort($routes, static fn (Route $a, Route $b) => $a->getName() <=> $b->getName());
+        } else {
+            usort($routes, static fn (Route $a, Route $b) => $a->getPath() <=> $b->getPath());
+        }
+
+        return $routes;
     }
 }

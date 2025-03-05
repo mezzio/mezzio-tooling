@@ -6,14 +6,11 @@ namespace Mezzio\Tooling\Routes\Filter;
 
 use ArrayIterator;
 use FilterIterator;
-use Iterator;
 use Mezzio\Router\Route;
-use Throwable;
+use Traversable;
 
 use function array_intersect;
-use function get_class;
-use function in_array;
-use function is_string;
+use function assert;
 use function preg_match;
 use function sprintf;
 use function str_replace;
@@ -22,35 +19,22 @@ use function stripos;
 /**
  * RoutesFilter filters a traversable list of Route objects based on any of the four Route criteria,
  * those being the route's name, path, middleware, or supported method(s).
-
- * @template TKey
- * @template-covariant TValue
- * @template TIterator as Iterator<TKey, TValue>
- * @template-extends FilterIterator<TKey, TValue, TIterator>
+ *
+ * @internal
+ *
+ * @template-covariant TKey of int
+ * @extends FilterIterator<int, Route, Traversable<TKey, Route>>
  */
 final class RoutesFilter extends FilterIterator
 {
     /**
-     * @param ArrayIterator<int, Route> $routes
-     * @param RouteFilterOptionsInterface $filterOptions An array storing the list of route options to
-     *                                    filter a route on along with their respective values.
-     *                                    The four allowed route options are: name, path, method,
-     *                                    and middleware.  Name and path can be a fixed string,
-     *                                    such as user.profile, or a regular expression, such as
-     *                                    user.*. Middleware can only contain a class name.
-     *                                    Method can be either a string which contains one of
-     *                                    the allowed HTTP methods, or an array of HTTP methods.
+     * @param ArrayIterator<TKey, Route> $routes
      */
-    public function __construct(ArrayIterator $routes, private RouteFilterOptionsInterface $filterOptions)
-    {
+    public function __construct(
+        ArrayIterator $routes,
+        private readonly RouteFilterOptions $options,
+    ) {
         parent::__construct($routes);
-
-        $this->filterOptions = $filterOptions;
-    }
-
-    public function getFilterOptions(): RouteFilterOptionsInterface
-    {
-        return $this->filterOptions;
     }
 
     public function accept(): bool
@@ -58,21 +42,21 @@ final class RoutesFilter extends FilterIterator
         /** @var Route $route */
         $route = $this->getInnerIterator()->current();
 
-        if ($this->filterOptions->has("name")) {
-            return $route->getName() === $this->filterOptions->getName()
-                || $this->matchesByRegex($route, 'name');
+        if ($this->options->name !== null) {
+            return $route->getName() === $this->options->name
+                || $this->matches($route->getName(), $this->options->name);
         }
 
-        if ($this->filterOptions->has("path")) {
-            return $route->getPath() === $this->filterOptions->getPath()
-                || $this->matchesByRegex($route, 'path');
+        if ($this->options->path !== null) {
+            return $route->getPath() === $this->options->path
+                || $this->matches($route->getPath(), $this->options->path);
         }
 
-        if ($this->filterOptions->has("middleware")) {
+        if ($this->options->middleware !== null) {
             return $this->matchesByMiddleware($route);
         }
 
-        if ($this->filterOptions->has("methods")) {
+        if ($this->options->methods !== []) {
             return $this->matchesByMethod($route);
         }
 
@@ -80,27 +64,14 @@ final class RoutesFilter extends FilterIterator
     }
 
     /**
-     * Match the route against a regular expression based on the field in $matchType.
-     *
-     * @param 'name'|'path' $routeAttribute
+     * @param non-empty-string $subject
+     * @param non-empty-string $search
      */
-    private function matchesByRegex(Route $route, string $routeAttribute): bool
+    private function matches(string $subject, string $search): bool
     {
-        if (! in_array($routeAttribute, ["name", "path"])) {
-            return false;
-        }
-
-        if ($routeAttribute === 'path') {
-            $path = $this->filterOptions->getPath();
-            return (bool) preg_match(
-                sprintf("/^%s/", str_replace('/', '\/', $path)),
-                $route->getPath()
-            );
-        }
-
         return (bool) preg_match(
-            sprintf("/%s/", $this->filterOptions->getName()),
-            $route->getName()
+            sprintf("/^%s/", str_replace('/', '\/', $search)),
+            $subject,
         );
     }
 
@@ -113,9 +84,8 @@ final class RoutesFilter extends FilterIterator
             return true;
         }
 
-        $methods = $this->filterOptions->getMethods() ?? [];
         return array_intersect(
-            is_string($methods) ? [$methods] : $methods,
+            $this->options->methods,
             $route->getAllowedMethods() ?? []
         ) !== [];
     }
@@ -131,21 +101,18 @@ final class RoutesFilter extends FilterIterator
      */
     private function matchesByMiddleware(Route $route): bool
     {
-        $middlewareClass   = $route->getMiddleware()::class;
-        $matchesMiddleware = $this->filterOptions->getMiddleware() ?? "";
+        assert($this->options->middleware !== null);
+        $middlewareClass = $route->getMiddleware()::class;
 
-        try {
-            return $middlewareClass === $matchesMiddleware
-                || (bool) stripos($middlewareClass, $matchesMiddleware)
-                || (bool) preg_match(
-                    sprintf('/%s/', $this->escapeNamespaceSeparatorForRegex($matchesMiddleware)),
-                    $middlewareClass
-                );
-        } catch (Throwable) {
-            return false;
-        }
+        return $middlewareClass === $this->options->middleware
+            || stripos($middlewareClass, $this->options->middleware) !== false
+            || (bool) preg_match(
+                sprintf('/%s/', $this->escapeNamespaceSeparatorForRegex($this->options->middleware)),
+                $middlewareClass
+            );
     }
 
+    /** @param non-empty-string $toMatch */
     private function escapeNamespaceSeparatorForRegex(string $toMatch): string
     {
         return str_replace('\\', '\\\\', $toMatch);

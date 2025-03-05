@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Mezzio\Tooling\Routes;
 
 use Mezzio\Router\RouteCollector;
-use Mezzio\Tooling\Routes\Filter\EmptyRouteFilterOptions;
 use Psr\Container\ContainerInterface;
 
 final class ListRoutesCommandFactory
@@ -18,6 +17,6 @@ final class ListRoutesCommandFactory
         /** @var ConfigLoaderInterface $configLoader */
         $configLoader = $container->get(ConfigLoaderInterface::class);
 
-        return new ListRoutesCommand($routeCollector, $configLoader, new EmptyRouteFilterOptions());
+        return new ListRoutesCommand($routeCollector, $configLoader);
     }
 }

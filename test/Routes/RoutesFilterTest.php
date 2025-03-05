@@ -7,15 +7,19 @@ namespace MezzioTest\Tooling\Routes;
 use ArrayIterator;
 use Mezzio\Router\Route;
 use Mezzio\Tooling\Routes\Filter\RouteFilterOptions;
-use Mezzio\Tooling\Routes\Filter\RouteFilterOptionsInterface;
 use Mezzio\Tooling\Routes\Filter\RoutesFilter;
 use MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware;
 use MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+use function count;
+use function restore_error_handler;
+use function set_error_handler;
 use function sprintf;
 use function var_export;
 
+/** @psalm-suppress InternalClass, InternalMethod */
 class RoutesFilterTest extends TestCase
 {
     /** @var array<int,Route> */
@@ -28,61 +32,72 @@ class RoutesFilterTest extends TestCase
                 "/user/profile",
                 new SimpleMiddleware(),
                 ['GET'],
-                'user.profile'
+                'user.profile',
             ),
             new Route(
                 "/",
                 new ExpressMiddleware(),
                 ['GET'],
-                'home'
+                'home',
             ),
             new Route(
                 "/login",
                 new ExpressMiddleware(),
                 ['GET'],
-                'user.login'
+                'user.login',
             ),
             new Route(
                 "/logout",
                 new ExpressMiddleware(),
                 ['GET'],
-                'user.logout'
+                'user.logout',
             ),
             new Route(
                 "/logout",
                 new ExpressMiddleware(),
                 ['GET', 'POST'],
-                'user.logout'
+                'user.logout',
             ),
             new Route(
                 "/logout",
                 new ExpressMiddleware(),
                 Route::HTTP_METHOD_ANY,
-                'user.logout'
+                'user.logout',
             ),
         ];
     }
 
-    /**
-     * @dataProvider validFilterDataProvider
-     */
+    public function testAllRoutesWillBeReturnedWhenThereAreNoOptionsSet(): void
+    {
+        self::assertCount(
+            count($this->routes),
+            new RoutesFilter(new ArrayIterator($this->routes), new RouteFilterOptions(
+                null,
+                null,
+                null,
+                [],
+            )),
+        );
+    }
+
+    #[DataProvider('validFilterDataProvider')]
     public function testCanFilterRoutesWithStringSearchExpression(
         int $expectedNumberOfRoutes,
-        RouteFilterOptionsInterface $filterOptions
+        RouteFilterOptions $filterOptions,
     ): void {
         $this->setUp();
 
         $routeFilter = new RoutesFilter(new ArrayIterator($this->routes), $filterOptions);
 
-        $this->assertCount(
+        self::assertCount(
             $expectedNumberOfRoutes,
             $routeFilter,
-            sprintf('Filtered with %s', var_export($filterOptions, true))
+            sprintf('Filtered with %s', var_export($filterOptions, true)),
         );
     }
 
     /**
-     * @psalm-return array<array-key, array{0: int, 1: RouteFilterOptionsInterface}>
+     * @psalm-return array<array-key, array{0: int, 1: RouteFilterOptions}>
      */
     public static function validFilterDataProvider(): array
     {
@@ -93,7 +108,7 @@ class RoutesFilterTest extends TestCase
                     middleware: 'ExpressMiddleware',
                     name: null,
                     path: null,
-                    methods: null,
+                    methods: [],
                 ),
             ],
             'middleware-simple-class-name'    => [
@@ -102,7 +117,7 @@ class RoutesFilterTest extends TestCase
                     middleware: 'Tooling',
                     name: null,
                     path: null,
-                    methods: null,
+                    methods: [],
                 ),
             ],
             'middleware-regex'                => [
@@ -111,7 +126,7 @@ class RoutesFilterTest extends TestCase
                     middleware: 'Tooling.*Middleware',
                     name: null,
                     path: null,
-                    methods: null,
+                    methods: [],
                 ),
             ],
             'middleware-fqcn'                 => [
@@ -120,153 +135,193 @@ class RoutesFilterTest extends TestCase
                     middleware: ExpressMiddleware::class,
                     name: null,
                     path: null,
-                    methods: null,
+                    methods: [],
                 ),
             ],
             'name-bare'                       => [
                 1,
                 new RouteFilterOptions(
-                    name: 'home',
                     middleware: null,
+                    name: 'home',
                     path: null,
-                    methods: null,
+                    methods: [],
                 ),
             ],
             'name-regex'                      => [
                 5,
                 new RouteFilterOptions(
-                    name: 'user.*',
                     middleware: null,
+                    name: 'user.*',
                     path: null,
-                    methods: null,
+                    methods: [],
                 ),
             ],
             'path-fq'                         => [
                 1,
                 new RouteFilterOptions(
-                    path: '/user',
                     middleware: null,
                     name: null,
-                    methods: null,
+                    path: '/user',
+                    methods: [],
                 ),
             ],
             'path-fq-regex'                   => [
                 4,
                 new RouteFilterOptions(
-                    path: '/log.*',
                     middleware: null,
                     name: null,
-                    methods: null,
+                    path: '/log.*',
+                    methods: [],
                 ),
             ],
             'path-root'                       => [
                 6,
                 new RouteFilterOptions(
-                    path: '/',
                     middleware: null,
                     name: null,
-                    methods: null,
+                    path: '/',
+                    methods: [],
                 ),
             ],
             'method-get'                      => [
                 6,
                 new RouteFilterOptions(
-                    methods: ['get'],
                     middleware: null,
                     name: null,
                     path: null,
+                    methods: ['get'],
                 ),
             ],
             'method-any'                      => [
                 6,
                 new RouteFilterOptions(
-                    methods: Route::HTTP_METHOD_ANY,
                     middleware: null,
                     name: null,
                     path: null,
+                    methods: [],
                 ),
             ],
             'method-get-lc'                   => [
                 6,
                 new RouteFilterOptions(
-                    methods: 'get',
                     middleware: null,
                     name: null,
                     path: null,
+                    methods: ['get'],
                 ),
             ],
             'method-post-lc'                  => [
                 2,
                 new RouteFilterOptions(
-                    methods: 'post',
                     middleware: null,
                     name: null,
                     path: null,
+                    methods: ['post'],
                 ),
             ],
             [
                 6,
                 new RouteFilterOptions(
+                    middleware: null,
+                    name: null,
+                    path: null,
                     methods: ['POST', 'GET'],
-                    middleware: null,
-                    name: null,
-                    path: null,
                 ),
             ],
             [
                 2,
                 new RouteFilterOptions(
-                    methods: ['POST'],
                     middleware: null,
                     name: null,
                     path: null,
+                    methods: ['POST'],
                 ),
             ],
             [
                 6,
                 new RouteFilterOptions(
+                    middleware: null,
+                    name: null,
+                    path: null,
                     methods: ['GET'],
-                    middleware: null,
-                    name: null,
-                    path: null,
                 ),
             ],
             [
                 1,
                 new RouteFilterOptions(
+                    middleware: null,
+                    name: null,
+                    path: null,
                     methods: ['PATCH'],
-                    middleware: null,
-                    name: null,
-                    path: null,
                 ),
             ],
             [
                 2,
                 new RouteFilterOptions(
+                    middleware: null,
+                    name: null,
+                    path: null,
                     methods: ['PATCH', 'POST'],
-                    middleware: null,
-                    name: null,
-                    path: null,
                 ),
             ],
             [
                 2,
                 new RouteFilterOptions(
-                    methods: ['patch', 'post'],
                     middleware: null,
                     name: null,
                     path: null,
+                    methods: ['patch', 'post'],
                 ),
             ],
             [
                 1,
                 new RouteFilterOptions(
-                    methods: ['patch'],
                     middleware: null,
                     name: null,
                     path: null,
+                    methods: ['patch'],
                 ),
             ],
         ];
+    }
+
+    public function testInvalidMiddlewareRegexIsIgnored(): void
+    {
+        // preg_match will raise a warning here
+        // phpcs:disable
+        /** @psalm-suppress InvalidArgument */
+        set_error_handler(static function (): void {});
+        // phpcs:enable
+
+        $filter = new RoutesFilter(new ArrayIterator($this->routes), new RouteFilterOptions(
+            '^^!(foo',
+            null,
+            null,
+            [],
+        ));
+
+        self::assertCount(0, $filter);
+
+        restore_error_handler();
+    }
+
+    public function testInvalidNameRegexIsIgnored(): void
+    {
+        // preg_match will raise a warning here
+        // phpcs:disable
+        /** @psalm-suppress InvalidArgument */
+        set_error_handler(static function (): void {});
+        // phpcs:enable
+
+        $filter = new RoutesFilter(new ArrayIterator($this->routes), new RouteFilterOptions(
+            null,
+            '^^!(foo',
+            null,
+            [],
+        ));
+
+        self::assertCount(0, $filter);
+
+        restore_error_handler();
     }
 }
