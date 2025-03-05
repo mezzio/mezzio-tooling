@@ -25,6 +25,8 @@ use Mezzio\Tooling\Module\DeregisterCommand;
 use Mezzio\Tooling\Module\DeregisterCommandFactory;
 use Mezzio\Tooling\Module\RegisterCommand;
 use Mezzio\Tooling\Module\RegisterCommandFactory;
+use Mezzio\Tooling\Routes\ConfigLoaderInterface;
+use Mezzio\Tooling\Routes\DefaultRoutesConfigLoaderFactory;
 use Mezzio\Tooling\Routes\ListRoutesCommand;
 use Mezzio\Tooling\Routes\ListRoutesCommandFactory;
 
@@ -66,6 +68,7 @@ final class ConfigProvider
     {
         return [
             'factories' => [
+                ConfigLoaderInterface::class                    => DefaultRoutesConfigLoaderFactory::class,
                 Create::class                                   => CreateFactory::class,
                 CreateActionCommand::class                      => CreateActionCommandFactory::class,
                 CreateCommand::class                            => CreateCommandFactory::class,
