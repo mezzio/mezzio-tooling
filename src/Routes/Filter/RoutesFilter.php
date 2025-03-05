@@ -5,61 +5,36 @@ declare(strict_types=1);
 namespace Mezzio\Tooling\Routes\Filter;
 
 use ArrayIterator;
-use Exception;
 use FilterIterator;
-use Iterator;
 use Mezzio\Router\Route;
+use Traversable;
 
-use function array_filter;
 use function array_intersect;
-use function array_walk;
-use function in_array;
-use function is_array;
-use function is_string;
+use function assert;
 use function preg_match;
 use function sprintf;
 use function str_replace;
 use function stripos;
-use function strtoupper;
 
 /**
  * RoutesFilter filters a traversable list of Route objects based on any of the four Route criteria,
  * those being the route's name, path, middleware, or supported method(s).
-
- * @template TKey
- * @template-covariant TValue
- * @template TIterator as Iterator<TKey, TValue>
- * @template-extends FilterIterator<TKey, TValue, TIterator>
+ *
+ * @internal
+ *
+ * @template-covariant TKey of int
+ * @extends FilterIterator<int, Route, Traversable<TKey, Route>>
  */
 final class RoutesFilter extends FilterIterator
 {
     /**
-     * @param ArrayIterator<int, Route> $routes
+     * @param ArrayIterator<TKey, Route> $routes
      */
     public function __construct(
         ArrayIterator $routes,
-        /**
-         * An array storing the list of route options to filter a route on along with their respective values.
-         *
-         * The four allowed route options are: name, path, method, and middleware.
-         * Name and path can be a fixed string, such as user.profile, or a regular expression, such as user.*.
-         * Middleware can only contain a class name. Method can be either a string which contains one of the
-         * allowed HTTP methods, or an array of HTTP methods.
-         */
-        private array $filterOptions = []
+        private readonly RouteFilterOptions $options,
     ) {
         parent::__construct($routes);
-
-        // Filter out any options that are, effectively, "empty".
-        $this->filterOptions = array_filter(
-            $this->filterOptions,
-            fn($value) => ! empty($value)
-        );
-    }
-
-    public function getFilterOptions(): array
-    {
-        return $this->filterOptions;
     }
 
     public function accept(): bool
@@ -67,91 +42,52 @@ final class RoutesFilter extends FilterIterator
         /** @var Route $route */
         $route = $this->getInnerIterator()->current();
 
-        if (empty($this->filterOptions)) {
-            return true;
+        if ($this->options->name !== null) {
+            return $route->getName() === $this->options->name
+                || $this->matches($route->getName(), $this->options->name);
         }
 
-        if (! empty($this->filterOptions['name'])) {
-            return $route->getName() === $this->filterOptions['name']
-                || $this->matchesByRegex($route, 'name');
+        if ($this->options->path !== null) {
+            return $route->getPath() === $this->options->path
+                || $this->matches($route->getPath(), $this->options->path);
         }
 
-        if (! empty($this->filterOptions['path'])) {
-            return $route->getPath() === $this->filterOptions['path']
-                || $this->matchesByRegex($route, 'path');
-        }
-
-        if (! empty($this->filterOptions['method'])) {
-            return $this->matchesByMethod($route);
-        }
-
-        if (! empty($this->filterOptions['middleware'])) {
+        if ($this->options->middleware !== null) {
             return $this->matchesByMiddleware($route);
         }
 
-        return false;
+        if ($this->options->methods !== []) {
+            return $this->matchesByMethod($route);
+        }
+
+        return true;
     }
 
     /**
-     * Match the route against a regular expression based on the field in $matchType.
-     *
-     * $matchType can be either "path" or "name".
+     * @param non-empty-string $subject
+     * @param non-empty-string $search
      */
-    public function matchesByRegex(Route $route, string $routeAttribute): bool
+    private function matches(string $subject, string $search): bool
     {
-        if ($routeAttribute === 'path') {
-            $path = (string) $this->filterOptions['path'];
-            return (bool) preg_match(
-                sprintf("/^%s/", str_replace('/', '\/', $path)),
-                $route->getPath()
-            );
-        }
-
-        if ($routeAttribute === 'name') {
-            return (bool) preg_match(
-                sprintf(
-                    "/%s/",
-                    (string) $this->filterOptions['name']
-                ),
-                $route->getName()
-            );
-        }
-
-        return false;
+        return (bool) preg_match(
+            sprintf("/^%s/", str_replace('/', '\/', $search)),
+            $subject,
+        );
     }
 
     /**
      * Match if the current route supports the method(s) supplied.
      */
-    public function matchesByMethod(Route $route): bool
+    private function matchesByMethod(Route $route): bool
     {
         if ($route->allowsAnyMethod()) {
             return true;
         }
 
-        if ($this->filterOptions['method'] === Route::HTTP_METHOD_ANY) {
-            return true;
-        }
-
-        if (is_string($this->filterOptions['method'])) {
-            return in_array(
-                strtoupper($this->filterOptions['method']),
-                $route->getAllowedMethods() ?? []
-            );
-        }
-
-        if (is_array($this->filterOptions['method'])) {
-            array_walk(
-                $this->filterOptions['method'],
-                fn(string &$value) => $value = strtoupper($value)
-            );
-            return ! empty(array_intersect(
-                $this->filterOptions['method'],
-                $route->getAllowedMethods() ?? []
-            ));
-        }
-
-        return false;
+        return array_intersect(
+            $this->options->methods,
+            $route->getAllowedMethods() ?? []
+        ) !== [];
     }
 
     /**
@@ -163,23 +99,20 @@ final class RoutesFilter extends FilterIterator
      * the class' name. The intent is to perform checks from the least to the
      * most computationally expensive, to avoid excessive overhead.
      */
-    public function matchesByMiddleware(Route $route): bool
+    private function matchesByMiddleware(Route $route): bool
     {
-        $middlewareClass   = $route->getMiddleware()::class;
-        $matchesMiddleware = (string) $this->filterOptions['middleware'];
+        assert($this->options->middleware !== null);
+        $middlewareClass = $route->getMiddleware()::class;
 
-        try {
-            return $middlewareClass === $matchesMiddleware
-                || (bool) stripos($middlewareClass, $matchesMiddleware)
-                || (bool) preg_match(
-                    sprintf('/%s/', $this->escapeNamespaceSeparatorForRegex($matchesMiddleware)),
-                    $middlewareClass
-                );
-        } catch (Exception) {
-            return false;
-        }
+        return $middlewareClass === $this->options->middleware
+            || stripos($middlewareClass, $this->options->middleware) !== false
+            || (bool) preg_match(
+                sprintf('/%s/', $this->escapeNamespaceSeparatorForRegex($this->options->middleware)),
+                $middlewareClass
+            );
     }
 
+    /** @param non-empty-string $toMatch */
     private function escapeNamespaceSeparatorForRegex(string $toMatch): string
     {
         return str_replace('\\', '\\\\', $toMatch);

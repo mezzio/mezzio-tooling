@@ -61,10 +61,23 @@ The command supports several options, listed in the table below.
 | `--format`          | `-f`          | Set the format of the command's output. The supported values are `table`, which is the default, and `json`. If you set the format to json, then we recommend using [jq](https://stedolan.github.io/jq/manual/) to query/filter the command's output.                                                                             |
 | `--sort`            | `-s`          | Sort the command's output. The supported values are `name` and `path`.                                                                                                                                                                                                                                                           |
 | `--supports-method` | `-m`          | Accepts a comma-separated list of one or more HTTP methods, and filters out routes which don't support those methods.                                                                                                                                                                                                            |
-| `--has-path`        | `-p`          | Accepts a comma-separated list of one or more paths, and filters out routes with paths that don't match. The paths can be a regular expression, supported by the `preg_*` functions. For example, "/,/api/ping,*/ping".                                                                                                            |
-| `--has-name`        | `-n`          | Accepts a comma-separated list of one or more names, and filters out routes with names that don't match. The names can be fixed strings, or regular expressions supported by the `preg_*` functions. For example, "user,user.register,*.register,user*".                                                                           |
+| `--has-path`        | `-p`          | Accepts a comma-separated list of one or more paths, and filters out routes with paths that don't match. The paths can be a regular expression, supported by the `preg_*` functions. For example, "/,/api/ping,*/ping".                                                                                                          |
+| `--has-name`        | `-n`          | Accepts a comma-separated list of one or more names, and filters out routes with names that don't match. The names can be fixed strings, or regular expressions supported by the `preg_*` functions. For example, "user,user.register,*.register,user*".                                                                         |
 | `--has-middleware`  | `-w`          | Accepts a comma-separated list of one or more middleware classes, and filters out routes that do not require those classes. The classes can be fully-qualified, unqualified, or a regular expression, supported by the preg_* functions. For example, "\Mezzio\Middleware\LazyLoadingMiddleware,LazyLoadingMiddleware,\Mezzio*". |
 <!-- markdownlint-enable MD037 -->
+
+##### Configuration
+
+By default, `Mezzio\Tooling\Routes\DefaultRoutesConfigLoaderFactory` registers a `ConfigLoaderInterface` service with the application's DI container, which retrieves the application's routes from two sources:
+
+- `config/routes.php`
+- Routes registered by any loaded `ConfigProvider` class
+
+However, this is a default/fallback implementation.
+If you don't store any routes in `config/routes.php` or need a custom implementation, then you need to do two things:
+
+1. Write a custom loader implementation that implements `Mezzio\Tooling\Routes\ConfigLoaderInterface`
+2. Register it with the application's DI container as an alias for `Mezzio\Tooling\Routes\ConfigLoaderInterface`
 
 ##### Usage Example
 
