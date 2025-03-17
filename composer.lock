@@ -3451,16 +3451,16 @@
         },
         {
             "name": "php-mock/php-mock-phpunit",
-            "version": "2.11.0",
+            "version": "2.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-mock/php-mock-phpunit.git",
-                "reference": "e01b2885af682bf34beb28edd1a98997d4e59294"
+                "reference": "17f68c14b4a4d7e3b0b01ae116c9f3c84031184d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-mock/php-mock-phpunit/zipball/e01b2885af682bf34beb28edd1a98997d4e59294",
-                "reference": "e01b2885af682bf34beb28edd1a98997d4e59294",
+                "url": "https://api.github.com/repos/php-mock/php-mock-phpunit/zipball/17f68c14b4a4d7e3b0b01ae116c9f3c84031184d",
+                "reference": "17f68c14b4a4d7e3b0b01ae116c9f3c84031184d",
                 "shasum": ""
             },
             "require": {
@@ -3507,7 +3507,7 @@
             ],
             "support": {
                 "issues": "https://github.com/php-mock/php-mock-phpunit/issues",
-                "source": "https://github.com/php-mock/php-mock-phpunit/tree/2.11.0"
+                "source": "https://github.com/php-mock/php-mock-phpunit/tree/2.12.0"
             },
             "funding": [
                 {
@@ -3515,7 +3515,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-08T19:55:19+00:00"
+            "time": "2025-03-12T15:12:11+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
