@@ -3451,22 +3451,22 @@
         },
         {
             "name": "php-mock/php-mock-phpunit",
-            "version": "2.12.0",
+            "version": "2.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-mock/php-mock-phpunit.git",
-                "reference": "17f68c14b4a4d7e3b0b01ae116c9f3c84031184d"
+                "reference": "498e5e25ee7824570332581304c2bb7e37d75e80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-mock/php-mock-phpunit/zipball/17f68c14b4a4d7e3b0b01ae116c9f3c84031184d",
-                "reference": "17f68c14b4a4d7e3b0b01ae116c9f3c84031184d",
+                "url": "https://api.github.com/repos/php-mock/php-mock-phpunit/zipball/498e5e25ee7824570332581304c2bb7e37d75e80",
+                "reference": "498e5e25ee7824570332581304c2bb7e37d75e80",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7",
                 "php-mock/php-mock-integration": "^3.0",
-                "phpunit/phpunit": "^6 || ^7 || ^8 || ^9 || ^10.0.17 || ^11 || ^12"
+                "phpunit/phpunit": "^6 || ^7 || ^8 || ^9 || ^10.0.17 || ^11 || ^12.0.9"
             },
             "require-dev": {
                 "mockery/mockery": "^1.3.6"
@@ -3507,7 +3507,7 @@
             ],
             "support": {
                 "issues": "https://github.com/php-mock/php-mock-phpunit/issues",
-                "source": "https://github.com/php-mock/php-mock-phpunit/tree/2.12.0"
+                "source": "https://github.com/php-mock/php-mock-phpunit/tree/2.13.0"
             },
             "funding": [
                 {
@@ -3515,7 +3515,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-12T15:12:11+00:00"
+            "time": "2025-03-19T20:58:51+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -5359,16 +5359,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.11.3",
+            "version": "3.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "ba05f990e79cbe69b9f35c8c1ac8dca7eecc3a10"
+                "reference": "2d1b63db139c3c6ea0c927698e5160f8b3b8d630"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/ba05f990e79cbe69b9f35c8c1ac8dca7eecc3a10",
-                "reference": "ba05f990e79cbe69b9f35c8c1ac8dca7eecc3a10",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/2d1b63db139c3c6ea0c927698e5160f8b3b8d630",
+                "reference": "2d1b63db139c3c6ea0c927698e5160f8b3b8d630",
                 "shasum": ""
             },
             "require": {
@@ -5435,11 +5435,11 @@
                     "type": "open_collective"
                 },
                 {
-                    "url": "https://thanks.dev/phpcsstandards",
+                    "url": "https://thanks.dev/u/gh/phpcsstandards",
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-01-23T17:04:15+00:00"
+            "time": "2025-03-18T05:04:51+00:00"
         },
         {
             "name": "symfony/filesystem",
