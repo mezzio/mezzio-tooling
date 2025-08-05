@@ -84,6 +84,17 @@ final class FileSystemBasedComposerPackage implements ComposerPackageInterface
 
     private function write(array $package): void
     {
+        foreach (['autoload', 'autoload-dev'] as $autoloadType) {
+            if (
+                isset($package[$autoloadType]) &&
+                isset($package[$autoloadType]['psr-4']) &&
+                is_array($package[$autoloadType]['psr-4']) &&
+                $package[$autoloadType]['psr-4'] === []
+            ) {
+                $package[$autoloadType]['psr-4'] = new \stdClass();
+            }
+        }
+
         $path = dirname($this->composerFile);
         if (! is_dir($path)) {
             throw ComposerFileException::dueToMissingDirectory($path);
@@ -93,7 +104,12 @@ final class FileSystemBasedComposerPackage implements ComposerPackageInterface
             throw ComposerFileException::dueToDirectoryPermissions($path);
         }
 
-        $contents = json_encode($package, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        $contents = json_encode(
+            $package,
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+        );
+
         file_put_contents($this->composerFile, $contents . "\n");
     }
+
 }
