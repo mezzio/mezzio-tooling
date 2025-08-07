@@ -194,10 +194,12 @@ class FileSystemBasedComposerPackageTest extends TestCase
         $package->addPsr4AutoloadRule('Dummy', 'src/Dummy');
         $package->removePsr4AutoloadRule('Dummy');
 
-        $json    = file_get_contents($composerFile);
+        $json = file_get_contents($composerFile);
+
+        /** @var stdClass $decoded */
         $decoded = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertInstanceOf(stdClass::class, $decoded->{'autoload'}->{'psr-4'});
-        $this->assertInstanceOf(stdClass::class, $decoded->{'autoload-dev'}->{'psr-4'});
+        $this->assertInstanceOf(stdClass::class, $decoded->{"autoload"}->{"psr-4"});
+        $this->assertInstanceOf(stdClass::class, $decoded->{"autoload-dev"}->{"psr-4"});
     }
 }
