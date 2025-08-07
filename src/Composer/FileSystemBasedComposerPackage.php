@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Composer;
 
+use stdClass;
+
 use function dirname;
 use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
+use function is_array;
 use function is_dir;
 use function is_readable;
 use function is_writable;
@@ -84,6 +87,17 @@ final class FileSystemBasedComposerPackage implements ComposerPackageInterface
 
     private function write(array $package): void
     {
+        foreach (['autoload', 'autoload-dev'] as $autoloadType) {
+            if (
+                isset($package[$autoloadType]) &&
+                isset($package[$autoloadType]['psr-4']) &&
+                is_array($package[$autoloadType]['psr-4']) &&
+                $package[$autoloadType]['psr-4'] === []
+            ) {
+                $package[$autoloadType]['psr-4'] = new stdClass();
+            }
+        }
+
         $path = dirname($this->composerFile);
         if (! is_dir($path)) {
             throw ComposerFileException::dueToMissingDirectory($path);
@@ -93,7 +107,11 @@ final class FileSystemBasedComposerPackage implements ComposerPackageInterface
             throw ComposerFileException::dueToDirectoryPermissions($path);
         }
 
-        $contents = json_encode($package, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        $contents = json_encode(
+            $package,
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+        );
+
         file_put_contents($this->composerFile, $contents . "\n");
     }
 }

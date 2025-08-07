@@ -6,6 +6,7 @@ namespace MezzioTest\Tooling\Composer;
 
 use Mezzio\Tooling\Composer\FileSystemBasedComposerPackage;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 use function copy;
 use function file_exists;
@@ -182,5 +183,29 @@ class FileSystemBasedComposerPackageTest extends TestCase
 
         $this->assertAutoloadRuleExists('TestModule', 'src/TestModule/', false, $projectRoot . '/composer.json');
         $this->assertAutoloadRuleDoesNotExist($module, false, $projectRoot . '/composer.json');
+    }
+
+    public function testEmptyPsr4ArrayIsConvertedToJsonObject(): void
+    {
+        $projectRoot  = $this->copyDistAsset('empty-psr4');
+        $composerFile = $projectRoot . '/composer.json';
+
+        $package = new FileSystemBasedComposerPackage($projectRoot);
+        $package->addPsr4AutoloadRule('Dummy', 'src/Dummy');
+        $package->removePsr4AutoloadRule('Dummy');
+
+        $json = file_get_contents($composerFile);
+
+        /** @var stdClass $decoded */
+        $decoded = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
+
+        /** @var stdClass $autoload */
+        $autoload = $decoded->autoload;
+
+        /** @var stdClass $autoloadDev */
+        $autoloadDev = $decoded->{'autoload-dev'};
+
+        $this->assertInstanceOf(stdClass::class, $autoload->{'psr-4'});
+        $this->assertInstanceOf(stdClass::class, $autoloadDev->{'psr-4'});
     }
 }
