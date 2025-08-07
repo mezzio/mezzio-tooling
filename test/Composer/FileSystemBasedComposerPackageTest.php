@@ -199,7 +199,13 @@ class FileSystemBasedComposerPackageTest extends TestCase
         /** @var stdClass $decoded */
         $decoded = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertInstanceOf(stdClass::class, $decoded->{"autoload"}->{"psr-4"});
-        $this->assertInstanceOf(stdClass::class, $decoded->{"autoload-dev"}->{"psr-4"});
+        /** @var stdClass $autoload */
+        $autoload = $decoded->autoload;
+
+        /** @var stdClass $autoloadDev */
+        $autoloadDev = $decoded->{'autoload-dev'};
+
+        $this->assertInstanceOf(stdClass::class, $autoload->{'psr-4'});
+        $this->assertInstanceOf(stdClass::class, $autoloadDev->{'psr-4'});
     }
 }
