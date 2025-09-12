@@ -139,7 +139,7 @@ class CreateMiddlewareTest extends TestCase
         );
         self::assertMatchesRegularExpression(
             '#^\s{4}public function process\(ServerRequestInterface \$request,'
-                . ' RequestHandlerInterface \$handler\) : ResponseInterface$#m',
+                . ' RequestHandlerInterface \$handler\): ResponseInterface$#m',
             $classFileContents
         );
     }
@@ -173,7 +173,7 @@ class CreateMiddlewareTest extends TestCase
         );
         self::assertMatchesRegularExpression(
             '#^\s{4}public function process\(ServerRequestInterface \$request,'
-                . ' RequestHandlerInterface \$handler\) : ResponseInterface$#m',
+                . ' RequestHandlerInterface \$handler\): ResponseInterface$#m',
             $classFileContents
         );
     }
@@ -207,7 +207,7 @@ class CreateMiddlewareTest extends TestCase
         );
         self::assertMatchesRegularExpression(
             '#^\s{4}public function process\(ServerRequestInterface \$request,'
-                . ' RequestHandlerInterface \$handler\) : ResponseInterface$#m',
+                . ' RequestHandlerInterface \$handler\): ResponseInterface$#m',
             $classFileContents
         );
     }
@@ -241,7 +241,7 @@ class CreateMiddlewareTest extends TestCase
         );
         self::assertMatchesRegularExpression(
             '#^\s{4}public function process\(ServerRequestInterface \$request,'
-                . ' RequestHandlerInterface \$handler\) : ResponseInterface$#m',
+                . ' RequestHandlerInterface \$handler\): ResponseInterface$#m',
             $classFileContents
         );
     }
