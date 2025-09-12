@@ -11,23 +11,23 @@ class ClassSkeletons
      */
     public const CLASS_SKELETON = <<<'EOS'
         <?php
-        
+
         declare(strict_types=1);
-        
+
         namespace %namespace%;
-        
+
         use Psr\Http\Message\ResponseInterface;
         use Psr\Http\Message\ServerRequestInterface;
         use Psr\Http\Server\RequestHandlerInterface;
-        
+
         class %class% implements RequestHandlerInterface
         {
-            public function handle(ServerRequestInterface $request) : ResponseInterface
+            public function handle(ServerRequestInterface $request): ResponseInterface
             {
                 // Create and return a response
             }
         }
-        
+
         EOS;
 
     /**
@@ -35,30 +35,30 @@ class ClassSkeletons
      */
     public const CLASS_SKELETON_WITH_TEMPLATE = <<<'EOS'
         <?php
-        
+
         declare(strict_types=1);
-        
+
         namespace %namespace%;
-        
+
         use Psr\Http\Message\ResponseInterface;
         use Psr\Http\Message\ServerRequestInterface;
         use Psr\Http\Server\RequestHandlerInterface;
         use Laminas\Diactoros\Response\HtmlResponse;
         use Mezzio\Template\TemplateRendererInterface;
-        
+
         class %class% implements RequestHandlerInterface
         {
             /**
              * @var TemplateRendererInterface
              */
             private $renderer;
-        
+
             public function __construct(TemplateRendererInterface $renderer)
             {
                 $this->renderer = $renderer;
             }
-        
-            public function handle(ServerRequestInterface $request) : ResponseInterface
+
+            public function handle(ServerRequestInterface $request): ResponseInterface
             {
                 // Do some work...
                 // Render and return a response:
@@ -68,6 +68,6 @@ class ClassSkeletons
                 ));
             }
         }
-        
+
         EOS;
 }

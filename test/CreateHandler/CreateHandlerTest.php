@@ -138,7 +138,7 @@ class CreateHandlerTest extends TestCase
             $classFileContents
         );
         self::assertMatchesRegularExpression(
-            '#^\s{4}public function handle\(ServerRequestInterface \$request\) : ResponseInterface$#m',
+            '#^\s{4}public function handle\(ServerRequestInterface \$request\): ResponseInterface$#m',
             $classFileContents
         );
     }
@@ -171,7 +171,7 @@ class CreateHandlerTest extends TestCase
             $classFileContents
         );
         self::assertMatchesRegularExpression(
-            '#^\s{4}public function handle\(ServerRequestInterface \$request\) : ResponseInterface$#m',
+            '#^\s{4}public function handle\(ServerRequestInterface \$request\): ResponseInterface$#m',
             $classFileContents
         );
     }
@@ -204,7 +204,7 @@ class CreateHandlerTest extends TestCase
             $classFileContents
         );
         self::assertMatchesRegularExpression(
-            '#^\s{4}public function handle\(ServerRequestInterface \$request\) : ResponseInterface$#m',
+            '#^\s{4}public function handle\(ServerRequestInterface \$request\): ResponseInterface$#m',
             $classFileContents
         );
     }
@@ -237,7 +237,7 @@ class CreateHandlerTest extends TestCase
             $classFileContents
         );
         self::assertMatchesRegularExpression(
-            '#^\s{4}public function handle\(ServerRequestInterface \$request\) : ResponseInterface$#m',
+            '#^\s{4}public function handle\(ServerRequestInterface \$request\): ResponseInterface$#m',
             $classFileContents
         );
     }
