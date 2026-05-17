@@ -16,6 +16,7 @@ use function count;
 use function implode;
 use function natsort;
 use function sprintf;
+use function str_contains;
 use function str_repeat;
 use function strrpos;
 use function substr;
@@ -65,6 +66,10 @@ class FactoryClassGenerator
 
     private function getClassName(string $className): string
     {
+        if (! str_contains($className, '\\')) {
+            return $className;
+        }
+
         return substr($className, strrpos($className, '\\') + 1);
     }
 
