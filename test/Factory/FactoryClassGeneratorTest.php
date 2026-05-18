@@ -7,6 +7,7 @@ namespace MezzioTest\Tooling\Factory;
 use Mezzio\Tooling\Factory\FactoryClassGenerator;
 use MezzioTest\Tooling\Factory\TestAsset\ComplexDependencyObject;
 use MezzioTest\Tooling\Factory\TestAsset\InvokableObject;
+use MezzioTest\Tooling\Factory\TestAsset\RootNamespaceDependencyObject;
 use MezzioTest\Tooling\Factory\TestAsset\SimpleDependencyObject;
 use PHPUnit\Framework\TestCase;
 use This\Duplicates\ClassDuplicatingNamespaceNameCase\ClassDuplicatingNamespaceName;
@@ -54,6 +55,14 @@ class FactoryClassGeneratorTest extends TestCase
         require __DIR__ . '/TestAsset/classes/ClassDuplicatingNamespaceName.php';
         $className = ClassDuplicatingNamespaceName::class;
         $factory   = file_get_contents(__DIR__ . '/TestAsset/factories/ClassDuplicatingNamespaceName.php');
+
+        self::assertEquals($factory, $this->generator->createFactory($className));
+    }
+
+    public function testCreateFactoryCreatesForRootNamespace(): void
+    {
+        $className = RootNamespaceDependencyObject::class;
+        $factory   = file_get_contents(__DIR__ . '/TestAsset/factories/RootNamespaceDependencyObject.php');
 
         self::assertEquals($factory, $this->generator->createFactory($className));
     }
