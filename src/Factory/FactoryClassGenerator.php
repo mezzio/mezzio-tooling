@@ -21,7 +21,12 @@ use function str_repeat;
 use function strrpos;
 use function substr;
 
-/** @internal */
+/**
+ * @internal
+ *
+ * @psalm-internal Mezzio\Tooling
+ * @psalm-internal MezzioTest\Tooling
+ */
 class FactoryClassGenerator
 {
     /**
