@@ -35,7 +35,7 @@
         }
     },
     "require": {
-        "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.1",
+        "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.1 || ~8.5.0",
         "ext-json": "*",
         "laminas/laminas-cli": "^1.7.0",
         "mezzio/mezzio": "^3.13.0",
@@ -51,7 +51,7 @@
         "phpdocumentor/reflection-docblock": "^5.3.0",
         "phpunit/phpunit": "^10.5.35",
         "psalm/plugin-mockery": "^0.11.0",
-        "psalm/plugin-phpunit": "^0.18.4",
+        "psalm/plugin-phpunit": "^0.20.0",
         "vimeo/psalm": "^5.17.0"
     },
     "conflict": {
