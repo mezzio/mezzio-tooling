@@ -6,7 +6,7 @@ namespace Mezzio\Tooling\Routes;
 
 use ArrayIterator;
 use Mezzio\Router\Route;
-use Mezzio\Router\RouteCollector;
+use Mezzio\Router\RouteCollectorInterface;
 use Mezzio\Tooling\Routes\Filter\RouteFilterOptions;
 use Mezzio\Tooling\Routes\Filter\RoutesFilter;
 use Override;
@@ -77,7 +77,7 @@ final class ListRoutesCommand extends Command
     public static $defaultName = 'mezzio:routes:list';
 
     public function __construct(
-        private readonly RouteCollector $routeCollector,
+        private readonly RouteCollectorInterface $routeCollector,
         private readonly ConfigLoaderInterface $configLoader
     ) {
         parent::__construct();
