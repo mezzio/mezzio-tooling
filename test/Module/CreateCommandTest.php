@@ -84,9 +84,7 @@ class CreateCommandTest extends TestCase
 
     private function reflectExecuteMethod(CreateCommand $command): ReflectionMethod
     {
-        $r = new ReflectionMethod($command, 'execute');
-        $r->setAccessible(true);
-        return $r;
+        return new ReflectionMethod($command, 'execute');
     }
 
     /**
@@ -107,7 +105,6 @@ class CreateCommandTest extends TestCase
                 self::callback(static function ($input) use ($name, $module, $composer, $modulePath): bool {
                     TestCase::assertInstanceOf(ArrayInput::class, $input);
                     $r = new ReflectionProperty($input, 'parameters');
-                    $r->setAccessible(true);
 
                     $parameters = $r->getValue($input);
                     TestCase::assertArrayHasKey('command', $parameters);

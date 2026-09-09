@@ -46,15 +46,12 @@ class CreateMiddlewareCommandTest extends TestCase
 
         // Do not require the generated middleware during testing
         $r = new ReflectionProperty($this->command, 'requireMiddlewareBeforeGeneratingFactory');
-        $r->setAccessible(true);
         $r->setValue($this->command, false);
     }
 
     private function reflectExecuteMethod(): ReflectionMethod
     {
-        $r = new ReflectionMethod($this->command, 'execute');
-        $r->setAccessible(true);
-        return $r;
+        return new ReflectionMethod($this->command, 'execute');
     }
 
     /** @return Application&MockObject */

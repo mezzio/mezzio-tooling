@@ -45,9 +45,7 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
 
     private function reflectExecuteMethod(MigrateInteropMiddlewareCommand $command): ReflectionMethod
     {
-        $r = new ReflectionMethod($command, 'execute');
-        $r->setAccessible(true);
-        return $r;
+        return new ReflectionMethod($command, 'execute');
     }
 
     public function testConfigureSetsExpectedDescription(): void

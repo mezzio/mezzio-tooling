@@ -60,15 +60,12 @@ class CreateActionCommandTest extends TestCase
     private function disableRequireHandlerDirective(CreateActionCommand $command): void
     {
         $r = new ReflectionProperty($command, 'requireHandlerBeforeGeneratingFactory');
-        $r->setAccessible(true);
         $r->setValue($command, false);
     }
 
     private function reflectExecuteMethod(CreateActionCommand $command): ReflectionMethod
     {
-        $r = new ReflectionMethod($command, 'execute');
-        $r->setAccessible(true);
-        return $r;
+        return new ReflectionMethod($command, 'execute');
     }
 
     /** @return Application&MockObject */
