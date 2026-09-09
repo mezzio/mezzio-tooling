@@ -14,6 +14,8 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Override;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -28,10 +30,8 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 use function sprintf;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
+#[RunTestsInSeparateProcesses()]
+#[PreserveGlobalState(false)]
 class CreateHandlerCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;

@@ -11,6 +11,7 @@ use Mezzio\Tooling\Factory\FactoryWriteException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use Override;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use TestHarness\NotReal\TestClass;
@@ -34,9 +35,7 @@ class CreateTest extends TestCase
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/classes', $this->dir);
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    #[RunInSeparateProcess()]
     public function testRaisesExceptionWhenFactoryClassFileAlreadyExists(): void
     {
         require $this->projectRoot . '/TestClass.php';
@@ -47,9 +46,7 @@ class CreateTest extends TestCase
         $this->factory->createForClass($className);
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    #[RunInSeparateProcess()]
     public function testRaisesExceptionWhenUnableToWriteFactory(): void
     {
         require $this->projectRoot . '/TestClass.php';
@@ -65,9 +62,7 @@ class CreateTest extends TestCase
         $factory->createForClass($className);
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    #[RunInSeparateProcess()]
     public function testCanCreateFactoryFile(): void
     {
         require $this->projectRoot . '/TestClass.php';

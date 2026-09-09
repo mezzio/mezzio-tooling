@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Routes;
 
+use Mezzio\Router\RouteCollector;
 use Mezzio\Router\RouteCollectorInterface;
 use Psr\Container\ContainerInterface;
 

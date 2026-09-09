@@ -15,6 +15,8 @@ use Mezzio\Tooling\Module\RuntimeException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use Override;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
@@ -25,7 +27,7 @@ use function mkdir;
 use function preg_replace;
 use function sprintf;
 
-/** @covers \Mezzio\Tooling\Module\RegisterCommand */
+#[CoversClass(RegisterCommand::class)]
 class RegisterCommandTest extends TestCase
 {
     use CommonOptionsAndAttributesTrait;
@@ -119,7 +121,7 @@ class RegisterCommandTest extends TestCase
         // phpcs:enable
     }
 
-    /** @dataProvider injectedEnabled */
+    #[DataProvider('injectedEnabled')]
     public function testCommandEmitsExpectedMessagesWhenItInjectsConfigurationAndEnablesModule(
         bool $injected,
         bool $enabled,

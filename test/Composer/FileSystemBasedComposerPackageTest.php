@@ -6,6 +6,7 @@ namespace MezzioTest\Tooling\Composer;
 
 use Mezzio\Tooling\Composer\FileSystemBasedComposerPackage;
 use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -139,7 +140,7 @@ class FileSystemBasedComposerPackageTest extends TestCase
         ];
     }
 
-    /** @dataProvider addRuleProvider */
+    #[DataProvider('addRuleProvider')]
     public function testCanAddRule(bool $isDev, string $module, string $moduleSourcePath): void
     {
         $projectRoot = $this->copyDistAsset('rule-does-not-exist');
@@ -157,7 +158,7 @@ class FileSystemBasedComposerPackageTest extends TestCase
         ];
     }
 
-    /** @dataProvider removeRuleProvider */
+    #[DataProvider('removeRuleProvider')]
     public function testCanRemoveRule(bool $isDev, string $module, string $assetDir, string $autoloadKey): void
     {
         $projectRoot = $this->copyDistAsset($assetDir);

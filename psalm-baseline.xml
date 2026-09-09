@@ -1001,11 +1001,9 @@
     </InvalidArgument>
     <MixedArgument>
       <code><![CDATA[$config]]></code>
-      <code><![CDATA[$parameters]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$config]]></code>
-      <code><![CDATA[$parameters]]></code>
     </MixedAssignment>
     <MixedReturnStatement>
       <code><![CDATA[$config]]></code>

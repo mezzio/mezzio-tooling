@@ -16,6 +16,8 @@ use Mezzio\Twig\TwigRenderer;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RunClassInSeparateProcess;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -30,9 +32,7 @@ use function strrpos;
 use function substr;
 use function vsprintf;
 
-/**
- * @runTestsInSeparateProcesses
- */
+#[RunClassInSeparateProcess()]
 class CreateTemplateTest extends TestCase
 {
     /**
@@ -133,9 +133,7 @@ class CreateTemplateTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider rendererTypes
-     */
+    #[DataProvider('rendererTypes')]
     public function testGeneratesTemplateFileInExpectedLocationAndWithExpectedSuffixForFlatHierarchy(
         string $rendererType,
         string $extension
@@ -154,9 +152,7 @@ class CreateTemplateTest extends TestCase
         self::assertSame('test::test', $template->getName());
     }
 
-    /**
-     * @dataProvider rendererTypes
-     */
+    #[DataProvider('rendererTypes')]
     public function testGeneratesTemplateFileInExpectedLocationAndWithExpectedSuffixForModuleHierarchy(
         string $rendererType,
         string $extension
@@ -178,9 +174,7 @@ class CreateTemplateTest extends TestCase
         self::assertSame('test::test', $template->getName());
     }
 
-    /**
-     * @dataProvider rendererTypes
-     */
+    #[DataProvider('rendererTypes')]
     public function testGeneratesTemplateFileInDefaultLocationWhenNoTemplatesConfigPresentForFlatHierarchy(
         string $rendererType,
         string $extension
@@ -199,9 +193,7 @@ class CreateTemplateTest extends TestCase
         self::assertSame('test::test', $template->getName());
     }
 
-    /**
-     * @dataProvider rendererTypes
-     */
+    #[DataProvider('rendererTypes')]
     public function testGeneratesTemplateFileInDefaultLocationWhenNoTemplatesConfigPresentForModuleHierarchy(
         string $rendererType,
         string $extension
@@ -220,9 +212,7 @@ class CreateTemplateTest extends TestCase
         self::assertSame('test::test', $template->getName());
     }
 
-    /**
-     * @dataProvider rendererTypes
-     */
+    #[DataProvider('rendererTypes')]
     public function testGeneratesTemplateFileUsingConfiguredValuesForFlatHierarchy(
         string $rendererType
     ): void {
@@ -242,9 +232,7 @@ class CreateTemplateTest extends TestCase
         self::assertSame('test::test', $template->getName());
     }
 
-    /**
-     * @dataProvider rendererTypes
-     */
+    #[DataProvider('rendererTypes')]
     public function testGeneratesTemplateFileUsingConfiguredValuesForModuleHierarchy(
         string $rendererType
     ): void {
@@ -264,9 +252,7 @@ class CreateTemplateTest extends TestCase
         self::assertSame('test::test', $template->getName());
     }
 
-    /**
-     * @dataProvider configType
-     */
+    #[DataProvider('configType')]
     public function testGeneratingTemplateWhenRendererServiceNotFoundResultsInException(bool $configAsArrayObject): void
     {
         vfsStream::copyFromFileSystem(__DIR__ . '/TestAsset/flat', $this->dir);
@@ -282,9 +268,7 @@ class CreateTemplateTest extends TestCase
         $generator->forHandler(TestHandler::class);
     }
 
-    /**
-     * @dataProvider configType
-     */
+    #[DataProvider('configType')]
     public function testGeneratingTemplateWhenRendererServiceIsNotInWhitelistResultsInException(
         bool $configAsArrayObject
     ): void {
@@ -316,9 +300,7 @@ class CreateTemplateTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider rendererTypesWithInvalidPathCounts
-     */
+    #[DataProvider('rendererTypesWithInvalidPathCounts')]
     public function testRaisesExceptionWhenConfiguredPathCountIsInvalidForFlatHierarchy(
         string $rendererType,
         string $extension,
@@ -338,9 +320,7 @@ class CreateTemplateTest extends TestCase
         $generator->forHandler(TestHandler::class);
     }
 
-    /**
-     * @dataProvider rendererTypesWithInvalidPathCounts
-     */
+    #[DataProvider('rendererTypesWithInvalidPathCounts')]
     public function testRaisesExceptionWhenConfiguredPathCountIsInvalidForModuleHierarchy(
         string $rendererType,
         string $extension,
@@ -360,9 +340,7 @@ class CreateTemplateTest extends TestCase
         $generator->forHandler(TestHandler::class);
     }
 
-    /**
-     * @dataProvider rendererTypes
-     */
+    #[DataProvider('rendererTypes')]
     public function testCanGenerateTemplateUsingProvidedNamespaceAndNameWhenConfigurationMatchesForFlatHierarchy(
         string $rendererType,
         string $extension
@@ -385,9 +363,7 @@ class CreateTemplateTest extends TestCase
         self::assertSame('custom::also-custom', $template->getName());
     }
 
-    /**
-     * @dataProvider rendererTypes
-     */
+    #[DataProvider('rendererTypes')]
     public function testCanGenerateTemplateUsingProvidedNamespaceAndNameWhenConfigurationMatchesForModuleHierarchy(
         string $rendererType,
         string $extension
@@ -410,9 +386,7 @@ class CreateTemplateTest extends TestCase
         self::assertSame('custom::also-custom', $template->getName());
     }
 
-    /**
-     * @dataProvider configType
-     */
+    #[DataProvider('configType')]
     public function testCanGenerateTemplateWithUnrecognizedRendererTypeIfTemplatSuffixIsProvided(
         bool $configAsArrayObject
     ): void {

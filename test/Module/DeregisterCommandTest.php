@@ -14,6 +14,9 @@ use Mezzio\Tooling\Module\DeregisterCommand;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
@@ -96,11 +99,9 @@ class DeregisterCommandTest extends TestCase
         ];
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     * @dataProvider removedDisabled
-     */
+    #[RunInSeparateProcess()]
+    #[PreserveGlobalState(false)]
+    #[DataProvider('removedDisabled')]
     public function testRemoveFromConfigurationAndDisableModuleEmitsExpectedMessages(
         bool $removed,
         bool $disabled
@@ -189,10 +190,8 @@ class DeregisterCommandTest extends TestCase
         ));
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[RunInSeparateProcess()]
+    #[PreserveGlobalState(false)]
     public function testAllowsExceptionsThrownFromDisableToBubbleUp(): void
     {
         $this->input->method('getArgument')->with('module')->willReturn('MyApp');
