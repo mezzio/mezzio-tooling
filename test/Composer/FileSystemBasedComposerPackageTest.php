@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MezzioTest\Tooling\Composer;
 
 use Mezzio\Tooling\Composer\FileSystemBasedComposerPackage;
+use Override;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -21,11 +22,13 @@ use const JSON_THROW_ON_ERROR;
 
 class FileSystemBasedComposerPackageTest extends TestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         $this->tearDownAssets();
     }
 
+    #[Override]
     protected function tearDown(): void
     {
         $this->tearDownAssets();

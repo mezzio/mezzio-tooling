@@ -6,6 +6,7 @@ namespace Mezzio\Tooling\ConfigInjector;
 
 use Mezzio\Tooling\ConfigDiscovery\ConfigAggregator as ConfigAggregatorDiscovery;
 use Mezzio\Tooling\ConfigDiscovery\DiscoveryInterface;
+use Override;
 
 use function preg_quote;
 use function sprintf;
@@ -96,11 +97,13 @@ final class ConfigAggregatorInjector extends AbstractInjector
         parent::__construct($projectRoot);
     }
 
+    #[Override]
     protected function getDefaultConfigFile(): string
     {
         return self::DEFAULT_CONFIG_FILE;
     }
 
+    #[Override]
     protected function getDiscoveryClass(): string
     {
         return $this->discoveryClass;

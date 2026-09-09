@@ -13,9 +13,12 @@ final class CreateCommandFactory
 {
     public function __invoke(ContainerInterface $container): CreateCommand
     {
+        $path = realpath(getcwd() ?: '.');
+        $path = $path === false ? '/tmp' : $path;
+
         return new CreateCommand(
             $container->get('config'),
-            realpath(getcwd())
+            $path,
         );
     }
 }

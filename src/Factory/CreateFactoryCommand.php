@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mezzio\Tooling\Factory;
 
 use Mezzio\Tooling\Factory\Create;
+use Override;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -57,6 +58,7 @@ final class CreateFactoryCommand extends Command
     /**
      * Configure the console command.
      */
+    #[Override]
     protected function configure(): void
     {
         $this->setDescription('Create a factory class file for the named class.');
@@ -68,6 +70,7 @@ final class CreateFactoryCommand extends Command
     /**
      * Execute console command.
      */
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $className       = (string) $input->getArgument('class');

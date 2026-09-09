@@ -10,6 +10,7 @@ use Mezzio\Tooling\Factory\FactoryClassGenerator;
 use Mezzio\Tooling\Factory\FactoryWriteException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Override;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use TestHarness\NotReal\TestClass;
@@ -24,6 +25,7 @@ class CreateTest extends TestCase
 
     private string $projectRoot;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->factory     = new Create(new FactoryClassGenerator());

@@ -23,7 +23,7 @@ trait TemplateResolutionTrait
     {
         $pattern     = ['#(?<=(?:\p{Lu}))(\p{Lu}\p{Ll})#', '#(?<=(?:\p{Ll}|\p{Nd}))(\p{Lu})#'];
         $replacement = ['-\1', '-\1'];
-        $identifier  = preg_replace($pattern, $replacement, $identifier);
+        $identifier  = preg_replace($pattern, $replacement, $identifier) ?? '';
         return strtolower($identifier);
     }
 
@@ -70,7 +70,7 @@ trait TemplateResolutionTrait
                 '#(Action|Handler|Middleware)$#',
                 '',
                 $this->getClassName($class)
-            )
+            ) ?? ''
         );
     }
 

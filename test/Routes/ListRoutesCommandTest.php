@@ -10,6 +10,7 @@ use Mezzio\Tooling\Routes\ConfigLoaderInterface;
 use Mezzio\Tooling\Routes\ListRoutesCommand;
 use MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware;
 use MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -27,6 +28,7 @@ class ListRoutesCommandTest extends TestCase
     private CommandTester $tester;
     private ListRoutesCommand $command;
 
+    #[Override]
     protected function setUp(): void
     {
         $configLoader         = $this->createMock(ConfigLoaderInterface::class);

@@ -46,7 +46,10 @@ final class CreateHandler extends ClassSkeletons
         private readonly string $skeleton = self::CLASS_SKELETON,
         ?string $projectRoot = null
     ) {
-        $this->projectRoot = $projectRoot ?? realpath(getcwd());
+        $defaultPath = realpath(getcwd() ?: '.');
+        $defaultPath = $defaultPath === false ? '/tmp' : $defaultPath;
+
+        $this->projectRoot = $projectRoot ?? $defaultPath;
     }
 
     /**
@@ -129,8 +132,14 @@ final class CreateHandler extends ClassSkeletons
         }
 
         try {
+            $composerContents = file_get_contents($composerPath);
             /** @var array{autoload: array{psr-4?: array<string, string>|string}} $composer */
-            $composer = json_decode(file_get_contents($composerPath), true, 512, JSON_THROW_ON_ERROR);
+            $composer = json_decode(
+                $composerContents === false ? '{}' : $composerContents,
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            );
         } catch (JsonException $jsonException) {
             throw CreateHandlerException::invalidComposerJson($jsonException->getMessage());
         }

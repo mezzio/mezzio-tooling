@@ -9,6 +9,7 @@ use Mezzio\Tooling\CreateHandler\CreateActionCommand;
 use Mezzio\Tooling\CreateHandler\CreateHandler;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Override;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -39,6 +40,7 @@ class CreateActionCommandTest extends TestCase
     /** @psalm-var ConsoleOutputInterface&MockObject */
     private ConsoleOutputInterface $output;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->input     = $this->createMock(InputInterface::class);

@@ -9,6 +9,7 @@ use Mezzio\Router\Route;
 use Mezzio\Router\RouteCollector;
 use Mezzio\Tooling\Routes\Filter\RouteFilterOptions;
 use Mezzio\Tooling\Routes\Filter\RoutesFilter;
+use Override;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -82,6 +83,7 @@ final class ListRoutesCommand extends Command
         parent::__construct();
     }
 
+    #[Override]
     protected function configure(): void
     {
         $this->setDescription("Print the application's routing table.");
@@ -150,6 +152,7 @@ final class ListRoutesCommand extends Command
         );
     }
 
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->configLoader->load();

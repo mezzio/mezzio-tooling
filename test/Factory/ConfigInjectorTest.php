@@ -8,6 +8,7 @@ use Mezzio\Tooling\Factory\ConfigFileNotWritableException;
 use Mezzio\Tooling\Factory\ConfigInjector;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Override;
 use PHPUnit\Framework\TestCase;
 
 use function file_put_contents;
@@ -21,6 +22,7 @@ class ConfigInjectorTest extends TestCase
 
     private string $projectRoot;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->dir         = vfsStream::setup('project');

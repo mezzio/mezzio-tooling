@@ -14,6 +14,7 @@ use Mezzio\Tooling\Module\RegisterCommand;
 use Mezzio\Tooling\Module\RuntimeException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
@@ -50,6 +51,7 @@ class RegisterCommandTest extends TestCase
     /** @var InjectorInterface&MockObject */
     private InjectorInterface $injector;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -187,16 +189,19 @@ class RegisterCommandTest extends TestCase
 
         if ($enabled === true) {
             $processResult = new class implements ComposerProcessResultInterface {
+                #[Override]
                 public function isSuccessful(): bool
                 {
                     return true;
                 }
 
+                #[Override]
                 public function getOutput(): string
                 {
                     return '';
                 }
 
+                #[Override]
                 public function getErrorOutput(): string
                 {
                     throw new RuntimeException(__METHOD__ . ' should not be called');

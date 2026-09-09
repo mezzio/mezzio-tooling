@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\CreateHandler;
 
+use Override;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -58,6 +59,7 @@ final class CreateActionCommand extends CreateHandlerCommand
     /** @var null|string Cannot be defined explicitly due to parent class */
     public static $defaultName = 'mezzio:action:create';
 
+    #[Override]
     protected function configure(): void
     {
         $this->handlerArgument = 'action';

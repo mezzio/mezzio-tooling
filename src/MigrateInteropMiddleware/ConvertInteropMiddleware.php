@@ -58,6 +58,7 @@ final class ConvertInteropMiddleware
     private function processFile(string $filename): void
     {
         $original = file_get_contents($filename);
+        $original = $original === false ? '' : $original;
         $contents = $original;
 
         $delegate = null;
@@ -109,7 +110,7 @@ final class ConvertInteropMiddleware
             $replacement = str_replace('process', 'handle', $matches[0]);
             if ($matches[1] !== ':') {
                 $ri          = $this->getResponseInterface($contents);
-                $replacement = preg_replace('#\)#', ') : ' . $ri, $replacement);
+                $replacement = preg_replace('#\)#', ') : ' . $ri, $replacement) ?? '';
             }
 
             $contents = str_replace($matches[0], $replacement, $contents);
@@ -122,11 +123,11 @@ final class ConvertInteropMiddleware
             && preg_match('#public\s+function\s+process\(\s*.+?,\s*.+?\s+(\$.+?)\s*\)\s*{#', $contents, $matches)
         ) {
             $ri          = $this->getResponseInterface($contents);
-            $replacement = preg_replace('#\)#', ') : ' . $ri, $matches[0]);
+            $replacement = preg_replace('#\)#', ') : ' . $ri, $matches[0]) ?? '';
 
             $contents = str_replace($matches[0], $replacement, $contents);
             $preg     = '/' . preg_quote($matches[1], '\\') . '\s*->\s*process\(/';
-            $contents = preg_replace($preg, $matches[1] . '->handle(', $contents);
+            $contents = preg_replace($preg, $matches[1] . '->handle(', $contents) ?? '';
         }
 
         if ($original === $contents) {

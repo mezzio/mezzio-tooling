@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Module;
 
+use Override;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -46,6 +47,7 @@ final class CreateCommand extends Command
     /**
      * Configure command.
      */
+    #[Override]
     protected function configure(): void
     {
         $this->setDescription('Create and register a middleware module with the application');
@@ -81,6 +83,7 @@ final class CreateCommand extends Command
      *
      * {@inheritDoc}
      */
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $module          = $input->getArgument('module');

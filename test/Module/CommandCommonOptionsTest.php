@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MezzioTest\Tooling\Module;
 
 use Mezzio\Tooling\Module\CommandCommonOptions;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,6 +15,7 @@ class CommandCommonOptionsTest extends TestCase
     /** @var InputInterface&MockObject */
     private InputInterface $input;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->input = $this->createMock(InputInterface::class);

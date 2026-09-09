@@ -9,6 +9,7 @@ use Mezzio\Tooling\Composer\ComposerPackageInterface;
 use Mezzio\Tooling\Composer\ComposerProcessFactoryInterface;
 use Mezzio\Tooling\ConfigInjector\ConfigAggregatorInjector;
 use Mezzio\Tooling\ConfigInjector\InjectorInterface;
+use Override;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -63,6 +64,7 @@ final class RegisterCommand extends Command
     /**
      * Configure command.
      */
+    #[Override]
     protected function configure(): void
     {
         $this->setDescription('Register a middleware module with the application');
@@ -77,6 +79,7 @@ final class RegisterCommand extends Command
         CommandCommonOptions::addDefaultOptionsAndArguments($this);
     }
 
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $module      = $input->getArgument('module');

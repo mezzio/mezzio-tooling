@@ -11,6 +11,7 @@ use Mezzio\Tooling\Factory\CreateFactoryCommand;
 use Mezzio\Tooling\Factory\FactoryClassGenerator;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
@@ -33,6 +34,7 @@ class CreateFactoryCommandTest extends TestCase
 
     private CreateFactoryCommand $command;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->input  = $this->createMock(InputInterface::class);

@@ -9,6 +9,7 @@ use MezzioTest\Tooling\Factory\TestAsset\ComplexDependencyObject;
 use MezzioTest\Tooling\Factory\TestAsset\InvokableObject;
 use MezzioTest\Tooling\Factory\TestAsset\RootNamespaceDependencyObject;
 use MezzioTest\Tooling\Factory\TestAsset\SimpleDependencyObject;
+use Override;
 use PHPUnit\Framework\TestCase;
 use This\Duplicates\ClassDuplicatingNamespaceNameCase\ClassDuplicatingNamespaceName;
 
@@ -18,6 +19,7 @@ class FactoryClassGeneratorTest extends TestCase
 {
     private FactoryClassGenerator $generator;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->generator = new FactoryClassGenerator();

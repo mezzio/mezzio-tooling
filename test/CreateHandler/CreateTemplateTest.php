@@ -15,6 +15,7 @@ use Mezzio\Tooling\CreateHandler\UnresolvableRendererException;
 use Mezzio\Twig\TwigRenderer;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -55,6 +56,7 @@ class CreateTemplateTest extends TestCase
     /** @var array<string, mixed> */
     private array $services = [];
 
+    #[Override]
     protected function setUp(): void
     {
         $this->dir         = vfsStream::setup('project');

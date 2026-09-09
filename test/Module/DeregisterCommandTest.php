@@ -13,6 +13,7 @@ use Mezzio\Tooling\ConfigInjector\InjectorInterface;
 use Mezzio\Tooling\Module\DeregisterCommand;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
@@ -45,6 +46,7 @@ class DeregisterCommandTest extends TestCase
     /** @var InjectorInterface&MockObject */
     private InjectorInterface $injector;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -135,16 +137,19 @@ class DeregisterCommandTest extends TestCase
 
         if ($disabled === true) {
             $processResult = new class implements ComposerProcessResultInterface {
+                #[Override]
                 public function isSuccessful(): bool
                 {
                     return true;
                 }
 
+                #[Override]
                 public function getOutput(): string
                 {
                     return '';
                 }
 
+                #[Override]
                 public function getErrorOutput(): string
                 {
                     throw new RuntimeException(__METHOD__ . ' should not be called');

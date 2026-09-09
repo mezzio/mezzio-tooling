@@ -118,7 +118,8 @@ final class CreateTemplate
     {
         $r    = new ReflectionClass($handler);
         $path = $r->getFileName();
-        $path = preg_replace('#^' . preg_quote($this->projectPath, '#') . '#', '', $path);
+        $path = false === $path ? '' : $path;
+        $path = preg_replace('#^' . preg_quote($this->projectPath, '#') . '#', '', $path) ?? '';
         $path = ltrim($path, '/\\');
         return rtrim($path, '/\\');
     }

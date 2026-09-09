@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\MigrateMiddlewareToRequestHandler;
 
+use Override;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -50,6 +51,7 @@ final class MigrateMiddlewareToRequestHandlerCommand extends Command
         parent::__construct();
     }
 
+    #[Override]
     protected function configure(): void
     {
         $this->setDescription('Migrate PSR-15 middleware to request handlers');
@@ -57,6 +59,7 @@ final class MigrateMiddlewareToRequestHandlerCommand extends Command
         $this->addOption('src', 's', InputOption::VALUE_REQUIRED, self::HELP_OPT_SRC);
     }
 
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $src = $this->getSrcDir($input);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Composer;
 
+use Override;
 use stdClass;
 
 use function dirname;
@@ -33,6 +34,7 @@ final class FileSystemBasedComposerPackage implements ComposerPackageInterface
         $this->composerFile = sprintf('%s/composer.json', $projectRoot);
     }
 
+    #[Override]
     public function addPsr4AutoloadRule(string $namespace, string $path, bool $isDev = false): bool
     {
         $namespace = rtrim($namespace, '\\') . '\\';
@@ -51,6 +53,7 @@ final class FileSystemBasedComposerPackage implements ComposerPackageInterface
         return true;
     }
 
+    #[Override]
     public function removePsr4AutoloadRule(string $namespace, bool $isDev = false): bool
     {
         $namespace = rtrim($namespace, '\\') . '\\';
@@ -82,6 +85,7 @@ final class FileSystemBasedComposerPackage implements ComposerPackageInterface
         }
 
         $contents = file_get_contents($this->composerFile);
+        $contents = false === $contents ? '{}' : $contents;
         return json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
     }
 
@@ -111,6 +115,7 @@ final class FileSystemBasedComposerPackage implements ComposerPackageInterface
             $package,
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
         );
+        $contents = false === $contents ? '{}' : $contents;
 
         file_put_contents($this->composerFile, $contents . "\n");
     }

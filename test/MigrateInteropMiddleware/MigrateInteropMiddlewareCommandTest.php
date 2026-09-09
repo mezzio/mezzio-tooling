@@ -10,6 +10,7 @@ use Mezzio\Tooling\MigrateInteropMiddleware\MigrateInteropMiddlewareCommand;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -35,6 +36,7 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
 
     private MigrateInteropMiddlewareCommand $command;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->input  = $this->createMock(InputInterface::class);

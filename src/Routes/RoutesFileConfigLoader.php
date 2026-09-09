@@ -7,6 +7,7 @@ namespace Mezzio\Tooling\Routes;
 use InvalidArgumentException;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
+use Override;
 use Psr\Container\ContainerInterface;
 
 use function file_exists;
@@ -21,6 +22,7 @@ final class RoutesFileConfigLoader implements ConfigLoaderInterface
     ) {
     }
 
+    #[Override]
     public function load(): void
     {
         if (! file_exists($this->configFilePath)) {

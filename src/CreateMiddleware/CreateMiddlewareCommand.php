@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\CreateMiddleware;
 
+use Override;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -74,6 +75,7 @@ final class CreateMiddlewareCommand extends Command
     /**
      * Configure the console command.
      */
+    #[Override]
     protected function configure(): void
     {
         $this->setDescription('Create a PSR-15 middleware class file.');
@@ -88,6 +90,7 @@ final class CreateMiddlewareCommand extends Command
      *
      * @return int Exit status
      */
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $middleware = $input->getArgument('middleware');

@@ -7,6 +7,7 @@ namespace Mezzio\Tooling\Routes\Filter;
 use ArrayIterator;
 use FilterIterator;
 use Mezzio\Router\Route;
+use Override;
 use Traversable;
 
 use function array_intersect;
@@ -37,10 +38,11 @@ final class RoutesFilter extends FilterIterator
         parent::__construct($routes);
     }
 
+    #[Override]
     public function accept(): bool
     {
         /** @var Route $route */
-        $route = $this->getInnerIterator()->current();
+        $route = $this->getInnerIterator()?->current();
 
         if ($this->options->name !== null) {
             return $route->getName() === $this->options->name

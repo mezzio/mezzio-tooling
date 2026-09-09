@@ -6,6 +6,7 @@ namespace Mezzio\Tooling\ConfigInjector;
 
 use Mezzio\Tooling\Exception;
 use Mezzio\Tooling\Exception\RuntimeException;
+use Override;
 
 use function addslashes;
 use function assert;
@@ -148,6 +149,7 @@ abstract class AbstractInjector implements InjectorInterface
         }
     }
 
+    #[Override]
     public function registersType(int $type): bool
     {
         return in_array($type, $this->allowedTypes, true);
@@ -156,20 +158,25 @@ abstract class AbstractInjector implements InjectorInterface
     /**
      * @return int[]
      */
+    #[Override]
     public function getTypesAllowed(): array
     {
         return $this->allowedTypes;
     }
 
+    #[Override]
     public function isRegistered(string $package): bool
     {
         $config = file_get_contents($this->configFile);
+        $config = false === $config ? '' : $config;
         return $this->isRegisteredInConfig($package, $config);
     }
 
+    #[Override]
     public function inject(string $package, int $type): bool
     {
         $config = file_get_contents($this->configFile);
+        $config = false === $config ? '' : $config;
 
         if ($this->isRegisteredInConfig($package, $config)) {
             return false;
@@ -198,7 +205,7 @@ abstract class AbstractInjector implements InjectorInterface
             $package
         );
 
-        $config = preg_replace($pattern, $replacement, $config, 1);
+        $config = preg_replace($pattern, $replacement, $config, 1) ?? '';
         file_put_contents($this->configFile, $config);
 
         return true;
@@ -239,7 +246,7 @@ abstract class AbstractInjector implements InjectorInterface
             $package
         );
 
-        $config = preg_replace($pattern, $replacement, $config, 1);
+        $config = preg_replace($pattern, $replacement, $config, 1) ?? '';
         file_put_contents($this->configFile, $config);
 
         return true;
@@ -297,7 +304,7 @@ abstract class AbstractInjector implements InjectorInterface
             $package
         );
 
-        $config = preg_replace($pattern, $replacement, $config, 1);
+        $config = preg_replace($pattern, $replacement, $config, 1) ?? '';
         file_put_contents($this->configFile, $config);
 
         return true;
@@ -336,6 +343,7 @@ abstract class AbstractInjector implements InjectorInterface
     /**
      * @param string[] $modules
      */
+    #[Override]
     public function setApplicationModules(array $modules): self
     {
         $this->applicationModules = $modules;
@@ -346,6 +354,7 @@ abstract class AbstractInjector implements InjectorInterface
     /**
      * @param string[] $modules
      */
+    #[Override]
     public function setModuleDependencies(array $modules): self
     {
         $this->moduleDependencies = $modules;
@@ -353,9 +362,11 @@ abstract class AbstractInjector implements InjectorInterface
         return $this;
     }
 
+    #[Override]
     public function remove(string $package): bool
     {
         $config = file_get_contents($this->configFile);
+        $config = false === $config ? '' : $config;
 
         if (! $this->isRegisteredInConfig($package, $config)) {
             return false;
@@ -367,13 +378,13 @@ abstract class AbstractInjector implements InjectorInterface
             $pattern,
             $this->removalPatterns['replacement'],
             $config
-        );
+        ) ?? '';
 
         $config = preg_replace(
             $this->cleanUpPatterns['pattern'],
             $this->cleanUpPatterns['replacement'],
             $config
-        );
+        ) ?? '';
 
         file_put_contents($this->configFile, $config);
 

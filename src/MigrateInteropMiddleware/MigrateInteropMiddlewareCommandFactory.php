@@ -11,6 +11,9 @@ final class MigrateInteropMiddlewareCommandFactory
 {
     public function __invoke(): MigrateInteropMiddlewareCommand
     {
-        return new MigrateInteropMiddlewareCommand(realpath(getcwd()));
+        $path = realpath(getcwd() ?: '.');
+        $path = $path === false ? '/tmp' : $path;
+
+        return new MigrateInteropMiddlewareCommand($path);
     }
 }

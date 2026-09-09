@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Composer;
 
+use Override;
 use Symfony\Component\Process\Process;
 
 final class ComposerProcessViaSymfonyProcessFactory implements ComposerProcessFactoryInterface
 {
+    #[Override]
     public function createProcess(array $args): ComposerProcessInterface
     {
         return new ComposerProcessViaSymfonyProcess(

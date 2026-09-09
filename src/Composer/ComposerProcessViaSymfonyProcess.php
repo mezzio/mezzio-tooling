@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\Composer;
 
+use Override;
 use Symfony\Component\Process\Process;
 
 /** @internal */
@@ -13,6 +14,7 @@ class ComposerProcessViaSymfonyProcess implements ComposerProcessInterface
     {
     }
 
+    #[Override]
     public function run(): ComposerProcessResultInterface
     {
         $this->process->run();

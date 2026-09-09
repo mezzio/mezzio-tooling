@@ -9,6 +9,7 @@ use Mezzio\Tooling\Composer\ComposerPackageInterface;
 use Mezzio\Tooling\Composer\ComposerProcessFactoryInterface;
 use Mezzio\Tooling\ConfigInjector\ConfigAggregatorInjector;
 use Mezzio\Tooling\ConfigInjector\InjectorInterface;
+use Override;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -56,6 +57,7 @@ final class DeregisterCommand extends Command
     /**
      * Configure command.
      */
+    #[Override]
     protected function configure(): void
     {
         $this->setDescription('Deregister a middleware module from the application');
@@ -68,6 +70,7 @@ final class DeregisterCommand extends Command
      *
      * {@inheritDoc}
      */
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $module   = $input->getArgument('module');

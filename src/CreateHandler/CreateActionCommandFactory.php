@@ -13,6 +13,9 @@ final class CreateActionCommandFactory
 {
     public function __invoke(ContainerInterface $container): CreateActionCommand
     {
-        return new CreateActionCommand($container, realpath(getcwd()));
+        $path = realpath(getcwd() ?: '.');
+        $path = $path === false ? '/tmp' : $path;
+
+        return new CreateActionCommand($container, $path);
     }
 }

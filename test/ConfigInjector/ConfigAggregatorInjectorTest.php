@@ -7,6 +7,7 @@ namespace MezzioTest\Tooling\ConfigInjector;
 use Mezzio\Tooling\ConfigInjector\ConfigAggregatorInjector;
 use Mezzio\Tooling\ConfigInjector\InjectorInterface;
 use org\bovigo\vfs\vfsStream;
+use Override;
 
 use function file_get_contents;
 use function preg_replace;
@@ -38,6 +39,7 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
     /**
      * @return array<string, mixed[]>
      */
+    #[Override]
     public static function allowedTypes(): array
     {
         return [
@@ -48,8 +50,20 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
     }
 
     /**
-     * @return array<string, array<string|bool|int>>
+     * @return (false|int|null|string)[][]
+     * @psalm-return array{
+     *     'fqcn-long-array': list{0, false|string, false|string},
+     *     'global-long-array': list{0, false|string, false|string},
+     *     'import-long-array': list{0, false|string, false|string},
+     *     'import-long-array-alt-indent': list{0, false|string, false|string},
+     *     'fqcn-short-array': list{0, null|string, null|string},
+     *     'global-short-array': list{0, null|string, null|string},
+     *     'import-short-array': list{0, null|string, null|string},
+     *     'import-short-array-alt-indent': list{0, null|string, null|string},
+     *     'inject-only-first-occurence': list{0, false|string, false|string}
+     * }
      */
+    #[Override]
     public static function injectComponentProvider(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
@@ -93,8 +107,17 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
     }
 
     /**
-     * @return array<string, array<string|bool|int>>
+     * @return (false|int|null|string)[][]
+     * @psalm-return array{
+     *     'fqcn-long-array': list{false|string, 0},
+     *     'global-long-array': list{false|string, 0},
+     *     'import-long-array': list{false|string, 0},
+     *     'fqcn-short-array': list{null|string, 0},
+     *     'global-short-array': list{null|string, 0},
+     *     'import-short-array': list{null|string, 0}
+     * }
      */
+    #[Override]
     public static function packageAlreadyRegisteredProvider(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
@@ -118,8 +141,17 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
     }
 
     /**
-     * @return array<string, array<string|bool>>
+     * @return (false|null|string)[][]
+     * @psalm-return array{
+     *     'fqcn-long-array': list{false|string},
+     *     'global-long-array': list{false|string},
+     *     'import-long-array': list{false|string},
+     *     'fqcn-short-array': list{null|string},
+     *     'global-short-array': list{null|string},
+     *     'import-short-array': list{null|string}
+     * }
      */
+    #[Override]
     public static function emptyConfiguration(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong
@@ -143,6 +175,7 @@ class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
     }
 
     /** @inheritDoc */
+    #[Override]
     public static function packagePopulatedInConfiguration(): array
     {
         // phpcs:disable Generic.Files.LineLength.TooLong

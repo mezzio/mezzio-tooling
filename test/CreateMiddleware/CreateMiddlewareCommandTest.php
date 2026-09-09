@@ -9,6 +9,7 @@ use Mezzio\Tooling\CreateMiddleware\CreateMiddlewareCommand;
 use Mezzio\Tooling\CreateMiddleware\CreateMiddlewareException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Override;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -37,6 +38,7 @@ class CreateMiddlewareCommandTest extends TestCase
 
     private CreateMiddlewareCommand $command;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->input  = $this->createMock(InputInterface::class);
