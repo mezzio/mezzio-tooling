@@ -52,11 +52,14 @@
         "phpunit/phpunit": "^11.5.56",
         "psalm/plugin-mockery": "^1.2.0",
         "psalm/plugin-phpunit": "^0.19.2",
-        "vimeo/psalm": "^6.0.0"
+        "vimeo/psalm": "^6.14.0"
     },
     "conflict": {
         "amphp/amp": "<2.6.4",
-        "symfony/console": "<5.4.45",
+        "amphp/dns": "<2.1.2",
+        "amphp/parallel": "<2.3.4",
+        "amphp/socket": "<2.3.1",
+        "symfony/console": "<5.4.45 || >=6.0,<6.3.12 || >=6.4.0,<6.4.3",
         "symfony/string": "<5.4.45"
     },
     "autoload": {
