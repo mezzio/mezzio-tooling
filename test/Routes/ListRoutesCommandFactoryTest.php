@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MezzioTest\Tooling\Routes;
 
-use Mezzio\Router\RouteCollector;
+use Mezzio\Router\RouteCollectorInterface;
 use Mezzio\Tooling\Routes\ConfigLoaderInterface;
 use Mezzio\Tooling\Routes\ListRoutesCommand;
 use Mezzio\Tooling\Routes\ListRoutesCommandFactory;
@@ -22,7 +22,7 @@ class ListRoutesCommandFactoryTest extends TestCase
             ->expects($this->atMost(2))
             ->method('get')
             ->willReturnOnConsecutiveCalls(
-                $this->createMock(RouteCollector::class),
+                $this->createMock(RouteCollectorInterface::class),
                 $this->createMock(ConfigLoaderInterface::class),
             );
         $factory = new ListRoutesCommandFactory();

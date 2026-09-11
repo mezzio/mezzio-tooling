@@ -56,6 +56,7 @@ final class ConvertMiddleware
     private function processFile(string $filename): void
     {
         $original = file_get_contents($filename);
+        $original = false === $original ? '' : $original;
         $contents = $original;
 
         if (
@@ -96,29 +97,29 @@ final class ConvertMiddleware
         $contents = preg_replace(
             '#use\s+Psr\\\\Http\\\\Server\\\\MiddlewareInterface(.*);\n?#',
             '',
-            $contents
-        );
+            $contents,
+        ) ?? '';
 
         // Change process to handle function and remove 2nd parameter
         $contents = preg_replace(
             '#(public\s+function\s+)(process)(\s*\(.*?)(,.*?)(\s*\))#s',
             '\\1handle\\3\\5',
-            $contents
-        );
+            $contents,
+        ) ?? '';
 
         // Remove alias from imported RequestHandlerInterface
         $contents = preg_replace(
             '#(use\s+Psr\\\\Http\\\\Server\\\\RequestHandlerInterface).*;#',
             '\\1;',
-            $contents
-        );
+            $contents,
+        ) ?? '';
 
         // Change implemented interface on the class from MiddlewareInterface to RequestHandlerInterface
         $contents = preg_replace(
             '#(class\s+.*implements\s+[^{]*,?\s*)' . preg_quote($middleware, '#') . '(,|\s|{)#',
             '\\1RequestHandlerInterface\\2',
-            $contents
-        );
+            $contents,
+        ) ?? '';
 
         if ($original === $contents) {
             return;

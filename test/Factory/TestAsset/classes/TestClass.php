@@ -8,7 +8,7 @@ use Mezzio\Tooling\Factory\FactoryClassGenerator;
 
 class TestClass
 {
-    public function __constructor(FactoryClassGenerator $generator)
+    public function __construct(FactoryClassGenerator $generator)
     {
     }
 }

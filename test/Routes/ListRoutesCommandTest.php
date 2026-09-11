@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace MezzioTest\Tooling\Routes;
 
 use Mezzio\Router\Route;
-use Mezzio\Router\RouteCollector;
+use Mezzio\Router\RouteCollectorInterface;
 use Mezzio\Tooling\Routes\ConfigLoaderInterface;
 use Mezzio\Tooling\Routes\ListRoutesCommand;
 use MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware;
 use MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -23,14 +24,15 @@ use const JSON_THROW_ON_ERROR;
 
 class ListRoutesCommandTest extends TestCase
 {
-    private RouteCollector&MockObject $routeCollector;
+    private RouteCollectorInterface&MockObject $routeCollector;
     private CommandTester $tester;
     private ListRoutesCommand $command;
 
+    #[Override]
     protected function setUp(): void
     {
         $configLoader         = $this->createMock(ConfigLoaderInterface::class);
-        $this->routeCollector = $this->createMock(RouteCollector::class);
+        $this->routeCollector = $this->createMock(RouteCollectorInterface::class);
         $this->command        = new ListRoutesCommand(
             $this->routeCollector,
             $configLoader,

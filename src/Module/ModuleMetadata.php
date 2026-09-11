@@ -15,7 +15,7 @@ final class ModuleMetadata
         private readonly string $rootPath,
         string $sourcePath
     ) {
-        $this->sourcePath = preg_replace('#^\./#', '', $sourcePath);
+        $this->sourcePath = preg_replace('#^\./#', '', $sourcePath) ?? '';
     }
 
     public function name(): string

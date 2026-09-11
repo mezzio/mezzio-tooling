@@ -12,7 +12,10 @@ use Mezzio\Tooling\CreateHandler\CreateTemplate;
 use Mezzio\Tooling\CreateHandler\Template;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Override;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -27,10 +30,8 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 use function sprintf;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
+#[RunTestsInSeparateProcesses()]
+#[PreserveGlobalState(false)]
 class CreateHandlerCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -44,6 +45,7 @@ class CreateHandlerCommandTest extends TestCase
     /** @var ConsoleOutputInterface&MockObject */
     private ConsoleOutputInterface $output;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->input     = $this->createMock(InputInterface::class);
@@ -65,15 +67,12 @@ class CreateHandlerCommandTest extends TestCase
     private function disableRequireHandlerDirective(CreateHandlerCommand $command): void
     {
         $r = new ReflectionProperty($command, 'requireHandlerBeforeGeneratingFactory');
-        $r->setAccessible(true);
         $r->setValue($command, false);
     }
 
     private function reflectExecuteMethod(CreateHandlerCommand $command): ReflectionMethod
     {
-        $r = new ReflectionMethod($command, 'execute');
-        $r->setAccessible(true);
-        return $r;
+        return new ReflectionMethod($command, 'execute');
     }
 
     /** @return Application&MockObject */

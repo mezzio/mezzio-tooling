@@ -7,6 +7,8 @@ namespace MezzioTest\Tooling\ConfigInjector;
 use Mezzio\Tooling\ConfigInjector\InjectorInterface;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function file_get_contents;
@@ -37,6 +39,7 @@ abstract class AbstractInjectorTestCase extends TestCase
      */
     protected $injectorTypesAllowed = [];
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configDir = vfsStream::setup('project');
@@ -56,8 +59,8 @@ abstract class AbstractInjectorTestCase extends TestCase
 
     /**
      * @psalm-param InjectorInterface::TYPE_* $type
-     * @dataProvider allowedTypes
      */
+    #[DataProvider('allowedTypes')]
     public function testRegistersTypesReturnsExpectedBooleanBasedOnType(int $type, bool $expected): void
     {
         $this->assertSame($expected, $this->injector->registersType($type));
@@ -75,8 +78,8 @@ abstract class AbstractInjectorTestCase extends TestCase
 
     /**
      * @psalm-param InjectorInterface::TYPE_* $type
-     * @dataProvider injectComponentProvider
      */
+    #[DataProvider('injectComponentProvider')]
     public function testInjectAddsPackageToModulesListInAppropriateLocation(
         int $type,
         string $initialContents,
@@ -98,9 +101,7 @@ abstract class AbstractInjectorTestCase extends TestCase
      */
     abstract public static function packageAlreadyRegisteredProvider(): array;
 
-    /**
-     * @dataProvider packageAlreadyRegisteredProvider
-     */
+    #[DataProvider('packageAlreadyRegisteredProvider')]
     public function testInjectDoesNotModifyContentsIfPackageIsAlreadyRegistered(string $contents, int $type): void
     {
         vfsStream::newFile($this->configFile)
@@ -119,9 +120,7 @@ abstract class AbstractInjectorTestCase extends TestCase
      */
     abstract public static function emptyConfiguration(): array;
 
-    /**
-     * @dataProvider emptyConfiguration
-     */
+    #[DataProvider('emptyConfiguration')]
     public function testRemoveDoesNothingIfPackageIsNotInConfigFile(string $contents): void
     {
         vfsStream::newFile($this->configFile)
@@ -137,9 +136,7 @@ abstract class AbstractInjectorTestCase extends TestCase
      */
     abstract public static function packagePopulatedInConfiguration(): array;
 
-    /**
-     * @dataProvider packagePopulatedInConfiguration
-     */
+    #[DataProvider('packagePopulatedInConfiguration')]
     public function testRemoveRemovesPackageFromConfigurationWhenFound(
         string $initialContents,
         string $expectedContents

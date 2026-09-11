@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mezzio\Tooling\ConfigDiscovery;
 
+use Override;
+
 use function assert;
 use function file_get_contents;
 use function is_dir;
@@ -54,6 +56,7 @@ abstract class AbstractDiscovery implements DiscoveryInterface
     /**
      * Determine if the configuration file exists and contains modules.
      */
+    #[Override]
     public function locate(): bool
     {
         if (! is_file($this->configFile)) {
@@ -63,6 +66,7 @@ abstract class AbstractDiscovery implements DiscoveryInterface
         assert($this->expected !== '');
 
         $config = file_get_contents($this->configFile);
+        $config = false === $config ? '' : $config;
         return 1 === preg_match($this->expected, $config);
     }
 }

@@ -10,6 +10,7 @@ use Mezzio\Tooling\Routes\Filter\RouteFilterOptions;
 use Mezzio\Tooling\Routes\Filter\RoutesFilter;
 use MezzioTest\Tooling\Routes\Middleware\ExpressMiddleware;
 use MezzioTest\Tooling\Routes\Middleware\SimpleMiddleware;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -25,6 +26,7 @@ class RoutesFilterTest extends TestCase
     /** @var array<int,Route> */
     private array $routes = [];
 
+    #[Override]
     public function setUp(): void
     {
         $this->routes = [

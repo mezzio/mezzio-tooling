@@ -14,6 +14,10 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
@@ -28,10 +32,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use function getcwd;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
+#[RunTestsInSeparateProcesses()]
+#[PreserveGlobalState(false)]
 class CreateCommandTest extends TestCase
 {
     use CommonOptionsAndAttributesTrait;
@@ -51,6 +53,7 @@ class CreateCommandTest extends TestCase
 
     private string $expectedModuleArgumentDescription;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->dir         = vfsStream::setup('project');
@@ -84,9 +87,7 @@ class CreateCommandTest extends TestCase
 
     private function reflectExecuteMethod(CreateCommand $command): ReflectionMethod
     {
-        $r = new ReflectionMethod($command, 'execute');
-        $r->setAccessible(true);
-        return $r;
+        return new ReflectionMethod($command, 'execute');
     }
 
     /**
@@ -107,9 +108,9 @@ class CreateCommandTest extends TestCase
                 self::callback(static function ($input) use ($name, $module, $composer, $modulePath): bool {
                     TestCase::assertInstanceOf(ArrayInput::class, $input);
                     $r = new ReflectionProperty($input, 'parameters');
-                    $r->setAccessible(true);
 
                     $parameters = $r->getValue($input);
+                    TestCase::assertIsArray($parameters);
                     TestCase::assertArrayHasKey('command', $parameters);
                     TestCase::assertEquals($name, $parameters['command']);
                     TestCase::assertArrayHasKey('module', $parameters);
@@ -143,9 +144,7 @@ class CreateCommandTest extends TestCase
         self::assertEquals(CreateCommand::HELP, $this->command->getHelp());
     }
 
-    /**
-     * @dataProvider configType
-     */
+    #[DataProvider('configType')]
     public function testCommandEmitsExpectedSuccessMessages(bool $configAsArrayObject): void
     {
         $metadata    = new ModuleMetadata(
@@ -195,9 +194,7 @@ class CreateCommandTest extends TestCase
         ));
     }
 
-    /**
-     * @dataProvider configType
-     */
+    #[DataProvider('configType')]
     public function testCommandWillFailIfRegisterFails(bool $configAsArrayObject): void
     {
         $metadata    = new ModuleMetadata(
@@ -248,9 +245,7 @@ class CreateCommandTest extends TestCase
         ));
     }
 
-    /**
-     * @dataProvider configType
-     */
+    #[DataProvider('configType')]
     public function testCommandAllowsExceptionsToBubbleUp(bool $configAsArrayObject): void
     {
         $projectRoot = getcwd();
@@ -284,9 +279,7 @@ class CreateCommandTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider configType
-     */
+    #[DataProvider('configType')]
     public function testCommandPassesFlatOptionDuringCreation(bool $configAsArrayObject): void
     {
         $metadata    = new ModuleMetadata(
@@ -336,9 +329,7 @@ class CreateCommandTest extends TestCase
         ));
     }
 
-    /**
-     * @dataProvider configType
-     */
+    #[DataProvider('configType')]
     public function testCommandPassesWithRouteDelegatorOptionDuringCreation(bool $configAsArrayObject): void
     {
         $metadata    = new ModuleMetadata(
@@ -388,9 +379,7 @@ class CreateCommandTest extends TestCase
         ));
     }
 
-    /**
-     * @dataProvider configType
-     */
+    #[DataProvider('configType')]
     public function testCommandPassesParentNamespaceOptionDuringCreation(bool $configAsArrayObject): void
     {
         $metadata    = new ModuleMetadata(

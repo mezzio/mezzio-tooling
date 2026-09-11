@@ -14,8 +14,11 @@ final class DeregisterCommandFactory
 {
     public function __invoke(): DeregisterCommand
     {
+        $path = realpath(getcwd() ?: '.');
+        $path = $path === false ? '/tmp' : $path;
+
         return new DeregisterCommand(
-            realpath(getcwd()),
+            $path,
             new FileSystemBasedComposerPackageFactory(),
             new ComposerProcessViaSymfonyProcessFactory()
         );

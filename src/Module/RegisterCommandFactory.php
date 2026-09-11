@@ -14,8 +14,11 @@ final class RegisterCommandFactory
 {
     public function __invoke(): RegisterCommand
     {
+        $path = realpath(getcwd() ?: '.');
+        $path = $path === false ? '/tmp' : $path;
+
         return new RegisterCommand(
-            realpath(getcwd()),
+            $path,
             new FileSystemBasedComposerPackageFactory(),
             new ComposerProcessViaSymfonyProcessFactory()
         );

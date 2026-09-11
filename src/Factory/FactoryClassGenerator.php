@@ -65,7 +65,7 @@ class FactoryClassGenerator
             $class,
             $namespace,
             $this->formatImportStatements($imports),
-            $this->createArgumentString($constructorParameters)
+            $this->createArgumentString($constructorParameters) ?? '',
         );
     }
 
@@ -139,7 +139,7 @@ class FactoryClassGenerator
         return implode("\n", $imports);
     }
 
-    private function createArgumentString(array $arguments): string
+    private function createArgumentString(array $arguments): string|null
     {
         $arguments = array_map(static fn($argument): string => sprintf('$container->get(%s::class)', $argument), $arguments);
         switch (count($arguments)) {

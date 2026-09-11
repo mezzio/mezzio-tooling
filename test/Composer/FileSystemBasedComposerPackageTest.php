@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace MezzioTest\Tooling\Composer;
 
 use Mezzio\Tooling\Composer\FileSystemBasedComposerPackage;
+use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -21,11 +23,13 @@ use const JSON_THROW_ON_ERROR;
 
 class FileSystemBasedComposerPackageTest extends TestCase
 {
+    #[Override]
     protected function setUp(): void
     {
         $this->tearDownAssets();
     }
 
+    #[Override]
     protected function tearDown(): void
     {
         $this->tearDownAssets();
@@ -136,7 +140,7 @@ class FileSystemBasedComposerPackageTest extends TestCase
         ];
     }
 
-    /** @dataProvider addRuleProvider */
+    #[DataProvider('addRuleProvider')]
     public function testCanAddRule(bool $isDev, string $module, string $moduleSourcePath): void
     {
         $projectRoot = $this->copyDistAsset('rule-does-not-exist');
@@ -154,7 +158,7 @@ class FileSystemBasedComposerPackageTest extends TestCase
         ];
     }
 
-    /** @dataProvider removeRuleProvider */
+    #[DataProvider('removeRuleProvider')]
     public function testCanRemoveRule(bool $isDev, string $module, string $assetDir, string $autoloadKey): void
     {
         $projectRoot = $this->copyDistAsset($assetDir);

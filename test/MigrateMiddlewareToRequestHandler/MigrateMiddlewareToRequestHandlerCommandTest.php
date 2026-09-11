@@ -10,6 +10,9 @@ use Mezzio\Tooling\MigrateMiddlewareToRequestHandler\MigrateMiddlewareToRequestH
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use Override;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunClassInSeparateProcess;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -19,10 +22,8 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 use function mkdir;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
+#[RunClassInSeparateProcess()]
+#[PreserveGlobalState(false)]
 class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -35,6 +36,7 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
 
     private MigrateMiddlewareToRequestHandlerCommand $command;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->input  = $this->createMock(InputInterface::class);
@@ -45,9 +47,7 @@ class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
 
     private function reflectExecuteMethod(MigrateMiddlewareToRequestHandlerCommand $command): ReflectionMethod
     {
-        $r = new ReflectionMethod($command, 'execute');
-        $r->setAccessible(true);
-        return $r;
+        return new ReflectionMethod($command, 'execute');
     }
 
     public function testConfigureSetsExpectedDescription(): void

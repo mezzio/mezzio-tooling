@@ -10,6 +10,9 @@ use Mezzio\Tooling\MigrateInteropMiddleware\MigrateInteropMiddlewareCommand;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use Override;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -19,10 +22,8 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 use function mkdir;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
+#[RunTestsInSeparateProcesses()]
+#[PreserveGlobalState(false)]
 class MigrateInteropMiddlewareCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -35,6 +36,7 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
 
     private MigrateInteropMiddlewareCommand $command;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->input  = $this->createMock(InputInterface::class);
@@ -45,9 +47,7 @@ class MigrateInteropMiddlewareCommandTest extends TestCase
 
     private function reflectExecuteMethod(MigrateInteropMiddlewareCommand $command): ReflectionMethod
     {
-        $r = new ReflectionMethod($command, 'execute');
-        $r->setAccessible(true);
-        return $r;
+        return new ReflectionMethod($command, 'execute');
     }
 
     public function testConfigureSetsExpectedDescription(): void

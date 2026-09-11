@@ -8,6 +8,7 @@ use Mezzio\Tooling\Module\Create;
 use Mezzio\Tooling\Module\RuntimeException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Override;
 use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 
@@ -30,6 +31,7 @@ class CreateTest extends TestCase
 
     private string $projectDir;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

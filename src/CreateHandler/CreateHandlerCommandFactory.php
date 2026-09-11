@@ -13,6 +13,9 @@ final class CreateHandlerCommandFactory
 {
     public function __invoke(ContainerInterface $container): CreateHandlerCommand
     {
-        return new CreateHandlerCommand($container, realpath(getcwd()));
+        $path = realpath(getcwd() ?: '.');
+        $path = $path === false ? '/tmp' : $path;
+
+        return new CreateHandlerCommand($container, $path);
     }
 }

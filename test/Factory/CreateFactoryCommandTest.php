@@ -11,16 +11,17 @@ use Mezzio\Tooling\Factory\CreateFactoryCommand;
 use Mezzio\Tooling\Factory\FactoryClassGenerator;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Override;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunClassInSeparateProcess;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
+#[RunClassInSeparateProcess()]
+#[PreserveGlobalState(false)]
 class CreateFactoryCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -33,6 +34,7 @@ class CreateFactoryCommandTest extends TestCase
 
     private CreateFactoryCommand $command;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->input  = $this->createMock(InputInterface::class);
@@ -46,9 +48,7 @@ class CreateFactoryCommandTest extends TestCase
 
     private function reflectExecuteMethod(CreateFactoryCommand $command): ReflectionMethod
     {
-        $r = new ReflectionMethod($command, 'execute');
-        $r->setAccessible(true);
-        return $r;
+        return new ReflectionMethod($command, 'execute');
     }
 
     public function testConfigureSetsExpectedDescription(): void

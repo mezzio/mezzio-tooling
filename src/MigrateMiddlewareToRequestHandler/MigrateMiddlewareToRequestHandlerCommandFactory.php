@@ -11,6 +11,9 @@ final class MigrateMiddlewareToRequestHandlerCommandFactory
 {
     public function __invoke(): MigrateMiddlewareToRequestHandlerCommand
     {
-        return new MigrateMiddlewareToRequestHandlerCommand(realpath(getcwd()));
+        $path = realpath(getcwd() ?: '.');
+        $path = $path === false ? '/tmp' : $path;
+
+        return new MigrateMiddlewareToRequestHandlerCommand($path);
     }
 }

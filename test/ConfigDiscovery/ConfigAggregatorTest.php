@@ -7,6 +7,8 @@ namespace MezzioTest\Tooling\ConfigDiscovery;
 use Mezzio\Tooling\ConfigDiscovery\ConfigAggregator;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Override;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ConfigAggregatorTest extends TestCase
@@ -15,6 +17,7 @@ class ConfigAggregatorTest extends TestCase
 
     private ConfigAggregator $locator;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->configDir = vfsStream::setup('project');
@@ -68,9 +71,7 @@ $aggregator = new ConfigAggregator(array(
         // @codingStandardsIgnoreEnd
     }
 
-    /**
-     * @dataProvider validMezzioConfigContents
-     */
+    #[DataProvider('validMezzioConfigContents')]
     public function testLocateReturnsTrueWhenFileExistsAndHasExpectedContent(string $contents): void
     {
         vfsStream::newFile('config/config.php')

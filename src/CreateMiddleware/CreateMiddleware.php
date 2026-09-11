@@ -134,8 +134,14 @@ final class CreateMiddleware
         }
 
         try {
+            $composerContents = file_get_contents($composerPath);
             /** @var array{autoload: array{psr-4?: array<string, string>|string}} $composer */
-            $composer = json_decode(file_get_contents($composerPath), true, 512, JSON_THROW_ON_ERROR);
+            $composer = json_decode(
+                $composerContents === false ? '{}' : $composerContents,
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            );
         } catch (JsonException $jsonException) {
             throw CreateMiddlewareException::invalidComposerJson($jsonException->getMessage());
         }

@@ -11,6 +11,9 @@ final class CreateMiddlewareCommandFactory
 {
     public function __invoke(): CreateMiddlewareCommand
     {
-        return new CreateMiddlewareCommand(realpath(getcwd()));
+        $path = realpath(getcwd() ?: '.');
+        $path = $path === false ? '/tmp' : $path;
+
+        return new CreateMiddlewareCommand($path);
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mezzio\Tooling\CreateHandler;
 
 use Mezzio\Tooling\TemplateResolutionTrait;
+use Override;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -162,6 +163,7 @@ class CreateHandlerCommand extends Command
     /**
      * Configure the console command.
      */
+    #[Override]
     protected function configure(): void
     {
         $this->setDescription(self::HELP_DESCRIPTION);
@@ -210,6 +212,7 @@ class CreateHandlerCommand extends Command
      *
      * @return int Exit status
      */
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $handler = $input->getArgument($this->handlerArgument);

@@ -8,6 +8,7 @@ use Mezzio\Tooling\CreateHandler\CreateHandler;
 use Mezzio\Tooling\CreateHandler\CreateHandlerException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Override;
 use PHPUnit\Framework\TestCase;
 
 use function file_get_contents;
@@ -20,6 +21,7 @@ class CreateHandlerTest extends TestCase
 
     private string $projectRoot;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->dir         = vfsStream::setup('project');

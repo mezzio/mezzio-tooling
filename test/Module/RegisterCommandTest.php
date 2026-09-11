@@ -14,6 +14,9 @@ use Mezzio\Tooling\Module\RegisterCommand;
 use Mezzio\Tooling\Module\RuntimeException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Override;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
@@ -24,7 +27,7 @@ use function mkdir;
 use function preg_replace;
 use function sprintf;
 
-/** @covers \Mezzio\Tooling\Module\RegisterCommand */
+#[CoversClass(RegisterCommand::class)]
 class RegisterCommandTest extends TestCase
 {
     use CommonOptionsAndAttributesTrait;
@@ -50,6 +53,7 @@ class RegisterCommandTest extends TestCase
     /** @var InjectorInterface&MockObject */
     private InjectorInterface $injector;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -117,7 +121,7 @@ class RegisterCommandTest extends TestCase
         // phpcs:enable
     }
 
-    /** @dataProvider injectedEnabled */
+    #[DataProvider('injectedEnabled')]
     public function testCommandEmitsExpectedMessagesWhenItInjectsConfigurationAndEnablesModule(
         bool $injected,
         bool $enabled,
@@ -187,16 +191,19 @@ class RegisterCommandTest extends TestCase
 
         if ($enabled === true) {
             $processResult = new class implements ComposerProcessResultInterface {
+                #[Override]
                 public function isSuccessful(): bool
                 {
                     return true;
                 }
 
+                #[Override]
                 public function getOutput(): string
                 {
                     return '';
                 }
 
+                #[Override]
                 public function getErrorOutput(): string
                 {
                     throw new RuntimeException(__METHOD__ . ' should not be called');
