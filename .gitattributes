@@ -8,3 +8,4 @@
 /psalm-baseline.xml export-ignore
 /psalm.xml export-ignore
 /test/ export-ignore
+/structarmed.php export-ignore

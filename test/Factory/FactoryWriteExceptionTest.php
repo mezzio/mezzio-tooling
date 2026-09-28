@@ -7,7 +7,7 @@ namespace MezzioTest\Tooling\Factory;
 use Mezzio\Tooling\Factory\FactoryWriteException;
 use PHPUnit\Framework\TestCase;
 
-class FactoryWriteExceptionTest extends TestCase
+final class FactoryWriteExceptionTest extends TestCase
 {
     public function testWhenCreatingFileGeneratesExpectedException(): void
     {

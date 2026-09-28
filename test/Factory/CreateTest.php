@@ -18,7 +18,7 @@ use TestHarness\NotReal\TestClass;
 
 use function file_put_contents;
 
-class CreateTest extends TestCase
+final class CreateTest extends TestCase
 {
     private vfsStreamDirectory $dir;
 

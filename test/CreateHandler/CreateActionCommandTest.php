@@ -27,7 +27,7 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 #[RunTestsInSeparateProcesses()]
 #[PreserveGlobalState(false)]
-class CreateActionCommandTest extends TestCase
+final class CreateActionCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

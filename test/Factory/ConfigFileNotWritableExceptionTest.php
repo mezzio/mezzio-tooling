@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 use function sprintf;
 
-class ConfigFileNotWritableExceptionTest extends TestCase
+final class ConfigFileNotWritableExceptionTest extends TestCase
 {
     public function testForFileGeneratesExpectedException(): void
     {

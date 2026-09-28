@@ -24,7 +24,7 @@ use function mkdir;
 
 #[RunClassInSeparateProcess()]
 #[PreserveGlobalState(false)]
-class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
+final class MigrateMiddlewareToRequestHandlerCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

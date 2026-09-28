@@ -7,7 +7,7 @@ namespace MezzioTest\Tooling\CreateHandler;
 use Mezzio\Tooling\CreateHandler\CreateHandlerException;
 use PHPUnit\Framework\TestCase;
 
-class CreateHandlerExceptionTest extends TestCase
+final class CreateHandlerExceptionTest extends TestCase
 {
     public function testMissingComposerJsonReturnsInstance(): void
     {

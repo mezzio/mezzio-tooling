@@ -32,7 +32,7 @@ use function sprintf;
 
 #[RunTestsInSeparateProcesses()]
 #[PreserveGlobalState(false)]
-class CreateHandlerCommandTest extends TestCase
+final class CreateHandlerCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 use function sprintf;
 
-class ClassNotFoundExceptionTest extends TestCase
+final class ClassNotFoundExceptionTest extends TestCase
 {
     public function testForClassNameGeneratesExpectedException(): void
     {

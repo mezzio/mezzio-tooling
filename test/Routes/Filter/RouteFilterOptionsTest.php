@@ -8,7 +8,7 @@ use Mezzio\Tooling\Routes\Filter\RouteFilterOptions;
 use PHPUnit\Framework\TestCase;
 
 /** @psalm-suppress InternalClass, InternalProperty, InternalMethod */
-class RouteFilterOptionsTest extends TestCase
+final class RouteFilterOptionsTest extends TestCase
 {
     public function testThatMethodsAreConvertedToUppercase(): void
     {

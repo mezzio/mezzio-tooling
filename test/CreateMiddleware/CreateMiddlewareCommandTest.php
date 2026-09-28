@@ -26,7 +26,7 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 #[RunClassInSeparateProcess()]
 #[PreserveGlobalState(false)]
-class CreateMiddlewareCommandTest extends TestCase
+final class CreateMiddlewareCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

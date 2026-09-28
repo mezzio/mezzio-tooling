@@ -15,7 +15,7 @@ use function file_get_contents;
 use function file_put_contents;
 use function json_encode;
 
-class CreateHandlerTest extends TestCase
+final class CreateHandlerTest extends TestCase
 {
     private vfsStreamDirectory $dir;
 

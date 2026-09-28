@@ -21,7 +21,7 @@ use function var_export;
 
 use const JSON_THROW_ON_ERROR;
 
-class FileSystemBasedComposerPackageTest extends TestCase
+final class FileSystemBasedComposerPackageTest extends TestCase
 {
     #[Override]
     protected function setUp(): void

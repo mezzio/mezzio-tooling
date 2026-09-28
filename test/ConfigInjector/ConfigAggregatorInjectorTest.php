@@ -12,7 +12,7 @@ use Override;
 use function file_get_contents;
 use function preg_replace;
 
-class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
+final class ConfigAggregatorInjectorTest extends AbstractInjectorTestCase
 {
     /** @var non-empty-string */
     protected $configFile = 'config/config.php';
