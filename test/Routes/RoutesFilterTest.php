@@ -21,7 +21,7 @@ use function sprintf;
 use function var_export;
 
 /** @psalm-suppress InternalClass, InternalMethod */
-class RoutesFilterTest extends TestCase
+final class RoutesFilterTest extends TestCase
 {
     /** @var array<int,Route> */
     private array $routes = [];

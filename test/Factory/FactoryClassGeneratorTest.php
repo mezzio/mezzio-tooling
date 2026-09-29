@@ -15,7 +15,7 @@ use This\Duplicates\ClassDuplicatingNamespaceNameCase\ClassDuplicatingNamespaceN
 
 use function file_get_contents;
 
-class FactoryClassGeneratorTest extends TestCase
+final class FactoryClassGeneratorTest extends TestCase
 {
     private FactoryClassGenerator $generator;
 

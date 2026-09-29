@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
+<files psalm-version="6.18.1@79465b8dc674127f442ae31ea114c11bc4dd7ed6">
   <file src="src/Composer/ComposerFileException.php">
     <ClassMustBeFinal>
       <code><![CDATA[ComposerFileException]]></code>
@@ -391,9 +391,6 @@
     </PossiblyFalseOperand>
   </file>
   <file src="test/Composer/FileSystemBasedComposerPackageTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[FileSystemBasedComposerPackageTest]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$package[$key]['psr-4']]]></code>
     </MixedArgument>
@@ -406,14 +403,9 @@
       <code><![CDATA[$json]]></code>
       <code><![CDATA[$json]]></code>
     </PossiblyFalseArgument>
-    <PossiblyUnusedParam>
+    <UnusedParam>
       <code><![CDATA[$autoloadKey]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="test/ConfigDiscovery/ConfigAggregatorTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ConfigAggregatorTest]]></code>
-    </ClassMustBeFinal>
+    </UnusedParam>
   </file>
   <file src="test/ConfigInjector/AbstractInjectorTestCase.php">
     <ArgumentTypeCoercion>
@@ -421,9 +413,6 @@
     </ArgumentTypeCoercion>
   </file>
   <file src="test/ConfigInjector/ConfigAggregatorInjectorTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ConfigAggregatorInjectorTest]]></code>
-    </ClassMustBeFinal>
     <LessSpecificImplementedReturnType>
       <code><![CDATA[array<string, mixed[]>]]></code>
       <code><![CDATA[array{
@@ -495,15 +484,7 @@
       <code><![CDATA[$importLongArray]]></code>
     </PossiblyFalseArgument>
   </file>
-  <file src="test/CreateHandler/CreateActionCommandTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[CreateActionCommandTest]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="test/CreateHandler/CreateHandlerCommandTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[CreateHandlerCommandTest]]></code>
-    </ClassMustBeFinal>
     <InvalidArgument>
       <code><![CDATA[[
                 ['without-template' => false],
@@ -515,15 +496,7 @@
             ]]]></code>
     </InvalidArgument>
   </file>
-  <file src="test/CreateHandler/CreateHandlerExceptionTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[CreateHandlerExceptionTest]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="test/CreateHandler/CreateHandlerTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[CreateHandlerTest]]></code>
-    </ClassMustBeFinal>
     <PossiblyFalseArgument>
       <code><![CDATA[$classFileContents]]></code>
       <code><![CDATA[$classFileContents]]></code>
@@ -613,9 +586,6 @@
     </PossiblyFalseArgument>
   </file>
   <file src="test/CreateHandler/CreateTemplateTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[CreateTemplateTest]]></code>
-    </ClassMustBeFinal>
     <InvalidStringClass>
       <code><![CDATA[new $renderer()]]></code>
     </InvalidStringClass>
@@ -708,20 +678,7 @@
       <code><![CDATA[require $this->projectRoot . '/src/Test/src/TestHandler.php']]></code>
     </UnresolvableInclude>
   </file>
-  <file src="test/CreateMiddleware/CreateMiddlewareCommandTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[CreateMiddlewareCommandTest]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/CreateMiddleware/CreateMiddlewareExceptionTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[CreateMiddlewareExceptionTest]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="test/CreateMiddleware/CreateMiddlewareTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[CreateMiddlewareTest]]></code>
-    </ClassMustBeFinal>
     <PossiblyFalseArgument>
       <code><![CDATA[$classFileContents]]></code>
       <code><![CDATA[$classFileContents]]></code>
@@ -810,20 +767,7 @@
       <code><![CDATA[json_encode(['name' => 'some/project'])]]></code>
     </PossiblyFalseArgument>
   </file>
-  <file src="test/Factory/ClassNotFoundExceptionTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ClassNotFoundExceptionTest]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/Factory/ConfigFileNotWritableExceptionTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ConfigFileNotWritableExceptionTest]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="test/Factory/ConfigInjectorTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ConfigInjectorTest]]></code>
-    </ClassMustBeFinal>
     <MixedArgument>
       <code><![CDATA[$config['dependencies']['factories']]]></code>
     </MixedArgument>
@@ -833,9 +777,6 @@
     </UnresolvableInclude>
   </file>
   <file src="test/Factory/CreateFactoryCommandTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[CreateFactoryCommandTest]]></code>
-    </ClassMustBeFinal>
     <InternalClass>
       <code><![CDATA[new Create(new FactoryClassGenerator())]]></code>
     </InternalClass>
@@ -847,9 +788,6 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$className]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[CreateTest]]></code>
-    </ClassMustBeFinal>
     <InternalClass>
       <code><![CDATA[new Create($generator)]]></code>
       <code><![CDATA[new Create($generator)]]></code>
@@ -892,33 +830,10 @@
       <code><![CDATA[require $this->projectRoot . '/TestClass.php']]></code>
     </UnresolvableInclude>
   </file>
-  <file src="test/Factory/FactoryAlreadyExistsExceptionTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[FactoryAlreadyExistsExceptionTest]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/Factory/FactoryClassGeneratorTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[FactoryClassGeneratorTest]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/Factory/FactoryWriteExceptionTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[FactoryWriteExceptionTest]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/MigrateInteropMiddleware/ConvertInteropMiddlewareTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ConvertInteropMiddlewareTest]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="test/MigrateInteropMiddleware/MigrateInteropMiddlewareCommandTest.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$class]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[MigrateInteropMiddlewareCommandTest]]></code>
-    </ClassMustBeFinal>
     <MixedReturnStatement>
       <code><![CDATA[$r->getConstant($const)]]></code>
     </MixedReturnStatement>
@@ -941,18 +856,10 @@
       <code><![CDATA[$dir]]></code>
     </PossiblyInvalidArgument>
   </file>
-  <file src="test/MigrateMiddlewareToRequestHandler/ConvertMiddlewareTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ConvertMiddlewareTest]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="test/MigrateMiddlewareToRequestHandler/MigrateMiddlewareToRequestHandlerCommandTest.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$class]]></code>
     </ArgumentTypeCoercion>
-    <ClassMustBeFinal>
-      <code><![CDATA[MigrateMiddlewareToRequestHandlerCommandTest]]></code>
-    </ClassMustBeFinal>
   </file>
   <file src="test/MigrateMiddlewareToRequestHandler/ProjectSetupTrait.php">
     <MixedArgument>
@@ -973,9 +880,6 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="test/Module/CommandCommonOptionsTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[CommandCommonOptionsTest]]></code>
-    </ClassMustBeFinal>
     <InternalClass>
       <code><![CDATA[CommandCommonOptions::getModulesPath($this->input)]]></code>
       <code><![CDATA[CommandCommonOptions::getModulesPath($this->input, $config)]]></code>
@@ -988,9 +892,6 @@
     </InternalMethod>
   </file>
   <file src="test/Module/CreateCommandTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[CreateCommandTest]]></code>
-    </ClassMustBeFinal>
     <InvalidArgument>
       <code><![CDATA[testCommandAllowsExceptionsToBubbleUp]]></code>
       <code><![CDATA[testCommandEmitsExpectedSuccessMessages]]></code>
@@ -1029,9 +930,6 @@
     </UnresolvableInclude>
   </file>
   <file src="test/Module/CreateTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[CreateTest]]></code>
-    </ClassMustBeFinal>
     <PossiblyFalseArgument>
       <code><![CDATA[$configProviderContent]]></code>
       <code><![CDATA[$configProviderContent]]></code>
@@ -1039,39 +937,13 @@
       <code><![CDATA[$configProviderContent]]></code>
     </PossiblyFalseArgument>
   </file>
-  <file src="test/Module/DeregisterCommandTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[DeregisterCommandTest]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="test/Module/RegisterCommandTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[RegisterCommandTest]]></code>
-    </ClassMustBeFinal>
     <PossiblyNullArgument>
       <code><![CDATA[$normalizedModulesPath]]></code>
       <code><![CDATA[$normalizedModulesPath]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="test/Routes/DefaultRoutesConfigLoaderFactoryTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[DefaultRoutesConfigLoaderFactoryTest]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/Routes/Filter/RouteFilterOptionsTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[RouteFilterOptionsTest]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/Routes/ListRoutesCommandFactoryTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ListRoutesCommandFactoryTest]]></code>
-    </ClassMustBeFinal>
-  </file>
   <file src="test/Routes/ListRoutesCommandTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ListRoutesCommandTest]]></code>
-    </ClassMustBeFinal>
     <PossiblyFalseArgument>
       <code><![CDATA[json_encode([
                 [
@@ -1090,20 +962,5 @@
                 ],
             ])]]></code>
     </PossiblyFalseArgument>
-  </file>
-  <file src="test/Routes/Middleware/ExpressMiddleware.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[ExpressMiddleware]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/Routes/Middleware/SimpleMiddleware.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[SimpleMiddleware]]></code>
-    </ClassMustBeFinal>
-  </file>
-  <file src="test/Routes/RoutesFilterTest.php">
-    <ClassMustBeFinal>
-      <code><![CDATA[RoutesFilterTest]]></code>
-    </ClassMustBeFinal>
   </file>
 </files>

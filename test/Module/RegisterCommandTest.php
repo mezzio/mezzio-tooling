@@ -28,7 +28,7 @@ use function preg_replace;
 use function sprintf;
 
 #[CoversClass(RegisterCommand::class)]
-class RegisterCommandTest extends TestCase
+final class RegisterCommandTest extends TestCase
 {
     use CommonOptionsAndAttributesTrait;
 

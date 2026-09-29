@@ -8,7 +8,7 @@ use Mezzio\Tooling\MigrateMiddlewareToRequestHandler\ConvertMiddleware;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
-class ConvertMiddlewareTest extends TestCase
+final class ConvertMiddlewareTest extends TestCase
 {
     use ProjectSetupTrait;
 

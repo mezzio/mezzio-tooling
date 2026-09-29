@@ -24,7 +24,7 @@ use function mkdir;
 
 #[RunTestsInSeparateProcesses()]
 #[PreserveGlobalState(false)]
-class MigrateInteropMiddlewareCommandTest extends TestCase
+final class MigrateInteropMiddlewareCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

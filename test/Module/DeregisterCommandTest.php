@@ -24,7 +24,7 @@ use RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
-class DeregisterCommandTest extends TestCase
+final class DeregisterCommandTest extends TestCase
 {
     use CommonOptionsAndAttributesTrait;
 

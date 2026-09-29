@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 use function file_put_contents;
 use function touch;
 
-class ConfigInjectorTest extends TestCase
+final class ConfigInjectorTest extends TestCase
 {
     private vfsStreamDirectory $dir;
 

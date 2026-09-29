@@ -7,7 +7,7 @@ namespace MezzioTest\Tooling\CreateMiddleware;
 use Mezzio\Tooling\CreateMiddleware\CreateMiddlewareException;
 use PHPUnit\Framework\TestCase;
 
-class CreateMiddlewareExceptionTest extends TestCase
+final class CreateMiddlewareExceptionTest extends TestCase
 {
     public function testMissingComposerJsonReturnsInstance(): void
     {

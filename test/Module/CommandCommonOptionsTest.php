@@ -10,7 +10,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputInterface;
 
-class CommandCommonOptionsTest extends TestCase
+final class CommandCommonOptionsTest extends TestCase
 {
     /** @var InputInterface&MockObject */
     private InputInterface $input;

@@ -22,7 +22,7 @@ use function json_encode;
 
 use const JSON_THROW_ON_ERROR;
 
-class ListRoutesCommandTest extends TestCase
+final class ListRoutesCommandTest extends TestCase
 {
     private RouteCollectorInterface&MockObject $routeCollector;
     private CommandTester $tester;

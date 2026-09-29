@@ -33,7 +33,7 @@ use function substr;
 use function vsprintf;
 
 #[RunClassInSeparateProcess()]
-class CreateTemplateTest extends TestCase
+final class CreateTemplateTest extends TestCase
 {
     /**
      * @var array<string, string>

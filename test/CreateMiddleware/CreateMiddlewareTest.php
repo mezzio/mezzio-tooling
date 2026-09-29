@@ -15,7 +15,7 @@ use function file_get_contents;
 use function file_put_contents;
 use function json_encode;
 
-class CreateMiddlewareTest extends TestCase
+final class CreateMiddlewareTest extends TestCase
 {
     private vfsStreamDirectory $dir;
 

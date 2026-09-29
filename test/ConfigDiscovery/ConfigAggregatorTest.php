@@ -11,7 +11,7 @@ use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class ConfigAggregatorTest extends TestCase
+final class ConfigAggregatorTest extends TestCase
 {
     private vfsStreamDirectory $configDir;
 

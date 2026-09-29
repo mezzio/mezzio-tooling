@@ -22,7 +22,7 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 #[RunClassInSeparateProcess()]
 #[PreserveGlobalState(false)]
-class CreateFactoryCommandTest extends TestCase
+final class CreateFactoryCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 

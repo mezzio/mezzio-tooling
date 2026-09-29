@@ -17,7 +17,7 @@ use function file_get_contents;
 use function preg_match;
 use function sprintf;
 
-class CreateTest extends TestCase
+final class CreateTest extends TestCase
 {
     use PHPMock;
 

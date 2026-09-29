@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 use function sprintf;
 
-class FactoryAlreadyExistsExceptionTest extends TestCase
+final class FactoryAlreadyExistsExceptionTest extends TestCase
 {
     public function testForClassUsingFileGeneratesExpectedException(): void
     {

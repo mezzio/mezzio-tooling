@@ -12,7 +12,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
-class ListRoutesCommandFactoryTest extends TestCase
+final class ListRoutesCommandFactoryTest extends TestCase
 {
     public function testCanInstantiateListRoutesCommandObject(): void
     {

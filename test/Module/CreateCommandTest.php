@@ -34,7 +34,7 @@ use function getcwd;
 
 #[RunTestsInSeparateProcesses()]
 #[PreserveGlobalState(false)]
-class CreateCommandTest extends TestCase
+final class CreateCommandTest extends TestCase
 {
     use CommonOptionsAndAttributesTrait;
     use MockeryPHPUnitIntegration;
