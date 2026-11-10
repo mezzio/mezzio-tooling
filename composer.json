@@ -53,7 +53,7 @@
         "phpdocumentor/reflection-docblock": "^5.3.0 || ^6.0.3",
         "phpunit/phpunit": "^11.5.57",
         "psalm/plugin-mockery": "^1.2.1",
-        "psalm/plugin-phpunit": "^0.22.2",
+        "psalm/plugin-phpunit": "^1.0.0",
         "vimeo/psalm": "^6.20.10"
     },
     "conflict": {
