@@ -13,30 +13,11 @@ use Mezzio\Tooling\Exception;
  */
 interface InjectorInterface
 {
-    /**
-     * @var int
-     */
-    public const TYPE_CONFIG_PROVIDER = 0;
-
-    /**
-     * @var int
-     */
-    public const TYPE_COMPONENT = 1;
-
-    /**
-     * @var int
-     */
-    public const TYPE_MODULE = 2;
-
-    /**
-     * @var int
-     */
-    public const TYPE_DEPENDENCY = 3;
-
-    /**
-     * @var int
-     */
-    public const TYPE_BEFORE_APPLICATION = 4;
+    public const int TYPE_CONFIG_PROVIDER    = 0;
+    public const int TYPE_COMPONENT          = 1;
+    public const int TYPE_MODULE             = 2;
+    public const int TYPE_DEPENDENCY         = 3;
+    public const int TYPE_BEFORE_APPLICATION = 4;
 
     /**
      * Whether or not the injector can handle the given type.

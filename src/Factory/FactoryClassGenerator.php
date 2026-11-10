@@ -32,7 +32,7 @@ class FactoryClassGenerator
     /**
      * @var string
      */
-    public const FACTORY_TEMPLATE = <<<'EOT'
+    public const string FACTORY_TEMPLATE = <<<'EOT'
         <?php
 
         declare(strict_types=1);
